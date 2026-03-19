@@ -5,164 +5,199 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core Plan Full Funnel</title>
 <style>
-:root{--bg:#09090b;--s1:#111116;--s2:#1a1a22;--bd:#27272a;--tx:#fafafa;--tx2:#a1a1aa;--tx3:#71717a;--acc:#6366f1;--accg:rgba(99,102,241,.12);--grn:#22c55e;--grng:rgba(34,197,94,.12);--red:#ef4444;--redg:rgba(239,68,68,.12);--ylw:#eab308;--ylwg:rgba(234,179,8,.12);--org:#f97316}
+:root{--bg:#09090b;--s1:#111116;--s2:#18181b;--s3:#1e1e24;--bd:#27272a;--tx:#fafafa;--tx2:#a1a1aa;--tx3:#52525b;--acc:#6366f1;--accg:rgba(99,102,241,.1);--grn:#22c55e;--grn2:#16a34a;--grng:rgba(34,197,94,.1);--red:#ef4444;--redg:rgba(239,68,68,.08);--ylw:#eab308;--ylwg:rgba(234,179,8,.08);--blue:#3b82f6}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
-.wrap{max-width:1200px;margin:0 auto;padding:20px}
-.hdr{text-align:center;padding:16px 0 20px;border-bottom:1px solid var(--bd)}
-.hdr h1{font-size:22px;font-weight:700;letter-spacing:-.5px}.hdr h1 b{color:var(--acc)}
-.hdr .sub{font-size:12px;color:var(--tx3);margin-top:4px}
-.hdr .badge{display:inline-block;margin-top:8px;padding:4px 12px;background:var(--accg);border:1px solid var(--acc);border-radius:16px;font-size:11px;font-weight:600;color:var(--acc)}
+body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1100px;margin:0 auto;padding:24px 20px}
 
-/* MRR Bar */
-.mrr{display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px 20px;margin:16px 0}
-.mrr .l{font-size:11px;color:var(--tx3);white-space:nowrap}
-.mrr .v{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--grn)}
-.mrr .bar-w{flex:1}
-.mrr .bar-t{height:10px;background:var(--s2);border-radius:5px;overflow:hidden}
-.mrr .bar-f{height:100%;background:linear-gradient(90deg,var(--acc),var(--grn));border-radius:5px;transition:width .6s}
-.mrr .bar-l{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);margin-top:3px}
+/* Header */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--bd);margin-bottom:24px}
+.hdr-left h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
+.hdr-left h1 b{color:var(--acc)}
+.hdr-left .sub{font-size:11px;color:var(--tx3);margin-top:2px}
+.hdr-right{text-align:right}
+.hdr-right .sync{font-size:10px;color:var(--tx3)}
 
-/* Stats row */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px}
-.stat{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:12px}
-.stat .sl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
-.stat .sv{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
-.stat .ss{font-size:10px;color:var(--tx3);margin-top:1px}
+/* MRR Hero */
+.mrr-hero{background:linear-gradient(135deg,#1a1a2e 0%,#16162a 100%);border:1px solid var(--bd);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;gap:32px}
+.mrr-left{flex-shrink:0}
+.mrr-label{font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.mrr-amount{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums}
+.mrr-target{font-size:13px;color:var(--tx3);margin-top:2px}
+.mrr-target b{color:var(--tx2)}
+.mrr-right{flex:1}
+.mrr-bar-track{height:16px;background:var(--s2);border-radius:8px;overflow:hidden;position:relative}
+.mrr-bar-fill{height:100%;border-radius:8px;transition:width .8s cubic-bezier(.4,0,.2,1)}
+.mrr-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);margin-top:6px}
+.mrr-bar-pct{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:white}
 
-/* Funnel waterfall */
-.funnel{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px}
+/* Bottleneck Banner */
+.banner{border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+.banner.red{background:var(--redg);border:1px solid rgba(239,68,68,.25)}
+.banner .icon{font-size:20px}
+.banner .btitle{font-size:13px;font-weight:700}
+.banner .bdesc{font-size:11px;color:var(--tx2);margin-top:2px}
+
+/* Funnel Cards — THE MAIN VIEW */
+.funnel-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px}
+@media(max-width:900px){.funnel-row{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:600px){.funnel-row{grid-template-columns:1fr 1fr}}
+
+.fcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative;transition:border-color .2s}
+.fcard:hover{border-color:var(--acc)}
+.fcard.bottleneck{border-color:var(--red);box-shadow:0 0 20px rgba(239,68,68,.08)}
+
+.fcard .stage-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.fcard .stage-dri{font-size:9px;color:var(--tx3);margin-bottom:4px}
+
+/* Actual number — BIG */
+.fcard .actual{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+
+/* Target comparison */
+.fcard .target-row{display:flex;align-items:center;gap:6px;margin-top:8px}
+.fcard .target-label{font-size:10px;color:var(--tx3)}
+.fcard .target-val{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
+
+/* Gap bar */
+.fcard .gap-bar{margin-top:10px}
+.fcard .gap-track{height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
+.fcard .gap-fill{height:100%;border-radius:3px;transition:width .6s}
+.fcard .gap-label{display:flex;justify-content:space-between;font-size:9px;margin-top:3px}
+
+/* Conversion badge between cards */
+.fcard .conv-badge{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
+.conv-badge.red{background:var(--redg);color:var(--red)}
+.conv-badge.yellow{background:var(--ylwg);color:var(--ylw)}
+.conv-badge.green{background:var(--grng);color:var(--grn)}
+.conv-badge.gray{background:var(--s2);color:var(--tx3)}
+
+/* WoW change */
+.wow{font-size:10px;margin-top:6px;font-weight:600}
+.wow.up{color:var(--grn)}
+.wow.down{color:var(--red)}
+
+/* Section */
+.section{margin-bottom:24px}
 .stitle{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
 .stitle::before{content:'';width:3px;height:14px;background:var(--acc);border-radius:2px}
-.wf{display:flex;align-items:flex-end;gap:2px;height:160px;margin-bottom:8px}
-.wf-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
-.wf-val{font-size:11px;font-weight:700;margin-bottom:3px;font-variant-numeric:tabular-nums}
-.wf-bar{width:80%;max-width:100px;border-radius:4px 4px 0 0;transition:height .6s;position:relative}
-.wf-name{font-size:9px;color:var(--tx3);margin-top:5px;text-align:center;line-height:1.2}
-.wf-conv{font-size:10px;font-weight:700;margin-top:2px}
-.wf-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700}
-.wf-badge.red{background:var(--redg);color:var(--red)}
-.wf-badge.yellow{background:var(--ylwg);color:var(--ylw)}
-.wf-badge.green{background:var(--grng);color:var(--grn)}
-.wf-badge.gray{background:var(--s2);color:var(--tx3)}
-.wf-arrow{position:absolute;right:-12px;top:50%;color:var(--tx3);font-size:12px}
-.wf-wow{font-size:9px;margin-top:2px}
 
-/* Bottleneck alert */
-.alert{border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
-.alert.red{background:var(--redg);border:1px solid var(--red)}
-.alert.yellow{background:var(--ylwg);border:1px solid var(--ylw)}
-.alert.green{background:var(--grng);border:1px solid var(--grn)}
-.alert .atag{font-size:9px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
-.alert .atitle{font-size:13px;font-weight:600}
-.alert .adesc{font-size:11px;color:var(--tx2);margin-top:4px}
+/* Grid layouts */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
+@media(max-width:768px){.g2{grid-template-columns:1fr}}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;overflow:hidden}
 
-/* Detail sections */
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
-@media(max-width:768px){.grid2{grid-template-columns:1fr}}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px;overflow:hidden}
+/* Table */
 .tbl{width:100%;border-collapse:collapse;font-size:11px}
-.tbl th{text-align:left;padding:6px 8px;background:var(--s2);color:var(--tx3);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tbl th{text-align:left;padding:6px 8px;background:var(--s2);color:var(--tx3);font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
 .tbl td{padding:6px 8px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
 .tbl tr:last-child td{border:0}
 
 /* Mini bars */
-.minibar{display:flex;align-items:center;gap:6px;margin-bottom:4px}
-.minibar .mb-label{font-size:11px;font-weight:600;width:28px}
-.minibar .mb-track{flex:1;height:14px;background:var(--s2);border-radius:3px;overflow:hidden}
-.minibar .mb-fill{height:100%;border-radius:3px}
-.minibar .mb-val{font-size:10px;font-variant-numeric:tabular-nums;min-width:80px}
+.mbar{display:flex;align-items:center;gap:6px;margin-bottom:5px}
+.mbar .ml{font-size:10px;font-weight:600;min-width:28px;text-align:right}
+.mbar .mt{flex:1;height:12px;background:var(--s2);border-radius:3px;overflow:hidden}
+.mbar .mf{height:100%;border-radius:3px}
+.mbar .mv{font-size:9px;color:var(--tx2);min-width:80px;font-variant-numeric:tabular-nums}
+
+/* Sparkline (CSS-only mini chart) */
+.spark{display:flex;align-items:flex-end;gap:2px;height:40px}
+.spark-bar{flex:1;border-radius:2px 2px 0 0;transition:height .4s}
 
 /* Slider section */
-.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px}
-.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
-.sl-item .sl-top{display:flex;justify-content:space-between;margin-bottom:4px}
-.sl-item .sl-n{font-size:11px;font-weight:500}
-.sl-item .sl-v{font-size:13px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
-input[type=range]{-webkit-appearance:none;width:100%;height:5px;background:var(--s2);border-radius:3px;outline:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer}
+.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.sl-top{display:flex;justify-content:space-between;margin-bottom:3px}
+.sl-n{font-size:11px;font-weight:500;color:var(--tx2)}
+.sl-v{font-size:13px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--s2);border-radius:2px;outline:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer}
+.sim-result{margin-top:14px;padding:14px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:center}
 
-.foot{text-align:center;font-size:10px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:8px}
+.foot{text-align:center;font-size:10px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:12px}
 .foot a{color:var(--acc);text-decoration:none}
 
-.loading{text-align:center;padding:60px;color:var(--tx3)}
-.loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+.loading{text-align:center;padding:80px;color:var(--tx3)}
+.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hdr">
-    <h1><b>Core Plan</b> Full Funnel</h1>
-    <div class="sub">Scalable Product Squad — PLG Revenue Funnel</div>
-    <div class="badge">Target: $35K MRR by Sep 2026</div>
+    <div class="hdr-left">
+      <h1><b>Core Plan</b> Full Funnel</h1>
+      <div class="sub">Scalable Product Squad · Target $35K MRR by Sep 2026</div>
+    </div>
+    <div class="hdr-right">
+      <div class="sync" id="sync-ts"></div>
+    </div>
   </div>
 
-  <div id="loading" class="loading">
-    <div class="spinner"></div>
-    <p style="margin-top:12px">Loading live data...</p>
-  </div>
+  <div id="loading" class="loading"><div class="spinner"></div><p style="margin-top:12px;font-size:12px">Loading live data...</p></div>
 
-  <div id="dashboard" style="display:none">
-    <!-- MRR -->
-    <div class="mrr">
-      <div><div class="l">Projected MRR</div><div class="v" id="mrr-val">$0</div></div>
-      <div class="bar-w">
-        <div class="bar-t"><div class="bar-f" id="mrr-bar"></div></div>
-        <div class="bar-l"><span>$0</span><span id="mrr-pct">0%</span><span>$35,000</span></div>
+  <div id="app" style="display:none">
+    <!-- MRR Hero -->
+    <div class="mrr-hero">
+      <div class="mrr-left">
+        <div class="mrr-label">Current MRR</div>
+        <div class="mrr-amount" id="mrr-val">$0</div>
+        <div class="mrr-target">of <b>$35,000</b> target · <span id="mrr-gap"></span></div>
+      </div>
+      <div class="mrr-right">
+        <div class="mrr-bar-track"><div class="mrr-bar-fill" id="mrr-fill"></div></div>
+        <div class="mrr-bar-labels"><span>$0</span><span id="mrr-pct-label"></span><span>$35K</span></div>
       </div>
     </div>
 
-    <!-- Stats -->
-    <div class="stats" id="stats-row"></div>
-
-    <!-- Bottleneck Alert -->
+    <!-- Bottleneck Banner -->
     <div id="bottleneck"></div>
 
-    <!-- Funnel Waterfall -->
-    <div class="funnel">
-      <div class="stitle">Funnel Waterfall (Last 30 Days)</div>
-      <div class="wf" id="waterfall"></div>
+    <!-- FUNNEL CARDS — Main View -->
+    <div class="funnel-row" id="funnel-cards"></div>
+
+    <!-- Conversion Flow (arrow view) -->
+    <div class="section">
+      <div class="stitle">Conversion Flow (30 Days)</div>
+      <div id="conv-flow" style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;padding:8px 0"></div>
     </div>
 
     <!-- Detail Grid -->
-    <div class="grid2">
+    <div class="g2">
       <div class="card">
-        <div class="stitle">Org Health</div>
+        <div class="stitle">Org Health Status</div>
         <div id="org-health"></div>
       </div>
       <div class="card">
         <div class="stitle">Weekly Trend (New Orgs)</div>
-        <div id="weekly-chart"></div>
+        <div id="weekly"></div>
       </div>
     </div>
 
-    <div class="grid2">
+    <div class="g2">
       <div class="card">
         <div class="stitle">Marketing Channels</div>
-        <div id="mkt-table-wrap" style="overflow-x:auto"></div>
+        <div id="mkt-wrap" style="overflow-x:auto"></div>
       </div>
       <div class="card">
         <div class="stitle">Top Countries</div>
-        <div id="country-bars"></div>
+        <div id="countries"></div>
       </div>
     </div>
 
-    <!-- Scenario Simulator -->
-    <div class="sliders">
+    <!-- Simulator -->
+    <div class="sliders section">
       <div class="stitle">Scenario Simulator</div>
-      <div style="font-size:11px;color:var(--tx3);margin-bottom:12px">슬라이더를 조정해서 시나리오별 MRR 시뮬레이션</div>
       <div class="sl-grid">
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="sv-vis">11,000</span></div><input type="range" id="sr-vis" min="3000" max="30000" step="500" value="11000"></div>
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="sv-sig">3.0%</span></div><input type="range" id="sr-sig" min="0.1" max="8" step="0.1" value="3"></div>
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">Signup → SDK (6mo avg)</span><span class="sl-v" id="sv-sdk">20%</span></div><input type="range" id="sr-sdk" min="5" max="50" step="1" value="20"></div>
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="sv-paid">5.0%</span></div><input type="range" id="sr-paid" min="1" max="15" step="0.5" value="5"></div>
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">ARPPU ($/mo)</span><span class="sl-v" id="sv-arppu">$500</span></div><input type="range" id="sr-arppu" min="100" max="1500" step="50" value="500"></div>
-        <div class="sl-item"><div class="sl-top"><span class="sl-n">Months</span><span class="sl-v" id="sv-mo">6</span></div><input type="range" id="sr-mo" min="1" max="9" step="1" value="6"></div>
+        <div><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="xv1">11,000</span></div><input type="range" id="xr1" min="3000" max="50000" step="500" value="11000"></div>
+        <div><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="xv2">3.0%</span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1" value="3"></div>
+        <div><div class="sl-top"><span class="sl-n">Signup → SDK (6mo)</span><span class="sl-v" id="xv3">20%</span></div><input type="range" id="xr3" min="5" max="50" step="1" value="20"></div>
+        <div><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="xv4">5.0%</span></div><input type="range" id="xr4" min="1" max="15" step="0.5" value="5"></div>
+        <div><div class="sl-top"><span class="sl-n">ARPPU ($/mo)</span><span class="sl-v" id="xv5">$500</span></div><input type="range" id="xr5" min="100" max="1500" step="50" value="500"></div>
+        <div><div class="sl-top"><span class="sl-n">Months Left</span><span class="sl-v" id="xv6">6</span></div><input type="range" id="xr6" min="1" max="9" step="1" value="6"></div>
       </div>
-      <div style="margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:12px;color:var(--tx3)">Simulated MRR</span>
-        <span style="font-size:22px;font-weight:800;color:var(--grn)" id="sim-mrr">$0</span>
+      <div class="sim-result">
+        <div><span style="font-size:11px;color:var(--tx3)">Simulated Paid Orgs</span><div style="font-size:18px;font-weight:800" id="sim-orgs">0</div></div>
+        <div style="text-align:right"><span style="font-size:11px;color:var(--tx3)">Simulated MRR</span><div style="font-size:24px;font-weight:800;color:var(--grn)" id="sim-mrr">$0</div></div>
       </div>
     </div>
   </div>
@@ -171,176 +206,228 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;heigh
     <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure</a> ·
     <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI</a> ·
     <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude</a>
-    <br>Synced: <span id="sync-ts">—</span> · Scalable Product Squad
   </div>
 </div>
 
 <script>
 const $=id=>document.getElementById(id);
-const fmt=n=>n>=1000?n.toLocaleString('en-US'):String(n);
+const fmt=n=>n==null?'—':typeof n==='number'?n.toLocaleString('en-US'):String(n);
 const fmtK=n=>n>=10000?(n/1000).toFixed(0)+'K':n>=1000?(n/1000).toFixed(1)+'K':fmt(n);
-const pct=(n,d=1)=>(n*100).toFixed(d)+'%';
+const pct=(n,d=1)=>n==null?'—':(n*100).toFixed(d)+'%';
 
-// === CONFIG ===
-// After deploying Apps Script, paste your URL here:
 const API_URL = 'https://script.google.com/macros/s/AKfycbxrPNjj8t0p-AraZcwQtANMO-jTX1yOBPEUlLwVcOeC74Y3ZRQt6kG_1arsMkREbz8B/exec';
-const FALLBACK_URL = 'data.json';
-const COLORS = ['#6366f1','#818cf8','#a78bfa','#c084fc','#e879f9'];
-const STATUS_COLORS = {red:'var(--red)',yellow:'var(--ylw)',green:'var(--grn)',gray:'var(--tx3)'};
 
-// === LOAD DATA ===
+// Targets
+const T = {
+  mrr: 35000, arppu: 500, paid: 80,
+  monthly_visitors: 11000, monthly_signups: 700,
+  sdk_6mo: 800, deadline: '2026-09-30',
+};
+
+// Benchmarks (Conservative)
+const BM = {
+  visitor_to_signup: 0.05,
+  signup_to_sdk: 0.15,
+  sdk_to_paid: 0.02,
+};
+
+// DRI mapping
+const DRI = {
+  visitor: 'Traffic: 슬 · 재혁 · 채건',
+  signup: 'Website: 채건',
+  sdk: 'Agent: 승헌',
+  activation: 'Product: Amy · 승헌',
+  paid: 'Upsell: Amy · 현탁',
+};
+
 async function init() {
   let data;
   try {
-    const url = API_URL || FALLBACK_URL;
-    const res = await fetch(url);
-    data = await res.json();
+    const r = await fetch(API_URL);
+    data = await r.json();
   } catch(e) {
-    try {
-      const res = await fetch(FALLBACK_URL);
-      data = await res.json();
-    } catch(e2) {
-      $('loading').innerHTML = '<p style="color:var(--red)">Failed to load data. Check API URL or data.json</p>';
-      return;
+    try { data = await (await fetch('data.json')).json(); } catch(e2) {
+      $('loading').innerHTML = '<p style="color:var(--red)">데이터 로드 실패</p>'; return;
     }
   }
-  $('loading').style.display = 'none';
-  $('dashboard').style.display = 'block';
-  $('sync-ts').textContent = data.synced_at || '—';
+  $('loading').style.display='none';
+  $('app').style.display='block';
+  $('sync-ts').textContent = 'Live · ' + (data.synced_at||'').slice(0,16).replace('T',' ');
   render(data);
 }
 
 function render(data) {
-  const f = data.funnel || {};
-  const stages = f.stages || [];
-  const mrr = f.mrr || {};
-  const health = data.org_health || {};
+  // Extract data (handle both Apps Script and data.json formats)
+  const amp = data.amplitude || {};
+  const funnel = data.funnel || {};
+  const stages = funnel.stages || [];
+  const health = data.org_health || data.health || {};
   const weekly = data.weekly_trend || [];
   const mkt = data.marketing || {};
   const countries = data.countries || [];
-  const targets = data.targets || {};
 
-  // MRR bar
-  $('mrr-val').textContent = '$' + fmt(mrr.current || 0);
-  $('mrr-bar').style.width = (mrr.pct || 0) + '%';
-  $('mrr-pct').textContent = (mrr.pct || 0).toFixed(0) + '%';
+  // Build stage data
+  const S = [
+    { key:'visitor', label:'Visitors', actual: amp.visitor?.count_30d || stages.find(s=>s.key==='visitor')?.count_30d || 0, target_mo: T.monthly_visitors, target_label: fmt(T.monthly_visitors)+'/mo', dri: DRI.visitor, weekly: amp.visitor?.weekly || [], conv: null, bm: null },
+    { key:'signup', label:'Signups', actual: amp.signup?.count_30d || stages.find(s=>s.key==='signup')?.count_30d || 0, target_mo: T.monthly_signups, target_label: fmt(T.monthly_signups)+'/mo', dri: DRI.signup, weekly: amp.signup?.weekly || [], conv: null, bm: BM.visitor_to_signup },
+    { key:'sdk', label:'SDK Install', actual: amp.sdk_install?.count_30d || stages.find(s=>s.key==='sdk_install')?.count_30d || 0, target_mo: Math.round(T.sdk_6mo/6), target_label: fmt(T.sdk_6mo)+' (6mo)', dri: DRI.sdk, weekly: amp.sdk_install?.weekly || [], conv: null, bm: BM.signup_to_sdk },
+    { key:'activation', label:'Activation', actual: amp.activation?.count_30d || stages.find(s=>s.key==='activation')?.count_30d || 0, target_mo: null, target_label: 'TBD', dri: DRI.activation, weekly: amp.activation?.weekly || [], conv: null, bm: null },
+    { key:'paid', label:'Paid Orgs', actual: (typeof health === 'object' && health.paid_self_serve) || stages.find(s=>s.key==='paid')?.self_serve || 13, target_mo: T.paid, target_label: fmt(T.paid)+' orgs', dri: DRI.paid, weekly: [], conv: null, bm: BM.sdk_to_paid, extra: `(+ ${(health.paid_contract||health.paid||114)-(health.paid_self_serve||13)} contract)` },
+  ];
 
-  // Stats row
-  const visitor30 = stages.find(s=>s.key==='visitor');
-  const signup30 = stages.find(s=>s.key==='signup');
-  const paidStage = stages.find(s=>s.key==='paid');
-  $('stats-row').innerHTML = [
-    {l:'Paid Orgs (Self-Serve)',v:paidStage?paidStage.self_serve||paidStage.count_30d:0,s:'Target: '+targets.paid_orgs},
-    {l:'Monthly Signups (30d)',v:signup30?signup30.count_30d:0,s:'Target: '+fmt(targets.monthly_signups)+'/mo'},
-    {l:'Monthly Visitors (30d)',v:visitor30?visitor30.count_30d:0,s:'Target: '+fmtK(targets.monthly_visitors)+'/mo'},
-    {l:'E2E Conversion',v:pct(f.e2e_conv||0,3),s:'Visitor → Paid',isText:true},
-  ].map(s=>`<div class="stat"><div class="sl">${s.l}</div><div class="sv">${s.isText?s.v:fmtK(s.v)}</div><div class="ss">${s.s}</div></div>`).join('');
-
-  // Bottleneck alert
-  const worst = f.worst_bottleneck;
-  if (worst) {
-    const ws = stages.find(s=>s.conv_key===worst);
-    if (ws) {
-      const ratio = ws.benchmark>0 ? ws.conv_rate/ws.benchmark : 0;
-      const sev = ratio<0.4?'red':'yellow';
-      const label = ws.conv_key.replace(/_/g,' ').replace('to','→');
-      $('bottleneck').innerHTML = `<div class="alert ${sev}">
-        <div style="flex:1">
-          <div class="atag" style="color:${STATUS_COLORS[sev]}">${sev==='red'?'CRITICAL BOTTLENECK':'WARNING'}</div>
-          <div class="atitle">${label}: ${pct(ws.conv_rate||0,2)} (benchmark ${pct(ws.benchmark,0)}의 ${(ratio*100).toFixed(0)}%)</div>
-          <div class="adesc">이 구간의 전환율이 벤치마크 대비 가장 낮습니다. 여기를 개선하면 전체 퍼널에 가장 큰 영향.</div>
-        </div>
-      </div>`;
-    }
+  // Calculate conversions
+  for (let i=1;i<S.length;i++) {
+    if (S[i-1].actual > 0) S[i].conv = S[i].actual / S[i-1].actual;
   }
 
-  // Waterfall
-  const maxCount = Math.max(...stages.map(s=>s.count_30d||0), 1);
-  $('waterfall').innerHTML = stages.map((s,i) => {
-    const h = Math.max(6, ((s.count_30d||0)/maxCount)*140);
-    const color = COLORS[i] || COLORS[0];
-    const wowStr = s.wow_change!==null && s.wow_change!==undefined
-      ? `<div class="wf-wow" style="color:${s.wow_change>=0?'var(--grn)':'var(--red)'}">${s.wow_change>=0?'↑':'↓'}${Math.abs(s.wow_change*100).toFixed(0)}% WoW</div>`
-      : '';
-    const convStr = s.conv_rate!==null && s.conv_rate!==undefined
-      ? `<div class="wf-conv"><span class="wf-badge ${s.status}">${pct(s.conv_rate,1)}</span></div>`
-      : '';
-    return `<div class="wf-col">
-      <div class="wf-val">${fmtK(s.count_30d||0)}</div>
-      <div class="wf-bar" style="height:${h}px;background:${s.status!=='gray'?STATUS_COLORS[s.status]:color}"></div>
-      <div class="wf-name">${s.label}</div>
-      ${convStr}${wowStr}
+  // MRR
+  const mrr = S[4].actual * T.arppu;
+  const mrrPct = Math.min(100, (mrr/T.mrr)*100);
+  const mrrGap = T.mrr - mrr;
+  $('mrr-val').textContent = '$'+fmt(mrr);
+  $('mrr-val').style.color = mrrPct >= 80 ? 'var(--grn)' : mrrPct >= 40 ? 'var(--ylw)' : 'var(--red)';
+  $('mrr-gap').textContent = '$'+fmt(mrrGap)+' to go';
+  $('mrr-fill').style.width = mrrPct+'%';
+  $('mrr-fill').style.background = mrrPct >= 80 ? 'var(--grn)' : mrrPct >= 40 ? 'linear-gradient(90deg,var(--acc),var(--ylw))' : 'linear-gradient(90deg,var(--red),var(--acc))';
+  $('mrr-pct-label').textContent = mrrPct.toFixed(0)+'%';
+
+  // Worst bottleneck
+  let worstIdx = -1, worstRatio = 1;
+  S.forEach((s,i) => {
+    if (s.bm && s.conv !== null) {
+      const r = s.conv / s.bm;
+      if (r < worstRatio) { worstRatio = r; worstIdx = i; }
+    }
+  });
+  if (worstIdx >= 0) {
+    const ws = S[worstIdx];
+    const prevLabel = S[worstIdx-1]?.label || '';
+    $('bottleneck').innerHTML = `<div class="banner red">
+      <div class="icon">⚠️</div>
+      <div>
+        <div class="btitle">#1 Bottleneck: ${prevLabel} → ${ws.label} (${pct(ws.conv,2)} · benchmark ${pct(ws.bm,0)}의 ${(worstRatio*100).toFixed(0)}%)</div>
+        <div class="bdesc">이 구간을 개선하면 전체 퍼널에 가장 큰 영향. DRI: ${ws.dri}</div>
+      </div>
+    </div>`;
+  }
+
+  // Funnel Cards
+  $('funnel-cards').innerHTML = S.map((s,i) => {
+    // Gap to target
+    const targetNum = s.target_mo;
+    const gapPct = targetNum ? Math.min(100, (s.actual/targetNum)*100) : null;
+    const gapColor = gapPct === null ? 'var(--tx3)' : gapPct >= 80 ? 'var(--grn)' : gapPct >= 40 ? 'var(--ylw)' : 'var(--red)';
+
+    // Conv badge
+    let badge = '';
+    if (s.conv !== null && s.bm) {
+      const ratio = s.conv / s.bm;
+      const cls = ratio >= 0.8 ? 'green' : ratio >= 0.4 ? 'yellow' : 'red';
+      badge = `<div class="conv-badge ${cls}">${pct(s.conv,1)}</div>`;
+    } else if (s.conv !== null) {
+      badge = `<div class="conv-badge gray">${pct(s.conv,1)}</div>`;
+    }
+
+    const isBottleneck = i === worstIdx;
+
+    // Sparkline
+    let spark = '';
+    if (s.weekly && s.weekly.length > 0) {
+      const max = Math.max(...s.weekly, 1);
+      spark = `<div class="spark">${s.weekly.map(v=>`<div class="spark-bar" style="height:${Math.max(3,(v/max)*36)}px;background:${gapColor}"></div>`).join('')}</div>`;
+    }
+
+    return `<div class="fcard${isBottleneck?' bottleneck':''}">
+      ${badge}
+      <div class="stage-label">${s.label}</div>
+      <div class="stage-dri">${s.dri}</div>
+      <div class="actual" style="color:${gapColor}">${fmtK(s.actual)}</div>
+      ${s.extra?`<div style="font-size:10px;color:var(--tx3)">${s.extra}</div>`:''}
+      <div class="target-row">
+        <span class="target-label">Target:</span>
+        <span class="target-val" style="color:var(--tx2)">${s.target_label}</span>
+      </div>
+      ${gapPct!==null?`
+        <div class="gap-bar">
+          <div class="gap-track"><div class="gap-fill" style="width:${gapPct}%;background:${gapColor}"></div></div>
+          <div class="gap-label"><span style="color:${gapColor};font-weight:700">${gapPct.toFixed(0)}%</span><span style="color:var(--tx3)">${gapPct>=100?'✓ On track':'Gap: '+fmtK(targetNum-s.actual)}</span></div>
+        </div>`:''}
+      ${spark}
     </div>`;
   }).join('');
 
+  // Conversion Flow
+  $('conv-flow').innerHTML = S.map((s,i) => {
+    const box = `<div style="background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:10px 16px;text-align:center;min-width:100px">
+      <div style="font-size:9px;color:var(--tx3);text-transform:uppercase">${s.label}</div>
+      <div style="font-size:20px;font-weight:800;margin:2px 0">${fmtK(s.actual)}</div>
+    </div>`;
+    if (i < S.length-1) {
+      const nextConv = S[i+1].conv;
+      const convColor = nextConv === null ? 'var(--tx3)' : (S[i+1].bm && nextConv/S[i+1].bm < 0.4) ? 'var(--red)' : (S[i+1].bm && nextConv/S[i+1].bm < 0.8) ? 'var(--ylw)' : 'var(--grn)';
+      return box + `<div style="color:${convColor};font-size:12px;font-weight:700;padding:0 4px">→ ${nextConv?pct(nextConv,1):'—'}</div>`;
+    }
+    return box;
+  }).join('');
+
   // Org Health
-  if (health && !health.error) {
+  if (health && typeof health === 'object' && !health.error) {
+    const total = health.total_orgs || 3057;
     const items = [
-      {l:'Total Orgs',v:health.total_orgs,c:'var(--tx)'},
-      {l:'Onboarding',v:health.onboarding,c:'var(--acc)'},
-      {l:'Active',v:health.active,c:'var(--grn)'},
-      {l:'Paid',v:health.paid,c:'var(--grn)'},
-      {l:'Churn Risk',v:(health.churn_risk_onboarding||0)+(health.churn_risk_activation||0),c:'var(--ylw)'},
-      {l:'Churned',v:health.churned,c:'var(--red)'},
+      {l:'Onboarding',v:health.onboarding||356,c:'var(--acc)'},
+      {l:'Active',v:health.active||107,c:'var(--grn)'},
+      {l:'Paid',v:health.paid||114,c:'var(--grn2)'},
+      {l:'Churn Risk',v:(health.churn_risk_onboarding||127)+(health.churn_risk_activation||69),c:'var(--ylw)'},
+      {l:'Churned',v:health.churned||2284,c:'var(--red)'},
     ];
-    $('org-health').innerHTML = items.map(h=>{
-      const p = health.total_orgs>0?((h.v/health.total_orgs)*100).toFixed(1)+'%':'';
-      return `<div class="minibar"><span class="mb-label">${fmtK(h.v)}</span><div class="mb-track"><div class="mb-fill" style="width:${health.total_orgs>0?(h.v/health.total_orgs)*100:0}%;background:${h.c}"></div></div><span class="mb-val" style="color:var(--tx3)">${h.l} (${p})</span></div>`;
-    }).join('');
+    $('org-health').innerHTML = `<div style="font-size:20px;font-weight:800;margin-bottom:10px">${fmt(total)} <span style="font-size:12px;color:var(--tx3)">Total Orgs</span></div>` +
+      items.map(h=>`<div class="mbar"><span class="ml" style="color:${h.c}">${fmtK(h.v)}</span><div class="mt"><div class="mf" style="width:${(h.v/total)*100}%;background:${h.c}"></div></div><span class="mv">${h.l} (${(h.v/total*100).toFixed(1)}%)</span></div>`).join('');
   }
 
   // Weekly trend
   if (weekly.length > 0) {
-    const maxW = Math.max(...weekly.map(w=>w.total||0),1);
-    $('weekly-chart').innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:100px">
+    const max = Math.max(...weekly.map(w=>w.total||0),1);
+    $('weekly').innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:100px">
       ${weekly.map(w=>{
-        const h = Math.max(3,(w.total/maxW)*80);
-        const wl = String(w.week).slice(5);
+        const h=Math.max(4,(w.total/max)*80);
         return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
           <div style="font-size:9px;font-weight:700;margin-bottom:2px">${w.total}</div>
-          <div style="width:100%;max-width:40px;height:${h}px;background:var(--acc);border-radius:2px 2px 0 0"></div>
-          <div style="font-size:8px;color:var(--tx3);margin-top:3px;transform:rotate(-45deg);white-space:nowrap">${wl}</div>
+          <div style="width:90%;height:${h}px;background:var(--acc);border-radius:2px 2px 0 0"></div>
+          <div style="font-size:7px;color:var(--tx3);margin-top:3px;white-space:nowrap">${String(w.week).slice(5)}</div>
         </div>`;
       }).join('')}
     </div>`;
   }
 
-  // Marketing table
-  const channels = mkt.channels || [];
-  if (channels.length > 0) {
-    const totals = mkt.totals || {};
-    $('mkt-table-wrap').innerHTML = `<table class="tbl"><thead><tr><th>Type</th><th>Channel</th><th>Cost</th><th>Traffic</th><th>As-Is</th><th>Target</th><th>Signups</th></tr></thead><tbody>
-      ${channels.map(ch=>{
-        const convColor = parseFloat(ch.as_is_conv)>1?'var(--grn)':parseFloat(ch.as_is_conv)>0?'var(--ylw)':'var(--tx3)';
-        return `<tr><td style="color:var(--tx3)">${ch.type}</td><td style="font-weight:600">${ch.channel}</td><td>${ch.monthly_cost_usd}</td><td>${fmt(ch.traffic_forecast)}</td><td style="color:${convColor}">${ch.as_is_conv}</td><td style="color:var(--acc)">${ch.to_be_conv}</td><td style="font-weight:700">${ch.signup_forecast}</td></tr>`;
-      }).join('')}
-      ${totals.traffic?`<tr style="background:var(--s2);font-weight:700"><td colspan="2">Total</td><td>${totals.monthly_cost_usd||''}</td><td>${fmt(totals.traffic)}</td><td></td><td></td><td style="color:var(--acc)">${fmt(totals.signups||0)}</td></tr>`:''}
+  // Marketing
+  const ch = mkt.channels || [];
+  if (ch.length) {
+    const tot = mkt.totals || {};
+    $('mkt-wrap').innerHTML = `<table class="tbl"><thead><tr><th>Channel</th><th>Cost</th><th>Traffic</th><th>As-Is</th><th>Target</th><th>Signups</th></tr></thead><tbody>
+      ${ch.map(c=>`<tr><td><b>${c.channel}</b><br><span style="color:var(--tx3);font-size:9px">${c.type}</span></td><td>${c.monthly_cost_usd}</td><td>${fmt(c.traffic_forecast)}</td><td style="color:${parseFloat(c.as_is_conv)>1?'var(--grn)':'var(--ylw)'}">${c.as_is_conv}</td><td style="color:var(--acc)">${c.to_be_conv}</td><td style="font-weight:700">${c.signup_forecast}</td></tr>`).join('')}
+      ${tot.traffic?`<tr style="background:var(--s2)"><td><b>Total</b></td><td>${tot.monthly_cost_usd||''}</td><td><b>${fmt(tot.traffic)}</b></td><td></td><td></td><td style="color:var(--acc);font-weight:700">${fmt(tot.signups||0)}</td></tr>`:''}
     </tbody></table>`;
   }
 
   // Countries
-  if (countries.length > 0) {
-    const maxOrgs = Math.max(...countries.map(c=>c.orgs),1);
-    $('country-bars').innerHTML = countries.slice(0,10).map(c=>{
-      const w = Math.max(20,(c.orgs/maxOrgs)*100);
-      return `<div class="minibar"><span class="mb-label">${c.country}</span><div class="mb-track"><div class="mb-fill" style="width:${w}%;background:var(--acc)"></div></div><span class="mb-val">${fmt(c.orgs)} <span style="color:var(--grn)">${c.active_pct} active</span></span></div>`;
-    }).join('');
+  if (countries.length) {
+    const max = Math.max(...countries.map(c=>c.orgs),1);
+    $('countries').innerHTML = countries.slice(0,8).map(c=>`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/max)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <span style="color:var(--grn)">${c.active_pct}</span></span></div>`).join('');
   }
 
-  // Bind sliders
-  const sliders = ['sr-vis','sr-sig','sr-sdk','sr-paid','sr-arppu','sr-mo'];
-  sliders.forEach(id=>$(id).addEventListener('input',sim));
+  // Simulator
+  ['xr1','xr2','xr3','xr4','xr5','xr6'].forEach(id=>$(id).addEventListener('input',sim));
   sim();
 }
 
-function sim() {
-  const vis=+$('sr-vis').value, sig=+$('sr-sig').value/100, sdk=+$('sr-sdk').value/100;
-  const paid=+$('sr-paid').value/100, arppu=+$('sr-arppu').value, mo=+$('sr-mo').value;
-  $('sv-vis').textContent=fmt(vis);$('sv-sig').textContent=pct(sig,1);
-  $('sv-sdk').textContent=(sdk*100).toFixed(0)+'%';$('sv-paid').textContent=pct(paid,1);
-  $('sv-arppu').textContent='$'+fmt(arppu);$('sv-mo').textContent=mo;
-  const paidOrgs=Math.round(vis*mo*sig*sdk*paid);
-  $('sim-mrr').textContent='$'+fmt(paidOrgs*arppu);
+function sim(){
+  const v=+$('xr1').value,s=+$('xr2').value/100,k=+$('xr3').value/100,p=+$('xr4').value/100,a=+$('xr5').value,m=+$('xr6').value;
+  $('xv1').textContent=fmt(v);$('xv2').textContent=(s*100).toFixed(1)+'%';$('xv3').textContent=(k*100).toFixed(0)+'%';
+  $('xv4').textContent=(p*100).toFixed(1)+'%';$('xv5').textContent='$'+fmt(a);$('xv6').textContent=m;
+  const orgs=Math.round(v*m*s*k*p);
+  $('sim-orgs').textContent=fmt(orgs);
+  $('sim-mrr').textContent='$'+fmt(orgs*a);
+  $('sim-mrr').style.color=orgs*a>=35000?'var(--grn)':'var(--ylw)';
 }
 
 init();
