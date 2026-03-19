@@ -3,808 +3,347 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Core Plan Full Funnel Dashboard</title>
+<title>Core Plan Full Funnel</title>
 <style>
-  :root {
-    --bg: #0a0a0f;
-    --surface: #12121a;
-    --surface2: #1a1a26;
-    --border: #2a2a3a;
-    --text: #e4e4ef;
-    --text-dim: #8888a0;
-    --accent: #6366f1;
-    --accent-glow: rgba(99,102,241,0.15);
-    --green: #22c55e;
-    --green-dim: rgba(34,197,94,0.15);
-    --red: #ef4444;
-    --red-dim: rgba(239,68,68,0.15);
-    --yellow: #eab308;
-    --yellow-dim: rgba(234,179,8,0.15);
-    --orange: #f97316;
-  }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 24px;
-  }
-  .container { max-width: 1200px; margin: 0 auto; }
+:root{--bg:#09090b;--s1:#111116;--s2:#1a1a22;--bd:#27272a;--tx:#fafafa;--tx2:#a1a1aa;--tx3:#71717a;--acc:#6366f1;--accg:rgba(99,102,241,.12);--grn:#22c55e;--grng:rgba(34,197,94,.12);--red:#ef4444;--redg:rgba(239,68,68,.12);--ylw:#eab308;--ylwg:rgba(234,179,8,.12);--org:#f97316}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh}
+.wrap{max-width:1200px;margin:0 auto;padding:20px}
+.hdr{text-align:center;padding:16px 0 20px;border-bottom:1px solid var(--bd)}
+.hdr h1{font-size:22px;font-weight:700;letter-spacing:-.5px}.hdr h1 b{color:var(--acc)}
+.hdr .sub{font-size:12px;color:var(--tx3);margin-top:4px}
+.hdr .badge{display:inline-block;margin-top:8px;padding:4px 12px;background:var(--accg);border:1px solid var(--acc);border-radius:16px;font-size:11px;font-weight:600;color:var(--acc)}
 
-  /* Header */
-  .header {
-    text-align: center;
-    margin-bottom: 32px;
-    padding-bottom: 24px;
-    border-bottom: 1px solid var(--border);
-  }
-  .header h1 {
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    margin-bottom: 8px;
-  }
-  .header h1 span { color: var(--accent); }
-  .header p { color: var(--text-dim); font-size: 14px; }
-  .header .target-badge {
-    display: inline-block;
-    margin-top: 12px;
-    padding: 6px 16px;
-    background: var(--accent-glow);
-    border: 1px solid var(--accent);
-    border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--accent);
-  }
+/* MRR Bar */
+.mrr{display:flex;align-items:center;gap:16px;background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px 20px;margin:16px 0}
+.mrr .l{font-size:11px;color:var(--tx3);white-space:nowrap}
+.mrr .v{font-size:28px;font-weight:800;font-variant-numeric:tabular-nums;color:var(--grn)}
+.mrr .bar-w{flex:1}
+.mrr .bar-t{height:10px;background:var(--s2);border-radius:5px;overflow:hidden}
+.mrr .bar-f{height:100%;background:linear-gradient(90deg,var(--acc),var(--grn));border-radius:5px;transition:width .6s}
+.mrr .bar-l{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);margin-top:3px}
 
-  /* MRR Summary */
-  .mrr-bar {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 20px 24px;
-    margin-bottom: 32px;
-  }
-  .mrr-bar .label { font-size: 13px; color: var(--text-dim); white-space: nowrap; }
-  .mrr-bar .amount { font-size: 32px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .mrr-bar .amount.green { color: var(--green); }
-  .mrr-bar .progress-wrap { flex: 1; }
-  .mrr-bar .progress-track {
-    height: 12px;
-    background: var(--surface2);
-    border-radius: 6px;
-    overflow: hidden;
-    position: relative;
-  }
-  .mrr-bar .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--accent), var(--green));
-    border-radius: 6px;
-    transition: width 0.5s ease;
-  }
-  .mrr-bar .progress-label {
-    display: flex;
-    justify-content: space-between;
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 4px;
-  }
+/* Stats row */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:16px}
+.stat{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:12px}
+.stat .sl{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px}
+.stat .sv{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.stat .ss{font-size:10px;color:var(--tx3);margin-top:1px}
 
-  /* Funnel */
-  .funnel-section { margin-bottom: 32px; }
-  .section-title {
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .section-title::before {
-    content: '';
-    width: 3px;
-    height: 18px;
-    background: var(--accent);
-    border-radius: 2px;
-  }
+/* Funnel waterfall */
+.funnel{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px}
+.stitle{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
+.stitle::before{content:'';width:3px;height:14px;background:var(--acc);border-radius:2px}
+.wf{display:flex;align-items:flex-end;gap:2px;height:160px;margin-bottom:8px}
+.wf-col{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;position:relative}
+.wf-val{font-size:11px;font-weight:700;margin-bottom:3px;font-variant-numeric:tabular-nums}
+.wf-bar{width:80%;max-width:100px;border-radius:4px 4px 0 0;transition:height .6s;position:relative}
+.wf-name{font-size:9px;color:var(--tx3);margin-top:5px;text-align:center;line-height:1.2}
+.wf-conv{font-size:10px;font-weight:700;margin-top:2px}
+.wf-badge{display:inline-block;padding:1px 6px;border-radius:8px;font-size:9px;font-weight:700}
+.wf-badge.red{background:var(--redg);color:var(--red)}
+.wf-badge.yellow{background:var(--ylwg);color:var(--ylw)}
+.wf-badge.green{background:var(--grng);color:var(--grn)}
+.wf-badge.gray{background:var(--s2);color:var(--tx3)}
+.wf-arrow{position:absolute;right:-12px;top:50%;color:var(--tx3);font-size:12px}
+.wf-wow{font-size:9px;margin-top:2px}
 
-  .funnel-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-  }
-  .funnel-step {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 16px;
-    position: relative;
-    transition: border-color 0.2s;
-  }
-  .funnel-step:hover { border-color: var(--accent); }
-  .funnel-step .step-num {
-    font-size: 11px;
-    color: var(--text-dim);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 4px;
-  }
-  .funnel-step .step-name {
-    font-size: 14px;
-    font-weight: 600;
-    margin-bottom: 12px;
-  }
-  .funnel-step .step-value {
-    font-size: 28px;
-    font-weight: 800;
-    font-variant-numeric: tabular-nums;
-    margin-bottom: 4px;
-  }
-  .funnel-step .step-target {
-    font-size: 12px;
-    color: var(--text-dim);
-  }
-  .funnel-step .step-target span { font-weight: 600; }
-  .funnel-step .conv-badge {
-    position: absolute;
-    top: 12px;
-    right: 12px;
-    padding: 2px 8px;
-    border-radius: 10px;
-    font-size: 11px;
-    font-weight: 700;
-  }
-  .conv-badge.good { background: var(--green-dim); color: var(--green); }
-  .conv-badge.warn { background: var(--yellow-dim); color: var(--yellow); }
-  .conv-badge.bad { background: var(--red-dim); color: var(--red); }
+/* Bottleneck alert */
+.alert{border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:flex-start;gap:10px}
+.alert.red{background:var(--redg);border:1px solid var(--red)}
+.alert.yellow{background:var(--ylwg);border:1px solid var(--ylw)}
+.alert.green{background:var(--grng);border:1px solid var(--grn)}
+.alert .atag{font-size:9px;font-weight:700;letter-spacing:1px;margin-bottom:3px}
+.alert .atitle{font-size:13px;font-weight:600}
+.alert .adesc{font-size:11px;color:var(--tx2);margin-top:4px}
 
-  .funnel-arrow {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-dim);
-    font-size: 18px;
-    min-width: 24px;
-  }
+/* Detail sections */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:768px){.grid2{grid-template-columns:1fr}}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px;overflow:hidden}
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{text-align:left;padding:6px 8px;background:var(--s2);color:var(--tx3);font-weight:600;font-size:10px;text-transform:uppercase;letter-spacing:.5px}
+.tbl td{padding:6px 8px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
+.tbl tr:last-child td{border:0}
 
-  /* Sliders */
-  .slider-section {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 32px;
-  }
-  .slider-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 20px;
-  }
-  .slider-item { }
-  .slider-label {
-    display: flex;
-    justify-content: space-between;
-    align-items: baseline;
-    margin-bottom: 8px;
-  }
-  .slider-label .name { font-size: 13px; font-weight: 500; }
-  .slider-label .val {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--accent);
-    font-variant-numeric: tabular-nums;
-  }
-  input[type="range"] {
-    -webkit-appearance: none;
-    width: 100%;
-    height: 6px;
-    background: var(--surface2);
-    border-radius: 3px;
-    outline: none;
-  }
-  input[type="range"]::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: var(--accent);
-    cursor: pointer;
-    box-shadow: 0 0 8px var(--accent-glow);
-  }
+/* Mini bars */
+.minibar{display:flex;align-items:center;gap:6px;margin-bottom:4px}
+.minibar .mb-label{font-size:11px;font-weight:600;width:28px}
+.minibar .mb-track{flex:1;height:14px;background:var(--s2);border-radius:3px;overflow:hidden}
+.minibar .mb-fill{height:100%;border-radius:3px}
+.minibar .mb-val{font-size:10px;font-variant-numeric:tabular-nums;min-width:80px}
 
-  /* Benchmark table */
-  .bench-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-    margin-top: 12px;
-  }
-  .bench-table th {
-    text-align: left;
-    padding: 10px 12px;
-    background: var(--surface2);
-    color: var(--text-dim);
-    font-weight: 600;
-    font-size: 11px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .bench-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid var(--border);
-    font-variant-numeric: tabular-nums;
-  }
-  .bench-table tr:last-child td { border-bottom: none; }
-  .bench-table .highlight { color: var(--accent); font-weight: 700; }
-  .bench-table .dim { color: var(--text-dim); }
+/* Slider section */
+.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:20px;margin-bottom:16px}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.sl-item .sl-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.sl-item .sl-n{font-size:11px;font-weight:500}
+.sl-item .sl-v{font-size:13px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;width:100%;height:5px;background:var(--s2);border-radius:3px;outline:0}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:var(--acc);cursor:pointer}
 
-  /* Waterfall chart */
-  .waterfall {
-    display: flex;
-    align-items: flex-end;
-    gap: 4px;
-    height: 180px;
-    padding: 16px 0;
-    margin-bottom: 8px;
-  }
-  .waterfall-bar-wrap {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    height: 100%;
-    justify-content: flex-end;
-  }
-  .waterfall-bar {
-    width: 100%;
-    max-width: 80px;
-    border-radius: 4px 4px 0 0;
-    transition: height 0.5s ease;
-    position: relative;
-  }
-  .waterfall-bar-label {
-    font-size: 11px;
-    font-weight: 700;
-    margin-bottom: 4px;
-    font-variant-numeric: tabular-nums;
-  }
-  .waterfall-bar-name {
-    font-size: 10px;
-    color: var(--text-dim);
-    margin-top: 6px;
-    text-align: center;
-    line-height: 1.3;
-  }
+.foot{text-align:center;font-size:10px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:8px}
+.foot a{color:var(--acc);text-decoration:none}
 
-  /* Status indicators */
-  .status-row {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 24px;
-    flex-wrap: wrap;
-  }
-  .status-card {
-    flex: 1;
-    min-width: 160px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .status-card .sc-label { font-size: 11px; color: var(--text-dim); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
-  .status-card .sc-value { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; }
-  .status-card .sc-sub { font-size: 11px; color: var(--text-dim); margin-top: 2px; }
-
-  .footnote {
-    text-align: center;
-    font-size: 11px;
-    color: var(--text-dim);
-    margin-top: 32px;
-    padding-top: 16px;
-    border-top: 1px solid var(--border);
-  }
-  .footnote a { color: var(--accent); text-decoration: none; }
-
-  @media (max-width: 640px) {
-    body { padding: 16px; }
-    .mrr-bar { flex-direction: column; align-items: flex-start; }
-    .mrr-bar .amount { font-size: 24px; }
-    .funnel-grid { grid-template-columns: 1fr; }
-  }
+.loading{text-align:center;padding:60px;color:var(--tx3)}
+.loading .spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
-<div class="container">
-
-  <div class="header">
-    <h1><span>Core Plan</span> Full Funnel Dashboard</h1>
-    <p>Scalable Product Squad &mdash; PLG Revenue Funnel</p>
-    <div class="target-badge">Target: $35K MRR by Sep 2026</div>
+<div class="wrap">
+  <div class="hdr">
+    <h1><b>Core Plan</b> Full Funnel</h1>
+    <div class="sub">Scalable Product Squad — PLG Revenue Funnel</div>
+    <div class="badge">Target: $35K MRR by Sep 2026</div>
   </div>
 
-  <!-- MRR Progress -->
-  <div class="mrr-bar">
-    <div>
-      <div class="label">Projected MRR</div>
-      <div class="amount green" id="projected-mrr">$0</div>
-    </div>
-    <div class="progress-wrap">
-      <div class="progress-track">
-        <div class="progress-fill" id="mrr-fill" style="width:0%"></div>
-      </div>
-      <div class="progress-label">
-        <span>$0</span>
-        <span id="mrr-pct">0%</span>
-        <span>$35,000</span>
-      </div>
-    </div>
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    <p style="margin-top:12px">Loading live data...</p>
   </div>
 
-  <!-- Key Status -->
-  <div class="status-row">
-    <div class="status-card">
-      <div class="sc-label">Paid Orgs Needed</div>
-      <div class="sc-value" id="paid-orgs">0</div>
-      <div class="sc-sub">Target: 80 orgs</div>
+  <div id="dashboard" style="display:none">
+    <!-- MRR -->
+    <div class="mrr">
+      <div><div class="l">Projected MRR</div><div class="v" id="mrr-val">$0</div></div>
+      <div class="bar-w">
+        <div class="bar-t"><div class="bar-f" id="mrr-bar"></div></div>
+        <div class="bar-l"><span>$0</span><span id="mrr-pct">0%</span><span>$35,000</span></div>
+      </div>
     </div>
-    <div class="status-card">
-      <div class="sc-label">Monthly Signups Needed</div>
-      <div class="sc-value" id="monthly-signups">0</div>
-      <div class="sc-sub">Over 6 months (Apr-Sep)</div>
-    </div>
-    <div class="status-card">
-      <div class="sc-label">Monthly Traffic Needed</div>
-      <div class="sc-value" id="monthly-traffic">0</div>
-      <div class="sc-sub" id="traffic-vs-current">vs current ~5,700/mo</div>
-    </div>
-    <div class="status-card">
-      <div class="sc-label">End-to-End Conv.</div>
-      <div class="sc-value" id="e2e-conv">0%</div>
-      <div class="sc-sub">Visitor → Paid</div>
-    </div>
-  </div>
 
-  <!-- Funnel Visualization -->
-  <div class="funnel-section">
-    <div class="section-title">Funnel Waterfall</div>
-    <div class="waterfall" id="waterfall"></div>
-  </div>
+    <!-- Stats -->
+    <div class="stats" id="stats-row"></div>
 
-  <!-- Funnel Steps -->
-  <div class="funnel-section">
-    <div class="section-title">Funnel Stages (6-month cumulative)</div>
-    <div class="funnel-grid" id="funnel-grid"></div>
-  </div>
+    <!-- Bottleneck Alert -->
+    <div id="bottleneck"></div>
 
-  <!-- Scenario Simulator -->
-  <div class="slider-section">
-    <div class="section-title">Scenario Simulator</div>
-    <p style="font-size:13px;color:var(--text-dim);margin-bottom:16px;">슬라이더를 조정해서 시나리오별 MRR을 시뮬레이션하세요</p>
-    <div class="slider-grid">
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">Monthly Visitors (US)</span>
-          <span class="val" id="val-visitors">11,000</span>
-        </div>
-        <input type="range" id="sl-visitors" min="3000" max="30000" step="500" value="11000">
+    <!-- Funnel Waterfall -->
+    <div class="funnel">
+      <div class="stitle">Funnel Waterfall (Last 30 Days)</div>
+      <div class="wf" id="waterfall"></div>
+    </div>
+
+    <!-- Detail Grid -->
+    <div class="grid2">
+      <div class="card">
+        <div class="stitle">Org Health</div>
+        <div id="org-health"></div>
       </div>
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">Visit → Core Signup</span>
-          <span class="val" id="val-signup">1.0%</span>
-        </div>
-        <input type="range" id="sl-signup" min="0.1" max="5" step="0.1" value="1.0">
+      <div class="card">
+        <div class="stitle">Weekly Trend (New Orgs)</div>
+        <div id="weekly-chart"></div>
       </div>
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">Signup → SDK Install (6mo avg)</span>
-          <span class="val" id="val-sdk">20%</span>
-        </div>
-        <input type="range" id="sl-sdk" min="5" max="50" step="1" value="20">
+    </div>
+
+    <div class="grid2">
+      <div class="card">
+        <div class="stitle">Marketing Channels</div>
+        <div id="mkt-table-wrap" style="overflow-x:auto"></div>
       </div>
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">SDK → Paid Conversion</span>
-          <span class="val" id="val-paid">5%</span>
-        </div>
-        <input type="range" id="sl-paid" min="1" max="15" step="0.5" value="5">
+      <div class="card">
+        <div class="stitle">Top Countries</div>
+        <div id="country-bars"></div>
       </div>
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">ARPPU ($/month)</span>
-          <span class="val" id="val-arppu">$500</span>
-        </div>
-        <input type="range" id="sl-arppu" min="100" max="1500" step="50" value="500">
+    </div>
+
+    <!-- Scenario Simulator -->
+    <div class="sliders">
+      <div class="stitle">Scenario Simulator</div>
+      <div style="font-size:11px;color:var(--tx3);margin-bottom:12px">슬라이더를 조정해서 시나리오별 MRR 시뮬레이션</div>
+      <div class="sl-grid">
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="sv-vis">11,000</span></div><input type="range" id="sr-vis" min="3000" max="30000" step="500" value="11000"></div>
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="sv-sig">3.0%</span></div><input type="range" id="sr-sig" min="0.1" max="8" step="0.1" value="3"></div>
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">Signup → SDK (6mo avg)</span><span class="sl-v" id="sv-sdk">20%</span></div><input type="range" id="sr-sdk" min="5" max="50" step="1" value="20"></div>
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="sv-paid">5.0%</span></div><input type="range" id="sr-paid" min="1" max="15" step="0.5" value="5"></div>
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">ARPPU ($/mo)</span><span class="sl-v" id="sv-arppu">$500</span></div><input type="range" id="sr-arppu" min="100" max="1500" step="50" value="500"></div>
+        <div class="sl-item"><div class="sl-top"><span class="sl-n">Months</span><span class="sl-v" id="sv-mo">6</span></div><input type="range" id="sr-mo" min="1" max="9" step="1" value="6"></div>
       </div>
-      <div class="slider-item">
-        <div class="slider-label">
-          <span class="name">Months Remaining</span>
-          <span class="val" id="val-months">6</span>
-        </div>
-        <input type="range" id="sl-months" min="1" max="9" step="1" value="6">
+      <div style="margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:12px;color:var(--tx3)">Simulated MRR</span>
+        <span style="font-size:22px;font-weight:800;color:var(--grn)" id="sim-mrr">$0</span>
       </div>
     </div>
   </div>
 
-  <!-- Benchmark Comparison -->
-  <div class="funnel-section">
-    <div class="section-title">Benchmark Comparison</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-      <table class="bench-table">
-        <thead>
-          <tr>
-            <th>Stage</th>
-            <th>Benchmark (Median)</th>
-            <th>Airbridge (Current)</th>
-            <th>Target</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>Visitor → Signup</td>
-            <td class="dim">2~5%</td>
-            <td style="color:var(--red)">0.26%</td>
-            <td class="highlight">1.0%</td>
-          </tr>
-          <tr>
-            <td>Signup → SDK Install</td>
-            <td class="dim">30~50%</td>
-            <td style="color:var(--yellow)">~20% (est.)</td>
-            <td class="highlight">20%</td>
-          </tr>
-          <tr>
-            <td>SDK → Activation</td>
-            <td class="dim">40~60%</td>
-            <td style="color:var(--text-dim)">TBD</td>
-            <td class="highlight">50%</td>
-          </tr>
-          <tr>
-            <td>Activation → Paid</td>
-            <td class="dim">5~15%</td>
-            <td style="color:var(--text-dim)">TBD</td>
-            <td class="highlight">10%</td>
-          </tr>
-          <tr>
-            <td style="font-weight:700">Visitor → Paid (E2E)</td>
-            <td class="dim">0.01~0.05%</td>
-            <td style="color:var(--red);font-weight:700">~0.001%</td>
-            <td class="highlight">0.01%</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <p style="font-size:11px;color:var(--text-dim);margin-top:8px;">* Benchmark: B2B SaaS PLG median (OpenView, ProductLed). Airbridge current: Deep Link plan 기준 (승헌님 데이터)</p>
+  <div class="foot">
+    <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure</a> ·
+    <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI</a> ·
+    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude</a>
+    <br>Synced: <span id="sync-ts">—</span> · Scalable Product Squad
   </div>
-
-  <!-- Bottleneck -->
-  <div class="funnel-section">
-    <div class="section-title">Bottleneck Analysis</div>
-    <div id="bottleneck-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;"></div>
-  </div>
-
-  <!-- Real Data: Org Health -->
-  <div class="funnel-section">
-    <div class="section-title">Live Org Health (from Google Sheets)</div>
-    <div id="org-health-grid" class="funnel-grid"></div>
-    <div id="weekly-chart" style="margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;"></div>
-  </div>
-
-  <!-- Real Data: Marketing Channels -->
-  <div class="funnel-section">
-    <div class="section-title">Marketing Channel Performance</div>
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
-      <table class="bench-table" id="mkt-table">
-        <thead>
-          <tr>
-            <th>Type</th>
-            <th>Channel</th>
-            <th>Cost/mo</th>
-            <th>Traffic</th>
-            <th>As-Is Conv</th>
-            <th>Target Conv</th>
-            <th>Signups</th>
-          </tr>
-        </thead>
-        <tbody id="mkt-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Top Countries -->
-  <div class="funnel-section">
-    <div class="section-title">Top Countries by Org Count</div>
-    <div id="country-bars" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
-  </div>
-
-  <div class="footnote">
-    Data sources: <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI Sheet</a> &middot;
-    <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure Sheet</a> &middot;
-    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude Dashboard</a>
-    <br>Last synced: <span id="sync-time">—</span> &middot; Run <code>bash scripts/sync-data.sh</code> to refresh &middot; Scalable Product Squad
-  </div>
-
 </div>
 
 <script>
-const $ = id => document.getElementById(id);
-const fmt = n => n >= 1000 ? n.toLocaleString('en-US') : n.toString();
-const fmtK = n => n >= 10000 ? (n/1000).toFixed(0)+'K' : n >= 1000 ? (n/1000).toFixed(1)+'K' : fmt(n);
+const $=id=>document.getElementById(id);
+const fmt=n=>n>=1000?n.toLocaleString('en-US'):String(n);
+const fmtK=n=>n>=10000?(n/1000).toFixed(0)+'K':n>=1000?(n/1000).toFixed(1)+'K':fmt(n);
+const pct=(n,d=1)=>(n*100).toFixed(d)+'%';
 
+// === CONFIG ===
+// After deploying Apps Script, paste your URL here:
+const API_URL = '';
+const FALLBACK_URL = 'data.json';
 const COLORS = ['#6366f1','#818cf8','#a78bfa','#c084fc','#e879f9'];
-const TARGET_MRR = 35000;
-const CURRENT_TRAFFIC = 5700;
+const STATUS_COLORS = {red:'var(--red)',yellow:'var(--ylw)',green:'var(--grn)',gray:'var(--tx3)'};
 
-function calculate() {
-  const visitors = +$('sl-visitors').value;
-  const signupRate = +$('sl-signup').value / 100;
-  const sdkRate = +$('sl-sdk').value / 100;
-  const paidRate = +$('sl-paid').value / 100;
-  const arppu = +$('sl-arppu').value;
-  const months = +$('sl-months').value;
-
-  // Funnel calc
-  const totalVisitors = visitors * months;
-  const signups = Math.round(totalVisitors * signupRate);
-  const sdkInstalls = Math.round(signups * sdkRate);
-  const paidOrgs = Math.round(sdkInstalls * paidRate);
-  const mrr = paidOrgs * arppu;
-  const e2e = (signupRate * sdkRate * paidRate * 100);
-
-  // Update slider labels
-  $('val-visitors').textContent = fmt(visitors);
-  $('val-signup').textContent = (signupRate*100).toFixed(1) + '%';
-  $('val-sdk').textContent = (sdkRate*100).toFixed(0) + '%';
-  $('val-paid').textContent = (paidRate*100).toFixed(1) + '%';
-  $('val-arppu').textContent = '$' + fmt(arppu);
-  $('val-months').textContent = months;
-
-  // MRR bar
-  const mrrPct = Math.min(100, (mrr / TARGET_MRR) * 100);
-  $('projected-mrr').textContent = '$' + fmt(mrr);
-  $('mrr-fill').style.width = mrrPct + '%';
-  $('mrr-pct').textContent = mrrPct.toFixed(0) + '%';
-
-  // Status cards
-  $('paid-orgs').textContent = fmt(paidOrgs);
-  $('monthly-signups').textContent = fmt(Math.round(signups / months));
-  $('monthly-traffic').textContent = fmtK(visitors);
-  $('traffic-vs-current').textContent = `vs current ~${fmtK(CURRENT_TRAFFIC)}/mo (${(visitors/CURRENT_TRAFFIC).toFixed(1)}x)`;
-  $('e2e-conv').textContent = e2e.toFixed(3) + '%';
-
-  // Waterfall
-  const stages = [
-    { name: 'Visitors', value: totalVisitors, color: COLORS[0] },
-    { name: 'Core Signup', value: signups, color: COLORS[1] },
-    { name: 'SDK Install', value: sdkInstalls, color: COLORS[2] },
-    { name: 'Paid Orgs', value: paidOrgs, color: COLORS[3] },
-  ];
-  const maxVal = stages[0].value || 1;
-  const waterfall = $('waterfall');
-  waterfall.innerHTML = stages.map(s => {
-    const h = Math.max(4, (s.value / maxVal) * 160);
-    return `<div class="waterfall-bar-wrap">
-      <div class="waterfall-bar-label">${fmtK(s.value)}</div>
-      <div class="waterfall-bar" style="height:${h}px;background:${s.color}"></div>
-      <div class="waterfall-bar-name">${s.name}</div>
-    </div>`;
-  }).join('');
-
-  // Funnel grid
-  const convRates = [
-    { from: 'Visit', to: 'Core Signup', rate: signupRate, benchmark: 0.03 },
-    { from: 'Signup', to: 'SDK Install', rate: sdkRate, benchmark: 0.35 },
-    { from: 'SDK', to: 'Paid', rate: paidRate, benchmark: 0.07 },
-  ];
-  const funnelSteps = [
-    { num: 'Step 1', name: 'Monthly Visitors', value: visitors, target: 11000, unit: '', conv: null },
-    { num: 'Step 2', name: 'Core Plan Signups', value: Math.round(visitors * signupRate), target: Math.round(11000*0.01), unit: '/mo', conv: signupRate, benchConv: 0.03 },
-    { num: 'Step 3', name: 'SDK Installed (6mo)', value: sdkInstalls, target: 800, unit: '', conv: sdkRate, benchConv: 0.35 },
-    { num: 'Step 4', name: 'Paid Orgs', value: paidOrgs, target: 80, unit: '', conv: paidRate, benchConv: 0.07 },
-  ];
-  const grid = $('funnel-grid');
-  grid.innerHTML = funnelSteps.map(s => {
-    let badge = '';
-    if (s.conv !== null) {
-      const ratio = s.conv / s.benchConv;
-      const cls = ratio >= 0.8 ? 'good' : ratio >= 0.4 ? 'warn' : 'bad';
-      badge = `<div class="conv-badge ${cls}">${(s.conv*100).toFixed(1)}%</div>`;
+// === LOAD DATA ===
+async function init() {
+  let data;
+  try {
+    const url = API_URL || FALLBACK_URL;
+    const res = await fetch(url);
+    data = await res.json();
+  } catch(e) {
+    try {
+      const res = await fetch(FALLBACK_URL);
+      data = await res.json();
+    } catch(e2) {
+      $('loading').innerHTML = '<p style="color:var(--red)">Failed to load data. Check API URL or data.json</p>';
+      return;
     }
-    const pct = s.target ? Math.round((s.value / s.target) * 100) : 0;
-    const pctColor = pct >= 100 ? 'var(--green)' : pct >= 60 ? 'var(--yellow)' : 'var(--red)';
-    return `<div class="funnel-step">
-      ${badge}
-      <div class="step-num">${s.num}</div>
-      <div class="step-name">${s.name}</div>
-      <div class="step-value">${fmtK(s.value)}</div>
-      <div class="step-target">Target: <span>${fmtK(s.target)}</span> &middot; <span style="color:${pctColor}">${pct}%</span></div>
-    </div>`;
-  }).join('');
-
-  // Bottleneck analysis
-  const bottlenecks = [];
-  if (signupRate < 0.01) {
-    bottlenecks.push({
-      severity: 'critical',
-      title: 'Visit → Signup 전환율 극히 낮음',
-      detail: `현재 ${(signupRate*100).toFixed(2)}% (벤치마크 2~5%). 홈페이지→waitlist CTA 경로가 사실상 막혀 있음. 모바일 트래픽 비중 높은데 전환은 PC에서만 발생.`,
-      action: 'Variant C 카피를 메인 랜딩에 적용 + 모바일 전환 최적화'
-    });
   }
-  if (sdkRate < 0.25) {
-    bottlenecks.push({
-      severity: 'warning',
-      title: 'Signup → SDK 설치율 개선 여지',
-      detail: `현재 ${(sdkRate*100)}% (벤치마크 30~50%). MMP 온보딩이 4주+ 걸리는 구조적 문제. AI Agent로 셀프서브 가능성은 확인됨.`,
-      action: 'Pilot 온보딩 설계 → 승헌님께 전달, Agent 팀 20% targeting'
-    });
-  }
-  if (visitors < 8000) {
-    bottlenecks.push({
-      severity: 'warning',
-      title: '트래픽 볼륨 부족',
-      detail: `월 ${fmtK(visitors)} 방문 (목표 11K). 현재 Direct+Facebook에 편중. 구글 검색 광고에서 첫 US 전환 발생.`,
-      action: 'Google Search 광고 확대 + 블로그 CTA 개선 + LinkedIn 콘텐츠'
-    });
-  }
-  if (paidRate < 0.05) {
-    bottlenecks.push({
-      severity: 'info',
-      title: 'SDK → Paid 전환 데이터 부족',
-      detail: `현재 ${(paidRate*100).toFixed(1)}% 추정. Stripe↔Amplitude 연동 미완, 정확한 측정 불가.`,
-      action: 'Stripe 이벤트 연동 (창규님) + DeepLink 고객 upsell 병행'
-    });
-  }
-  if (mrr >= TARGET_MRR) {
-    bottlenecks.push({
-      severity: 'good',
-      title: '이 시나리오에서 $35K 달성 가능',
-      detail: `예상 MRR $${fmt(mrr)} (목표 대비 ${(mrr/TARGET_MRR*100).toFixed(0)}%)`,
-      action: '현재 슬라이더 값을 팀 KPI로 확정하고 주간 트래킹'
-    });
-  }
-
-  const sevColors = {
-    critical: { bg: 'var(--red-dim)', border: 'var(--red)', text: 'var(--red)', label: 'CRITICAL' },
-    warning: { bg: 'var(--yellow-dim)', border: 'var(--yellow)', text: 'var(--yellow)', label: 'WARNING' },
-    info: { bg: 'var(--accent-glow)', border: 'var(--accent)', text: 'var(--accent)', label: 'INFO' },
-    good: { bg: 'var(--green-dim)', border: 'var(--green)', text: 'var(--green)', label: 'ON TRACK' },
-  };
-  $('bottleneck-cards').innerHTML = bottlenecks.map(b => {
-    const c = sevColors[b.severity];
-    return `<div style="background:${c.bg};border:1px solid ${c.border};border-radius:10px;padding:16px;">
-      <div style="font-size:10px;font-weight:700;color:${c.text};letter-spacing:1px;margin-bottom:6px;">${c.label}</div>
-      <div style="font-size:14px;font-weight:600;margin-bottom:8px;">${b.title}</div>
-      <div style="font-size:12px;color:var(--text-dim);margin-bottom:8px;">${b.detail}</div>
-      <div style="font-size:12px;font-weight:600;color:${c.text};">→ ${b.action}</div>
-    </div>`;
-  }).join('');
+  $('loading').style.display = 'none';
+  $('dashboard').style.display = 'block';
+  $('sync-ts').textContent = data.synced_at || '—';
+  render(data);
 }
 
-// Bind sliders
-['sl-visitors','sl-signup','sl-sdk','sl-paid','sl-arppu','sl-months'].forEach(id => {
-  $(id).addEventListener('input', calculate);
-});
+function render(data) {
+  const f = data.funnel || {};
+  const stages = f.stages || [];
+  const mrr = f.mrr || {};
+  const health = data.org_health || {};
+  const weekly = data.weekly_trend || [];
+  const mkt = data.marketing || {};
+  const countries = data.countries || [];
+  const targets = data.targets || {};
 
-// Initial simulation
-calculate();
+  // MRR bar
+  $('mrr-val').textContent = '$' + fmt(mrr.current || 0);
+  $('mrr-bar').style.width = (mrr.pct || 0) + '%';
+  $('mrr-pct').textContent = (mrr.pct || 0).toFixed(0) + '%';
 
-// === REAL DATA LOADING ===
-// Priority: Apps Script (live) → data.json (fallback)
-// After deploying Apps Script, paste your URL below:
-const APPS_SCRIPT_URL = ''; // e.g. 'https://script.google.com/macros/s/XXXX/exec'
+  // Stats row
+  const visitor30 = stages.find(s=>s.key==='visitor');
+  const signup30 = stages.find(s=>s.key==='signup');
+  const paidStage = stages.find(s=>s.key==='paid');
+  $('stats-row').innerHTML = [
+    {l:'Paid Orgs (Self-Serve)',v:paidStage?paidStage.self_serve||paidStage.count_30d:0,s:'Target: '+targets.paid_orgs},
+    {l:'Monthly Signups (30d)',v:signup30?signup30.count_30d:0,s:'Target: '+fmt(targets.monthly_signups)+'/mo'},
+    {l:'Monthly Visitors (30d)',v:visitor30?visitor30.count_30d:0,s:'Target: '+fmtK(targets.monthly_visitors)+'/mo'},
+    {l:'E2E Conversion',v:pct(f.e2e_conv||0,3),s:'Visitor → Paid',isText:true},
+  ].map(s=>`<div class="stat"><div class="sl">${s.l}</div><div class="sv">${s.isText?s.v:fmtK(s.v)}</div><div class="ss">${s.s}</div></div>`).join('');
 
-const dataUrl = APPS_SCRIPT_URL || 'data.json';
-fetch(dataUrl).then(r => r.json()).then(data => {
-  // Sync time
-  if ($('sync-time')) $('sync-time').textContent = data.synced_at;
-
-  // Org Health Grid
-  const f = data.funnel;
-  const healthItems = [
-    { label: 'Total Orgs', value: f.total_orgs, color: 'var(--text)' },
-    { label: 'Onboarding', value: f.onboarding, color: 'var(--accent)' },
-    { label: 'Active', value: f.active, color: 'var(--green)' },
-    { label: 'Paid', value: f.paid, color: 'var(--green)' },
-    { label: 'Churn Risk (Onboarding)', value: f.churn_risk_onboarding, color: 'var(--yellow)' },
-    { label: 'Churn Risk (Activation)', value: f.churn_risk_activation, color: 'var(--orange)' },
-    { label: 'Churned', value: f.churned, color: 'var(--red)' },
-  ];
-  $('org-health-grid').innerHTML = healthItems.map(h =>
-    `<div class="funnel-step">
-      <div class="step-num">${h.label}</div>
-      <div class="step-value" style="color:${h.color}">${fmt(h.value)}</div>
-      <div class="step-target">${f.total_orgs ? ((h.value/f.total_orgs)*100).toFixed(1)+'% of total' : ''}</div>
-    </div>`
-  ).join('');
-
-  // Weekly trend chart (simple bar chart)
-  const weeks = data.weekly_trend || [];
-  if (weeks.length > 0) {
-    const maxW = Math.max(...weeks.map(w => w.total));
-    const barColors = {
-      onboarding: '#6366f1',
-      active: '#22c55e',
-      paid: '#10b981',
-      churn_risk_onboarding: '#eab308',
-      churn_risk_activation: '#f97316',
-      churned: '#ef4444',
-    };
-    $('weekly-chart').innerHTML = `
-      <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Weekly New Orgs (last 12 weeks)</div>
-      <div style="display:flex;align-items:flex-end;gap:4px;height:120px;">
-        ${weeks.map(w => {
-          const h = Math.max(4, (w.total / maxW) * 100);
-          const weekLabel = w.week.slice(5);
-          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
-            <div style="font-size:10px;font-weight:700;margin-bottom:2px;">${w.total}</div>
-            <div style="width:100%;max-width:50px;height:${h}px;background:var(--accent);border-radius:3px 3px 0 0;"></div>
-            <div style="font-size:9px;color:var(--text-dim);margin-top:4px;transform:rotate(-45deg);white-space:nowrap;">${weekLabel}</div>
-          </div>`;
-        }).join('')}
-      </div>
-      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
-        ${Object.entries(barColors).map(([k,c]) =>
-          `<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-dim);">
-            <div style="width:8px;height:8px;border-radius:2px;background:${c};"></div>${k}
-          </div>`
-        ).join('')}
-      </div>
-    `;
-  }
-
-  // Marketing channels table
-  const channels = data.marketing?.channels || [];
-  const tbody = $('mkt-tbody');
-  if (tbody && channels.length > 0) {
-    tbody.innerHTML = channels.map(ch => {
-      const convColor = parseFloat(ch.as_is_conv) > 1 ? 'var(--green)' : parseFloat(ch.as_is_conv) > 0 ? 'var(--yellow)' : 'var(--text-dim)';
-      return `<tr>
-        <td class="dim">${ch.type}</td>
-        <td style="font-weight:600">${ch.channel}</td>
-        <td>${ch.monthly_cost_usd}</td>
-        <td>${fmt(ch.traffic_forecast)}</td>
-        <td style="color:${convColor}">${ch.as_is_conv}</td>
-        <td class="highlight">${ch.to_be_conv}</td>
-        <td style="font-weight:700">${ch.signup_forecast}</td>
-      </tr>`;
-    }).join('');
-    // Add totals row
-    const t = data.marketing.totals;
-    if (t && t.traffic) {
-      tbody.innerHTML += `<tr style="background:var(--surface2);font-weight:700;">
-        <td colspan="2">Total</td>
-        <td>${t.monthly_cost_usd}</td>
-        <td>${fmt(t.traffic)}</td>
-        <td></td><td></td>
-        <td style="color:var(--accent)">${fmt(t.signups)}</td>
-      </tr>`;
+  // Bottleneck alert
+  const worst = f.worst_bottleneck;
+  if (worst) {
+    const ws = stages.find(s=>s.conv_key===worst);
+    if (ws) {
+      const ratio = ws.benchmark>0 ? ws.conv_rate/ws.benchmark : 0;
+      const sev = ratio<0.4?'red':'yellow';
+      const label = ws.conv_key.replace(/_/g,' ').replace('to','→');
+      $('bottleneck').innerHTML = `<div class="alert ${sev}">
+        <div style="flex:1">
+          <div class="atag" style="color:${STATUS_COLORS[sev]}">${sev==='red'?'CRITICAL BOTTLENECK':'WARNING'}</div>
+          <div class="atitle">${label}: ${pct(ws.conv_rate||0,2)} (benchmark ${pct(ws.benchmark,0)}의 ${(ratio*100).toFixed(0)}%)</div>
+          <div class="adesc">이 구간의 전환율이 벤치마크 대비 가장 낮습니다. 여기를 개선하면 전체 퍼널에 가장 큰 영향.</div>
+        </div>
+      </div>`;
     }
   }
 
-  // Country bars
-  const countries = data.countries || [];
-  if (countries.length > 0) {
-    const maxOrgs = Math.max(...countries.map(c => c.orgs));
-    $('country-bars').innerHTML = countries.slice(0, 10).map(c => {
-      const w = Math.max(30, (c.orgs / maxOrgs) * 200);
-      return `<div style="display:flex;align-items:center;gap:8px;min-width:200px;flex:1;">
-        <div style="font-size:12px;font-weight:600;width:24px;">${c.country}</div>
-        <div style="flex:1;display:flex;align-items:center;gap:6px;">
-          <div style="height:20px;width:${w}px;background:var(--accent);border-radius:3px;"></div>
-          <span style="font-size:11px;font-variant-numeric:tabular-nums;">${fmt(c.orgs)} <span style="color:var(--green);">(${c.active_pct} active)</span></span>
-        </div>
-      </div>`;
+  // Waterfall
+  const maxCount = Math.max(...stages.map(s=>s.count_30d||0), 1);
+  $('waterfall').innerHTML = stages.map((s,i) => {
+    const h = Math.max(6, ((s.count_30d||0)/maxCount)*140);
+    const color = COLORS[i] || COLORS[0];
+    const wowStr = s.wow_change!==null && s.wow_change!==undefined
+      ? `<div class="wf-wow" style="color:${s.wow_change>=0?'var(--grn)':'var(--red)'}">${s.wow_change>=0?'↑':'↓'}${Math.abs(s.wow_change*100).toFixed(0)}% WoW</div>`
+      : '';
+    const convStr = s.conv_rate!==null && s.conv_rate!==undefined
+      ? `<div class="wf-conv"><span class="wf-badge ${s.status}">${pct(s.conv_rate,1)}</span></div>`
+      : '';
+    return `<div class="wf-col">
+      <div class="wf-val">${fmtK(s.count_30d||0)}</div>
+      <div class="wf-bar" style="height:${h}px;background:${s.status!=='gray'?STATUS_COLORS[s.status]:color}"></div>
+      <div class="wf-name">${s.label}</div>
+      ${convStr}${wowStr}
+    </div>`;
+  }).join('');
+
+  // Org Health
+  if (health && !health.error) {
+    const items = [
+      {l:'Total Orgs',v:health.total_orgs,c:'var(--tx)'},
+      {l:'Onboarding',v:health.onboarding,c:'var(--acc)'},
+      {l:'Active',v:health.active,c:'var(--grn)'},
+      {l:'Paid',v:health.paid,c:'var(--grn)'},
+      {l:'Churn Risk',v:(health.churn_risk_onboarding||0)+(health.churn_risk_activation||0),c:'var(--ylw)'},
+      {l:'Churned',v:health.churned,c:'var(--red)'},
+    ];
+    $('org-health').innerHTML = items.map(h=>{
+      const p = health.total_orgs>0?((h.v/health.total_orgs)*100).toFixed(1)+'%':'';
+      return `<div class="minibar"><span class="mb-label">${fmtK(h.v)}</span><div class="mb-track"><div class="mb-fill" style="width:${health.total_orgs>0?(h.v/health.total_orgs)*100:0}%;background:${h.c}"></div></div><span class="mb-val" style="color:var(--tx3)">${h.l} (${p})</span></div>`;
     }).join('');
   }
 
-}).catch(err => {
-  console.log('No data.json found, using simulation only. Run sync-data.sh to load real data.');
-});
+  // Weekly trend
+  if (weekly.length > 0) {
+    const maxW = Math.max(...weekly.map(w=>w.total||0),1);
+    $('weekly-chart').innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:100px">
+      ${weekly.map(w=>{
+        const h = Math.max(3,(w.total/maxW)*80);
+        const wl = String(w.week).slice(5);
+        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
+          <div style="font-size:9px;font-weight:700;margin-bottom:2px">${w.total}</div>
+          <div style="width:100%;max-width:40px;height:${h}px;background:var(--acc);border-radius:2px 2px 0 0"></div>
+          <div style="font-size:8px;color:var(--tx3);margin-top:3px;transform:rotate(-45deg);white-space:nowrap">${wl}</div>
+        </div>`;
+      }).join('')}
+    </div>`;
+  }
+
+  // Marketing table
+  const channels = mkt.channels || [];
+  if (channels.length > 0) {
+    const totals = mkt.totals || {};
+    $('mkt-table-wrap').innerHTML = `<table class="tbl"><thead><tr><th>Type</th><th>Channel</th><th>Cost</th><th>Traffic</th><th>As-Is</th><th>Target</th><th>Signups</th></tr></thead><tbody>
+      ${channels.map(ch=>{
+        const convColor = parseFloat(ch.as_is_conv)>1?'var(--grn)':parseFloat(ch.as_is_conv)>0?'var(--ylw)':'var(--tx3)';
+        return `<tr><td style="color:var(--tx3)">${ch.type}</td><td style="font-weight:600">${ch.channel}</td><td>${ch.monthly_cost_usd}</td><td>${fmt(ch.traffic_forecast)}</td><td style="color:${convColor}">${ch.as_is_conv}</td><td style="color:var(--acc)">${ch.to_be_conv}</td><td style="font-weight:700">${ch.signup_forecast}</td></tr>`;
+      }).join('')}
+      ${totals.traffic?`<tr style="background:var(--s2);font-weight:700"><td colspan="2">Total</td><td>${totals.monthly_cost_usd||''}</td><td>${fmt(totals.traffic)}</td><td></td><td></td><td style="color:var(--acc)">${fmt(totals.signups||0)}</td></tr>`:''}
+    </tbody></table>`;
+  }
+
+  // Countries
+  if (countries.length > 0) {
+    const maxOrgs = Math.max(...countries.map(c=>c.orgs),1);
+    $('country-bars').innerHTML = countries.slice(0,10).map(c=>{
+      const w = Math.max(20,(c.orgs/maxOrgs)*100);
+      return `<div class="minibar"><span class="mb-label">${c.country}</span><div class="mb-track"><div class="mb-fill" style="width:${w}%;background:var(--acc)"></div></div><span class="mb-val">${fmt(c.orgs)} <span style="color:var(--grn)">${c.active_pct} active</span></span></div>`;
+    }).join('');
+  }
+
+  // Bind sliders
+  const sliders = ['sr-vis','sr-sig','sr-sdk','sr-paid','sr-arppu','sr-mo'];
+  sliders.forEach(id=>$(id).addEventListener('input',sim));
+  sim();
+}
+
+function sim() {
+  const vis=+$('sr-vis').value, sig=+$('sr-sig').value/100, sdk=+$('sr-sdk').value/100;
+  const paid=+$('sr-paid').value/100, arppu=+$('sr-arppu').value, mo=+$('sr-mo').value;
+  $('sv-vis').textContent=fmt(vis);$('sv-sig').textContent=pct(sig,1);
+  $('sv-sdk').textContent=(sdk*100).toFixed(0)+'%';$('sv-paid').textContent=pct(paid,1);
+  $('sv-arppu').textContent='$'+fmt(arppu);$('sv-mo').textContent=mo;
+  const paidOrgs=Math.round(vis*mo*sig*sdk*paid);
+  $('sim-mrr').textContent='$'+fmt(paidOrgs*arppu);
+}
+
+init();
 </script>
 </body>
 </html>
