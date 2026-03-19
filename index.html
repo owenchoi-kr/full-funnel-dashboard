@@ -693,8 +693,13 @@ function calculate() {
 // Initial simulation
 calculate();
 
-// Load real data from data.json
-fetch('data.json').then(r => r.json()).then(data => {
+// === REAL DATA LOADING ===
+// Priority: Apps Script (live) → data.json (fallback)
+// After deploying Apps Script, paste your URL below:
+const APPS_SCRIPT_URL = ''; // e.g. 'https://script.google.com/macros/s/XXXX/exec'
+
+const dataUrl = APPS_SCRIPT_URL || 'data.json';
+fetch(dataUrl).then(r => r.json()).then(data => {
   // Sync time
   if ($('sync-time')) $('sync-time').textContent = data.synced_at;
 
