@@ -1,13 +1,97 @@
 {
-  "synced_at": "2026-03-19T09:57:08Z",
+  "synced_at": "2026-03-19T10:52:42Z",
   "funnel": {
-    "total_orgs": 3057,
-    "onboarding": 356,
-    "active": 107,
-    "paid": 114,
-    "churn_risk_onboarding": 127,
-    "churn_risk_activation": 69,
-    "churned": 2284
+    "stages": [
+      {
+        "key": "visitor",
+        "label": "Visitors",
+        "count_30d": 42082,
+        "weekly": [
+          9298,
+          10363,
+          8865,
+          10798,
+          7578
+        ],
+        "conv_rate": null,
+        "conv_key": null,
+        "benchmark": null,
+        "target": null,
+        "status": "gray"
+      },
+      {
+        "key": "signup",
+        "label": "Signups",
+        "count_30d": 382,
+        "weekly": [
+          175,
+          310,
+          272,
+          315,
+          232
+        ],
+        "conv_rate": 0.009077515327218288,
+        "conv_key": "visitor_to_signup",
+        "benchmark": 0.05,
+        "target": 0.03,
+        "status": "red"
+      },
+      {
+        "key": "sdk_install",
+        "label": "SDK Install",
+        "count_30d": 15,
+        "weekly": [
+          2,
+          3,
+          2,
+          7,
+          1
+        ],
+        "conv_rate": 0.03926701570680628,
+        "conv_key": "signup_to_sdk_install",
+        "benchmark": 0.15,
+        "target": 0.2,
+        "status": "red"
+      },
+      {
+        "key": "activation",
+        "label": "Activation",
+        "count_30d": 5923,
+        "weekly": [
+          919,
+          1265,
+          1243,
+          1290,
+          1206
+        ],
+        "conv_rate": 394.8666666666667,
+        "conv_key": "sdk_install_to_activation",
+        "benchmark": null,
+        "target": null,
+        "status": "gray"
+      },
+      {
+        "key": "paid",
+        "label": "Paid Orgs",
+        "count_30d": 114,
+        "self_serve": 13,
+        "contract": 101,
+        "weekly": [],
+        "conv_rate": 0.8666666666666667,
+        "conv_key": "sdk_install_to_paid",
+        "benchmark": 0.02,
+        "target": 0.05,
+        "status": "green",
+        "source": "sheets"
+      }
+    ],
+    "mrr": {
+      "current": 6500,
+      "target": 35000,
+      "pct": 18.571428571428573
+    },
+    "e2e_conv": 0.0003089206786749679,
+    "worst_bottleneck": "visitor_to_signup"
   },
   "health": {
     "Onboarding": {
@@ -439,7 +523,91 @@
     "mrr": 35000,
     "paid_orgs": 80,
     "monthly_signups": 700,
+    "monthly_visitors": 11000,
     "arppu": 500,
     "deadline": "2026-09-30"
+  },
+  "amplitude": {
+    "visitor": {
+      "label": "Visitors",
+      "count_30d": 42082,
+      "weekly": [
+        9298,
+        10363,
+        8865,
+        10798,
+        7578
+      ]
+    },
+    "signup": {
+      "label": "Signups",
+      "count_30d": 382,
+      "weekly": [
+        175,
+        310,
+        272,
+        315,
+        232
+      ]
+    },
+    "sdk_install": {
+      "label": "SDK Install",
+      "count_30d": 15,
+      "weekly": [
+        2,
+        3,
+        2,
+        7,
+        1
+      ]
+    },
+    "activation": {
+      "label": "Activation",
+      "count_30d": 5923,
+      "weekly": [
+        919,
+        1265,
+        1243,
+        1290,
+        1206
+      ]
+    },
+    "weeks": [
+      "2/16",
+      "2/23",
+      "3/2",
+      "3/9",
+      "3/16"
+    ]
+  },
+  "benchmarks": {
+    "visitor_to_signup": {
+      "benchmark": 0.05,
+      "target": 0.03
+    },
+    "signup_to_sdk_install": {
+      "benchmark": 0.15,
+      "target": 0.2
+    },
+    "sdk_install_to_paid": {
+      "benchmark": 0.02,
+      "target": 0.05
+    }
+  },
+  "dri": {
+    "traffic": [
+      "슬(Seul)",
+      "재혁(Jaehyuk)",
+      "채건(Chaigun)"
+    ],
+    "sdk_install": [
+      "승헌(Seungheon)",
+      "Agent팀"
+    ],
+    "paid": [
+      "Amy",
+      "현탁(Hyeontak)"
+    ],
+    "owner": "현종(Hyunjong)"
   }
 }
