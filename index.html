@@ -487,11 +487,45 @@
     <div id="bottleneck-cards" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px;"></div>
   </div>
 
+  <!-- Real Data: Org Health -->
+  <div class="funnel-section">
+    <div class="section-title">Live Org Health (from Google Sheets)</div>
+    <div id="org-health-grid" class="funnel-grid"></div>
+    <div id="weekly-chart" style="margin-top:16px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;"></div>
+  </div>
+
+  <!-- Real Data: Marketing Channels -->
+  <div class="funnel-section">
+    <div class="section-title">Marketing Channel Performance</div>
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <table class="bench-table" id="mkt-table">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Channel</th>
+            <th>Cost/mo</th>
+            <th>Traffic</th>
+            <th>As-Is Conv</th>
+            <th>Target Conv</th>
+            <th>Signups</th>
+          </tr>
+        </thead>
+        <tbody id="mkt-tbody"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Top Countries -->
+  <div class="funnel-section">
+    <div class="section-title">Top Countries by Org Count</div>
+    <div id="country-bars" style="display:flex;gap:8px;flex-wrap:wrap;"></div>
+  </div>
+
   <div class="footnote">
     Data sources: <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI Sheet</a> &middot;
-    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude Dashboard</a> &middot;
-    <a href="https://owenchoi-kr.github.io/core-plan-mrr-simulation/" target="_blank">MRR Simulation</a>
-    <br>Last updated: 2026-03-19 &middot; Scalable Product Squad
+    <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure Sheet</a> &middot;
+    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude Dashboard</a>
+    <br>Last synced: <span id="sync-time">—</span> &middot; Run <code>bash scripts/sync-data.sh</code> to refresh &middot; Scalable Product Squad
   </div>
 
 </div>
@@ -656,8 +690,116 @@ function calculate() {
   $(id).addEventListener('input', calculate);
 });
 
-// Initial
+// Initial simulation
 calculate();
+
+// Load real data from data.json
+fetch('data.json').then(r => r.json()).then(data => {
+  // Sync time
+  if ($('sync-time')) $('sync-time').textContent = data.synced_at;
+
+  // Org Health Grid
+  const f = data.funnel;
+  const healthItems = [
+    { label: 'Total Orgs', value: f.total_orgs, color: 'var(--text)' },
+    { label: 'Onboarding', value: f.onboarding, color: 'var(--accent)' },
+    { label: 'Active', value: f.active, color: 'var(--green)' },
+    { label: 'Paid', value: f.paid, color: 'var(--green)' },
+    { label: 'Churn Risk (Onboarding)', value: f.churn_risk_onboarding, color: 'var(--yellow)' },
+    { label: 'Churn Risk (Activation)', value: f.churn_risk_activation, color: 'var(--orange)' },
+    { label: 'Churned', value: f.churned, color: 'var(--red)' },
+  ];
+  $('org-health-grid').innerHTML = healthItems.map(h =>
+    `<div class="funnel-step">
+      <div class="step-num">${h.label}</div>
+      <div class="step-value" style="color:${h.color}">${fmt(h.value)}</div>
+      <div class="step-target">${f.total_orgs ? ((h.value/f.total_orgs)*100).toFixed(1)+'% of total' : ''}</div>
+    </div>`
+  ).join('');
+
+  // Weekly trend chart (simple bar chart)
+  const weeks = data.weekly_trend || [];
+  if (weeks.length > 0) {
+    const maxW = Math.max(...weeks.map(w => w.total));
+    const barColors = {
+      onboarding: '#6366f1',
+      active: '#22c55e',
+      paid: '#10b981',
+      churn_risk_onboarding: '#eab308',
+      churn_risk_activation: '#f97316',
+      churned: '#ef4444',
+    };
+    $('weekly-chart').innerHTML = `
+      <div style="font-size:13px;font-weight:600;margin-bottom:12px;">Weekly New Orgs (last 12 weeks)</div>
+      <div style="display:flex;align-items:flex-end;gap:4px;height:120px;">
+        ${weeks.map(w => {
+          const h = Math.max(4, (w.total / maxW) * 100);
+          const weekLabel = w.week.slice(5);
+          return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%;">
+            <div style="font-size:10px;font-weight:700;margin-bottom:2px;">${w.total}</div>
+            <div style="width:100%;max-width:50px;height:${h}px;background:var(--accent);border-radius:3px 3px 0 0;"></div>
+            <div style="font-size:9px;color:var(--text-dim);margin-top:4px;transform:rotate(-45deg);white-space:nowrap;">${weekLabel}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;flex-wrap:wrap;">
+        ${Object.entries(barColors).map(([k,c]) =>
+          `<div style="display:flex;align-items:center;gap:4px;font-size:10px;color:var(--text-dim);">
+            <div style="width:8px;height:8px;border-radius:2px;background:${c};"></div>${k}
+          </div>`
+        ).join('')}
+      </div>
+    `;
+  }
+
+  // Marketing channels table
+  const channels = data.marketing?.channels || [];
+  const tbody = $('mkt-tbody');
+  if (tbody && channels.length > 0) {
+    tbody.innerHTML = channels.map(ch => {
+      const convColor = parseFloat(ch.as_is_conv) > 1 ? 'var(--green)' : parseFloat(ch.as_is_conv) > 0 ? 'var(--yellow)' : 'var(--text-dim)';
+      return `<tr>
+        <td class="dim">${ch.type}</td>
+        <td style="font-weight:600">${ch.channel}</td>
+        <td>${ch.monthly_cost_usd}</td>
+        <td>${fmt(ch.traffic_forecast)}</td>
+        <td style="color:${convColor}">${ch.as_is_conv}</td>
+        <td class="highlight">${ch.to_be_conv}</td>
+        <td style="font-weight:700">${ch.signup_forecast}</td>
+      </tr>`;
+    }).join('');
+    // Add totals row
+    const t = data.marketing.totals;
+    if (t && t.traffic) {
+      tbody.innerHTML += `<tr style="background:var(--surface2);font-weight:700;">
+        <td colspan="2">Total</td>
+        <td>${t.monthly_cost_usd}</td>
+        <td>${fmt(t.traffic)}</td>
+        <td></td><td></td>
+        <td style="color:var(--accent)">${fmt(t.signups)}</td>
+      </tr>`;
+    }
+  }
+
+  // Country bars
+  const countries = data.countries || [];
+  if (countries.length > 0) {
+    const maxOrgs = Math.max(...countries.map(c => c.orgs));
+    $('country-bars').innerHTML = countries.slice(0, 10).map(c => {
+      const w = Math.max(30, (c.orgs / maxOrgs) * 200);
+      return `<div style="display:flex;align-items:center;gap:8px;min-width:200px;flex:1;">
+        <div style="font-size:12px;font-weight:600;width:24px;">${c.country}</div>
+        <div style="flex:1;display:flex;align-items:center;gap:6px;">
+          <div style="height:20px;width:${w}px;background:var(--accent);border-radius:3px;"></div>
+          <span style="font-size:11px;font-variant-numeric:tabular-nums;">${fmt(c.orgs)} <span style="color:var(--green);">(${c.active_pct} active)</span></span>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+}).catch(err => {
+  console.log('No data.json found, using simulation only. Run sync-data.sh to load real data.');
+});
 </script>
 </body>
 </html>

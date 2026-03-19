@@ -1,0 +1,445 @@
+{
+  "synced_at": "2026-03-19T09:57:08Z",
+  "funnel": {
+    "total_orgs": 3057,
+    "onboarding": 356,
+    "active": 107,
+    "paid": 114,
+    "churn_risk_onboarding": 127,
+    "churn_risk_activation": 69,
+    "churned": 2284
+  },
+  "health": {
+    "Onboarding": {
+      "total": 356,
+      "self_serve": 347,
+      "contract": 9
+    },
+    "Active": {
+      "total": 107,
+      "self_serve": 107,
+      "contract": 0
+    },
+    "Paid": {
+      "total": 114,
+      "self_serve": 13,
+      "contract": 101
+    },
+    "Churn Risk - Activation": {
+      "total": 69,
+      "self_serve": 62,
+      "contract": 7
+    },
+    "Churn Risk - Onboarding": {
+      "total": 127,
+      "self_serve": 127,
+      "contract": 0
+    },
+    "Churned": {
+      "total": 2284,
+      "self_serve": 2261,
+      "contract": 23
+    },
+    "Total": {
+      "total": 3057,
+      "self_serve": 2917,
+      "contract": 140
+    }
+  },
+  "countries": [
+    {
+      "country": "US",
+      "orgs": 673,
+      "active": 28,
+      "active_pct": "4%"
+    },
+    {
+      "country": "KR",
+      "orgs": 681,
+      "active": 14,
+      "active_pct": "2%"
+    },
+    {
+      "country": "PK",
+      "orgs": 408,
+      "active": 2,
+      "active_pct": "0%"
+    },
+    {
+      "country": "GB",
+      "orgs": 151,
+      "active": 9,
+      "active_pct": "6%"
+    },
+    {
+      "country": "IN",
+      "orgs": 178,
+      "active": 8,
+      "active_pct": "4%"
+    },
+    {
+      "country": "VN",
+      "orgs": 122,
+      "active": 1,
+      "active_pct": "1%"
+    },
+    {
+      "country": "CN",
+      "orgs": 50,
+      "active": 2,
+      "active_pct": "4%"
+    },
+    {
+      "country": "ID",
+      "orgs": 36,
+      "active": 2,
+      "active_pct": "6%"
+    },
+    {
+      "country": "FR",
+      "orgs": 38,
+      "active": 2,
+      "active_pct": "5%"
+    },
+    {
+      "country": "AE",
+      "orgs": 33,
+      "active": 2,
+      "active_pct": "6%"
+    },
+    {
+      "country": "EG",
+      "orgs": 27,
+      "active": 2,
+      "active_pct": "7%"
+    },
+    {
+      "country": "CA",
+      "orgs": 19,
+      "active": 2,
+      "active_pct": "11%"
+    },
+    {
+      "country": "TR",
+      "orgs": 21,
+      "active": 0,
+      "active_pct": "0%"
+    },
+    {
+      "country": "AD",
+      "orgs": 16,
+      "active": 0,
+      "active_pct": "0%"
+    },
+    {
+      "country": "ES",
+      "orgs": 18,
+      "active": 1,
+      "active_pct": "6%"
+    },
+    {
+      "country": "JP",
+      "orgs": 18,
+      "active": 3,
+      "active_pct": "17%"
+    },
+    {
+      "country": "BR",
+      "orgs": 16,
+      "active": 1,
+      "active_pct": "6%"
+    },
+    {
+      "country": "NG",
+      "orgs": 17,
+      "active": 1,
+      "active_pct": "6%"
+    },
+    {
+      "country": "BD",
+      "orgs": 13,
+      "active": 0,
+      "active_pct": "0%"
+    },
+    {
+      "country": "MY",
+      "orgs": 15,
+      "active": 1,
+      "active_pct": "7%"
+    }
+  ],
+  "weekly_trend": [
+    {
+      "week": "2025-12-29",
+      "total": 49,
+      "onboarding": 2,
+      "churn_risk_onboarding": 0,
+      "active": 0,
+      "churn_risk_activation": 3,
+      "paid": 0,
+      "churned": 44
+    },
+    {
+      "week": "2026-01-05",
+      "total": 66,
+      "onboarding": 2,
+      "churn_risk_onboarding": 0,
+      "active": 5,
+      "churn_risk_activation": 2,
+      "paid": 0,
+      "churned": 57
+    },
+    {
+      "week": "2026-01-12",
+      "total": 85,
+      "onboarding": 9,
+      "churn_risk_onboarding": 1,
+      "active": 4,
+      "churn_risk_activation": 4,
+      "paid": 0,
+      "churned": 67
+    },
+    {
+      "week": "2026-01-19",
+      "total": 118,
+      "onboarding": 8,
+      "churn_risk_onboarding": 1,
+      "active": 6,
+      "churn_risk_activation": 3,
+      "paid": 0,
+      "churned": 100
+    },
+    {
+      "week": "2026-01-26",
+      "total": 82,
+      "onboarding": 7,
+      "churn_risk_onboarding": 0,
+      "active": 9,
+      "churn_risk_activation": 6,
+      "paid": 0,
+      "churned": 60
+    },
+    {
+      "week": "2026-02-02",
+      "total": 125,
+      "onboarding": 12,
+      "churn_risk_onboarding": 10,
+      "active": 6,
+      "churn_risk_activation": 5,
+      "paid": 0,
+      "churned": 92
+    },
+    {
+      "week": "2026-02-09",
+      "total": 125,
+      "onboarding": 16,
+      "churn_risk_onboarding": 3,
+      "active": 3,
+      "churn_risk_activation": 5,
+      "paid": 0,
+      "churned": 98
+    },
+    {
+      "week": "2026-02-16",
+      "total": 90,
+      "onboarding": 11,
+      "churn_risk_onboarding": 5,
+      "active": 3,
+      "churn_risk_activation": 3,
+      "paid": 0,
+      "churned": 68
+    },
+    {
+      "week": "2026-02-23",
+      "total": 112,
+      "onboarding": 34,
+      "churn_risk_onboarding": 12,
+      "active": 6,
+      "churn_risk_activation": 7,
+      "paid": 0,
+      "churned": 53
+    },
+    {
+      "week": "2026-03-02",
+      "total": 129,
+      "onboarding": 40,
+      "churn_risk_onboarding": 52,
+      "active": 8,
+      "churn_risk_activation": 13,
+      "paid": 0,
+      "churned": 16
+    },
+    {
+      "week": "2026-03-09",
+      "total": 160,
+      "onboarding": 129,
+      "churn_risk_onboarding": 21,
+      "active": 7,
+      "churn_risk_activation": 3,
+      "paid": 0,
+      "churned": 0
+    },
+    {
+      "week": "2026-03-16",
+      "total": 36,
+      "onboarding": 36,
+      "churn_risk_onboarding": 0,
+      "active": 0,
+      "churn_risk_activation": 0,
+      "paid": 0,
+      "churned": 0
+    }
+  ],
+  "marketing": {
+    "channels": [
+      {
+        "type": "Organic",
+        "channel": "Blog",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 4000,
+        "as_is_conv": "0.50%",
+        "to_be_conv": "3%",
+        "signup_forecast": 120
+      },
+      {
+        "type": "Organic",
+        "channel": "Newsletter",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 163,
+        "as_is_conv": "0.85%",
+        "to_be_conv": "5%",
+        "signup_forecast": 8
+      },
+      {
+        "type": "Organic",
+        "channel": "LinkedIn",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 794,
+        "as_is_conv": "0.14%",
+        "to_be_conv": "1.5%",
+        "signup_forecast": 12
+      },
+      {
+        "type": "Organic",
+        "channel": "X",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 720,
+        "as_is_conv": "",
+        "to_be_conv": "1.0%",
+        "signup_forecast": 7
+      },
+      {
+        "type": "Organic",
+        "channel": "Facebook",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 0,
+        "as_is_conv": "2.26%",
+        "to_be_conv": "2.5%",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Organic",
+        "channel": "Reddit",
+        "monthly_cost_usd": "0$",
+        "traffic_forecast": 0,
+        "as_is_conv": "",
+        "to_be_conv": "2%",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Organic",
+        "channel": "Main Landing",
+        "monthly_cost_usd": "",
+        "traffic_forecast": 0,
+        "as_is_conv": "",
+        "to_be_conv": "",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Paid Ads",
+        "channel": "Meta (Post Boost)",
+        "monthly_cost_usd": "608",
+        "traffic_forecast": 900,
+        "as_is_conv": "0.02%",
+        "to_be_conv": "0%",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Paid Ads",
+        "channel": "Google",
+        "monthly_cost_usd": "4,865",
+        "traffic_forecast": 360,
+        "as_is_conv": "3.36%",
+        "to_be_conv": "8%",
+        "signup_forecast": 29
+      },
+      {
+        "type": "Paid Ads",
+        "channel": "Reddit",
+        "monthly_cost_usd": "1,014",
+        "traffic_forecast": 500,
+        "as_is_conv": "0.00%",
+        "to_be_conv": "0%",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Paid Ads",
+        "channel": "Linkedin",
+        "monthly_cost_usd": "1,014",
+        "traffic_forecast": 300,
+        "as_is_conv": "0.02%",
+        "to_be_conv": "0%",
+        "signup_forecast": 0
+      },
+      {
+        "type": "Influencer",
+        "channel": "Youtube",
+        "monthly_cost_usd": "4,000",
+        "traffic_forecast": 400,
+        "as_is_conv": "",
+        "to_be_conv": "5%",
+        "signup_forecast": 20
+      },
+      {
+        "type": "Influencer",
+        "channel": "Linkedin",
+        "monthly_cost_usd": "1,000",
+        "traffic_forecast": 100,
+        "as_is_conv": "",
+        "to_be_conv": "10%",
+        "signup_forecast": 10
+      },
+      {
+        "type": "Influencer",
+        "channel": "Newsletter",
+        "monthly_cost_usd": "1,000",
+        "traffic_forecast": 100,
+        "as_is_conv": "5.00%",
+        "to_be_conv": "10%",
+        "signup_forecast": 10
+      },
+      {
+        "type": "Event",
+        "channel": "Offline",
+        "monthly_cost_usd": "",
+        "traffic_forecast": 300,
+        "as_is_conv": "",
+        "to_be_conv": "20%",
+        "signup_forecast": 60
+      }
+    ],
+    "totals": {
+      "monthly_cost_usd": "13,500",
+      "traffic": 8637,
+      "signups": 276
+    },
+    "conversion_goal_monthly": 700
+  },
+  "targets": {
+    "mrr": 35000,
+    "paid_orgs": 80,
+    "monthly_signups": 700,
+    "arppu": 500,
+    "deadline": "2026-09-30"
+  }
+}
