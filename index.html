@@ -230,14 +230,16 @@ function render(d){
     <div class="cd-item"><div class="cd-val">${orgsPerMonth}</div><div class="cd-label">Orgs / Month</div></div>
     <div class="cd-item"><div class="cd-val">+$${fmtK(mrrPerMonth)}</div><div class="cd-label">MRR / Month</div></div>`;
 
-  // === BOTTLENECK ===
+  // === BOTTLENECK (top 2) ===
   const gaps=[{k:'Visit→Signup',r:cv_v2s/BM.v2s,conv:cv_v2s,bm:BM.v2s,dri:DRI.sig},{k:'Signup→SDK',r:cv_s2k/BM.s2k,conv:cv_s2k,bm:BM.s2k,dri:DRI.sdk}];
-  const worst=gaps.reduce((a,b)=>a.r<b.r?a:b);
-  $('bottleneck').innerHTML=`<div class="banner red">
-    <div>⚠️</div>
-    <div><div class="btitle">#1 Bottleneck: ${worst.k} — ${pct(worst.conv,2)} (benchmark ${pct(worst.bm,0)}의 ${(worst.r*100).toFixed(0)}%)</div>
-    <div class="bdesc">DRI: ${worst.dri} · 이 구간 개선이 전체 퍼널에 가장 큰 레버</div></div>
-  </div>`;
+  gaps.sort((a,b)=>a.r-b.r);
+  $('bottleneck').innerHTML=gaps.map((g,i)=>{
+    const sev=g.r<0.4?'red':'ylw';
+    return`<div class="banner ${sev==='red'?'red':''}" style="${sev!=='red'?'background:var(--ylwg);border:1px solid rgba(234,179,8,.2);margin-bottom:8px':'margin-bottom:8px'}">
+      <div>${i===0?'⚠️':'⚡'}</div>
+      <div><div class="btitle">#${i+1} ${g.k}: ${pct(g.conv,2)} (benchmark ${pct(g.bm,0)}의 ${(g.r*100).toFixed(0)}%)</div>
+      <div class="bdesc">DRI: ${g.dri}</div></div>
+    </div>`}).join('');
 
   // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
   const stages=[
@@ -251,30 +253,65 @@ function render(d){
   let worstIdx=-1,worstR=1;
   stages.forEach((s,i)=>{if(s.bm&&s.conv!==null){const r=s.conv/s.bm;if(r<worstR){worstR=r;worstIdx=i}}});
 
+  // DRI border colors
+  const driColors=['#818cf8','#818cf8','#f59e0b','#10b981'];
+
   $('funnel').innerHTML=stages.map((s,i)=>{
-    const gapPct=s.target?Math.min(100,(s.actual/s.target)*100):0;
-    const gapColor=gapPct>=80?'var(--grn)':gapPct>=40?'var(--ylw)':'var(--red)';
-    // Conv badge
+    const rawGapPct=s.target?(s.actual/s.target)*100:0;
+    const gapPct=Math.min(100,rawGapPct);
+
+    // Visitor over-target: volume OK but quality problem → amber, not green
+    const isVisitorOverTarget=i===0&&rawGapPct>100;
+    const isLowQuality=isVisitorOverTarget&&cv_v2s<BM.v2s*0.5;
+    const gapColor=isLowQuality?'var(--ylw)':gapPct>=80?'var(--grn)':gapPct>=40?'var(--ylw)':'var(--red)';
+
+    // Conv badge (SDK gets asterisk for cohort lag)
     let badge='';
-    if(s.conv!==null&&s.bm){const r=s.conv/s.bm;const cls=r>=0.8?'grn':r>=0.4?'ylw':'red';badge=`<div class="f-conv ${cls}">${pct(s.conv,1)}</div>`}
-    // WoW
-    let wow='';
-    if(s.weekly&&s.weekly.length>=2){const last=s.weekly[s.weekly.length-1];const prev=s.weekly[s.weekly.length-2];if(prev>0){const ch=((last-prev)/prev);wow=`<div class="f-wow" style="color:${ch>=0?'var(--grn)':'var(--red)'}"><span>${ch>=0?'↑':'↓'}${Math.abs(ch*100).toFixed(0)}%</span> WoW</div>`}}
+    if(s.conv!==null&&s.bm){
+      const r=s.conv/s.bm;const cls=r>=0.8?'grn':r>=0.4?'ylw':'red';
+      const asterisk=s.label.includes('SDK')?'*':'';
+      badge=`<div class="f-conv ${cls}">${pct(s.conv,1)}${asterisk}</div>`;
+    }
+
+    // WoW inline with actual (stock-ticker style)
+    let wowHtml='';
+    if(s.weekly&&s.weekly.length>=2){
+      const last=s.weekly[s.weekly.length-1];const prev=s.weekly[s.weekly.length-2];
+      if(prev>0){const ch=((last-prev)/prev);wowHtml=` <span style="font-size:12px;font-weight:700;color:${ch>=0?'var(--grn)':'var(--red)'}"> ${ch>=0?'↑':'↓'}${Math.abs(ch*100).toFixed(0)}%</span>`}
+    }
+
     // Sparkline
     let spark='';
     if(s.weekly&&s.weekly.length>0){const mx=Math.max(...s.weekly,1);spark=`<div class="spark">${s.weekly.map(v=>`<div style="height:${Math.max(2,(v/mx)*24)}px;background:${gapColor}"></div>`).join('')}</div>`}
-    const overTarget=gapPct>=100;
-    const gapText=overTarget?'✓ On track':'Gap: '+fmtK(s.target-s.actual);
-    const linkAttr=s.link?` onclick="window.open('${s.link}','_blank')" style="cursor:pointer"`:' ';
+
+    // Gap text
+    let gapText='';
+    if(isLowQuality){gapText='Volume OK · conversion is the problem'}
+    else if(rawGapPct>=100){gapText='✓ On track'}
+    else{gapText='Gap: '+fmtK(s.target-s.actual)}
+
+    // Paid orgs: split view
+    let actualHtml=`<span class="f-actual" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${fmtK(s.actual)}</span>${wowHtml}`;
+    if(s.label.includes('Paid')){
+      actualHtml=`<span class="f-actual" style="color:${gapColor}">${paidSS}</span><span style="font-size:14px;color:var(--tx3)"> / ${paidTotal}</span>${wowHtml}`;
+    }
+
+    // SDK footnote
+    let sdkNote='';
+    if(s.label.includes('SDK')){sdkNote=`<div style="font-size:7px;color:var(--ylw);margin-top:2px">* 동일 기간 — 코호트 매칭 시 다를 수 있음</div>`}
+
+    const linkAttr=s.link?` onclick="window.open('${s.link}','_blank')" style="cursor:pointer;border-left:3px solid ${driColors[i]}"`:` style="border-left:3px solid ${driColors[i]}"`;
+
     return `<div class="fc${i===worstIdx?' worst':''}"${linkAttr} title="Click to drill down">
       ${badge}
       <div class="f-stage">${s.label}</div>
       <div class="f-dri">${s.dri}</div>
-      <div class="f-actual" style="color:${overTarget?'var(--grn)':gapColor}">${fmtK(s.actual)}</div>
-      ${s.extra?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
-      ${wow}
-      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${overTarget?'var(--grn)':gapColor}">${overTarget?'✓ '+gapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
-      <div class="f-gap-track"><div class="f-gap-fill" style="width:${Math.min(100,gapPct)}%;background:${overTarget?'var(--grn)':gapColor}"></div></div>
+      <div>${actualHtml}</div>
+      ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:8px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
+      ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
+      ${sdkNote}
+      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ Volume OK':rawGapPct>=100?'✓ '+rawGapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
+      <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}"></div></div>
       <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
     </div>`}).join('');
@@ -294,8 +331,30 @@ function render(d){
     <div style="font-size:11px">At-Risk: <b style="color:${atRiskColor}">${atRiskRate.toFixed(0)}%</b> <span style="font-size:9px;color:var(--tx3)">of onboarding</span></div>
   </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
 
-  // === WEEKLY ===
-  if(wk.length>0){const mx=Math.max(...wk.map(w=>w.total||0),1);$('weekly').innerHTML=`<div style="display:flex;align-items:flex-end;gap:2px;height:80px">${wk.map(w=>{const ht=Math.max(3,(w.total/mx)*65);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%"><div style="font-size:8px;font-weight:700;margin-bottom:1px">${w.total}</div><div style="width:85%;height:${ht}px;background:var(--acc);border-radius:2px 2px 0 0"></div><div style="font-size:7px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div></div>`}).join('')}</div>`}
+  // === WEEKLY (stacked: healthy vs churned) ===
+  if(wk.length>0){const mx=Math.max(...wk.map(w=>w.total||0),1);$('weekly').innerHTML=`<div style="display:flex;align-items:flex-end;gap:2px;height:90px">${wk.map(w=>{
+    const ht=Math.max(3,(w.total/mx)*70);
+    const healthy=(w.onboarding||0)+(w.active||0)+(w.paid||0);
+    const risk=(w.churn_risk_onboarding||0)+(w.churn_risk_activation||0);
+    const churned=w.churned||0;
+    const hPct=w.total>0?healthy/w.total*100:0;
+    const rPct=w.total>0?risk/w.total*100:0;
+    const cPct=w.total>0?churned/w.total*100:0;
+    const net=healthy+risk;
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
+      <div style="font-size:7px;font-weight:700;margin-bottom:1px">${w.total}<span style="color:var(--grn);font-size:6px"> (${net})</span></div>
+      <div style="width:85%;height:${ht}px;border-radius:2px 2px 0 0;overflow:hidden;display:flex;flex-direction:column">
+        <div style="flex:${cPct};background:var(--red);opacity:.5"></div>
+        <div style="flex:${rPct};background:var(--ylw);opacity:.6"></div>
+        <div style="flex:${hPct};background:var(--grn)"></div>
+      </div>
+      <div style="font-size:6px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div>
+    </div>`}).join('')}</div>
+    <div style="display:flex;gap:8px;margin-top:6px;font-size:8px;color:var(--tx3)">
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:1px"></span> Healthy</span>
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--ylw);border-radius:1px;opacity:.6"></span> At Risk</span>
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--red);border-radius:1px;opacity:.5"></span> Churned</span>
+    </div>`}
 
   // === CAC BY CHANNEL ===
   const allCh=mkt.channels||[];
