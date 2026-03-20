@@ -83,104 +83,65 @@ function buildDashboardData() {
   };
 }
 
-// ========== AMPLITUDE API ==========
+// ========== AMPLITUDE DATA (from Sheet) ==========
+// Amplitude 데이터는 Simulation 탭에서 읽음 (Claude Code가 MCP로 싱크)
 function fetchAmplitudeData() {
-  const props = PropertiesService.getScriptProperties();
-  const apiKey = props.getProperty('AMP_API_KEY');
-  const secretKey = props.getProperty('AMP_SECRET_KEY');
+  try {
+    const ss = SpreadsheetApp.openById(LEAD_SHEET_ID);
+    const sheet = ss.getSheetByName('Simulation');
+    if (!sheet) return { error: 'Simulation tab not found' };
 
-  if (!apiKey || !secretKey) {
-    return { error: 'Amplitude API keys not configured. Set AMP_API_KEY and AMP_SECRET_KEY in Script Properties.' };
-  }
+    const data = sheet.getRange('A1:F7').getValues();
+    const weekly = sheet.getRange('A9:F13').getValues();
 
-  const auth = Utilities.base64Encode(apiKey + ':' + secretKey);
-  const now = new Date();
+    // Parse funnel rows (row 2-6: Visitor, Signup, SDK, Activation, Paid)
+    const results = {};
+    const stageMap = {
+      'Visitor': 'visitor',
+      'Signup': 'signup',
+      'SDK Install': 'sdk_install',
+      'Activation': 'activation',
+      'Paid (Self-Serve)': 'paid_self_serve',
+    };
 
-  // Last 30 days
-  const start30 = formatDate(new Date(now.getTime() - 30 * 86400000));
-  const end30 = formatDate(now);
-
-  // Last 7 days
-  const start7 = formatDate(new Date(now.getTime() - 7 * 86400000));
-  const end7 = formatDate(now);
-
-  // Previous 7 days (for comparison)
-  const start14 = formatDate(new Date(now.getTime() - 14 * 86400000));
-  const end14 = formatDate(new Date(now.getTime() - 7 * 86400000));
-
-  const results = {};
-
-  // Fetch each funnel event count for 30d and 7d
-  for (const fe of FUNNEL_EVENTS) {
-    try {
-      const count30 = queryEventCount(auth, fe.event, start30, end30);
-      const count7 = queryEventCount(auth, fe.event, start7, end7);
-      const countPrev7 = queryEventCount(auth, fe.event, start14, end14);
-      const daily30 = queryEventDaily(auth, fe.event, start30, end30);
-
-      results[fe.stage] = {
-        label: fe.label,
-        event: fe.event,
-        count_30d: count30,
-        count_7d: count7,
-        count_prev_7d: countPrev7,
-        wow_change: countPrev7 > 0 ? ((count7 - countPrev7) / countPrev7) : null,
-        daily: daily30,
+    for (let i = 2; i < data.length; i++) {
+      const row = data[i];
+      const stage = stageMap[row[0]];
+      if (!stage) continue;
+      results[stage] = {
+        label: row[0],
+        event: row[1],
+        count_30d: toInt(row[2]),
+        weekly_avg: toInt(row[3]),
+        conv_rate: row[4] || null,
+        status: row[5] || null,
       };
-    } catch (err) {
-      results[fe.stage] = { label: fe.label, event: fe.event, error: err.message };
     }
-  }
 
-  return results;
+    // Parse weekly breakdown (rows 9-13)
+    if (weekly.length >= 5) {
+      const weeks = weekly[0].slice(1).filter(w => w);
+      results.weeks = weeks.map(String);
+      const weeklyData = {};
+      for (let i = 1; i < weekly.length; i++) {
+        const name = String(weekly[i][0]).toLowerCase().replace(/ /g, '_');
+        weeklyData[name] = weekly[i].slice(1).map(toInt);
+      }
+      // Attach weekly arrays
+      if (results.visitor) results.visitor.weekly = weeklyData.visitors || [];
+      if (results.signup) results.signup.weekly = weeklyData.signups || [];
+      if (results.sdk_install) results.sdk_install.weekly = weeklyData.sdk_install || [];
+      if (results.activation) results.activation.weekly = weeklyData.activation || [];
+    }
+
+    return results;
+  } catch (e) {
+    return { error: 'Failed to read Simulation tab: ' + e.message };
+  }
 }
 
-function queryEventCount(auth, eventType, start, end) {
-  const params = {
-    e: JSON.stringify({ event_type: eventType }),
-    start: start,
-    end: end,
-    m: 'totals',
-  };
-
-  const url = 'https://amplitude.com/api/2/events/segmentation?' + buildQuery(params);
-  const response = UrlFetchApp.fetch(url, {
-    headers: { 'Authorization': 'Basic ' + auth },
-    muteHttpExceptions: true,
-  });
-
-  const json = JSON.parse(response.getContentText());
-  if (json.data && json.data.series) {
-    // Sum all values in the series
-    return json.data.series.reduce((sum, arr) => sum + arr.reduce((a, b) => a + b, 0), 0);
-  }
-  return 0;
-}
-
-function queryEventDaily(auth, eventType, start, end) {
-  const params = {
-    e: JSON.stringify({ event_type: eventType }),
-    start: start,
-    end: end,
-    m: 'totals',
-    i: '1', // daily interval
-  };
-
-  const url = 'https://amplitude.com/api/2/events/segmentation?' + buildQuery(params);
-  const response = UrlFetchApp.fetch(url, {
-    headers: { 'Authorization': 'Basic ' + auth },
-    muteHttpExceptions: true,
-  });
-
-  const json = JSON.parse(response.getContentText());
-  if (json.data && json.data.series && json.data.xValues) {
-    return json.data.xValues.map((date, i) => ({
-      date: date,
-      count: json.data.series[0] ? json.data.series[0][i] || 0 : 0,
-    }));
-  }
-  return [];
-}
+// Amplitude API 함수 제거됨 — Secret Key 없이 운영
+// Amplitude 데이터는 Claude Code MCP → Simulation 탭 → 이 스크립트가 읽음
 
 // ========== GOOGLE SHEETS ==========
 function fetchSheetsData() {
