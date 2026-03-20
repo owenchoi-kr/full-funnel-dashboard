@@ -156,6 +156,13 @@ const API='https://script.google.com/macros/s/AKfycbxrPNjj8t0p-AraZcwQtANMO-jTX1
 const T={mrr:35000,arppu:500,paid:80,vis_mo:11000,sig_mo:700,sdk_6mo:800,deadline:'2026-09-30'};
 const BM={v2s:0.05,s2k:0.15,k2p:0.02};
 const DRI={vis:'슬 · 재혁 · 채건',sig:'채건 (Website)',sdk:'승헌 (Agent)',paid:'Amy · 현탁'};
+// Deep links to Amplitude/Sheets for each funnel card
+const LINKS={
+  vis:'https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt',
+  sig:'https://app.amplitude.com/analytics/ab180/chart/new/82od37ke',
+  sdk:'https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit#gid=0',
+  paid:'https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit#gid=0',
+};
 
 async function init(){
   let d;
@@ -225,10 +232,10 @@ function render(d){
 
   // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
   const stages=[
-    {label:'Visitors',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/mo',dri:DRI.vis,conv:null,bm:null,weekly:wVis},
-    {label:'Signups',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/mo',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig},
-    {label:'SDK Install',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+' (6mo)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk},
-    {label:'Paid (Self-Serve)',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+' orgs',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`},
+    {label:'Visitors',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/mo',dri:DRI.vis,conv:null,bm:null,weekly:wVis,link:LINKS.vis},
+    {label:'Signups',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/mo',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig,link:LINKS.sig},
+    {label:'SDK Install',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+' (6mo)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk},
+    {label:'Paid (Self-Serve)',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+' orgs',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`,link:LINKS.paid},
   ];
 
   // Find worst
@@ -247,15 +254,19 @@ function render(d){
     // Sparkline
     let spark='';
     if(s.weekly&&s.weekly.length>0){const mx=Math.max(...s.weekly,1);spark=`<div class="spark">${s.weekly.map(v=>`<div style="height:${Math.max(2,(v/mx)*24)}px;background:${gapColor}"></div>`).join('')}</div>`}
-    return `<div class="fc${i===worstIdx?' worst':''}">
+    const overTarget=gapPct>=100;
+    const gapText=overTarget?'✓ On track':'Gap: '+fmtK(s.target-s.actual);
+    const linkAttr=s.link?` onclick="window.open('${s.link}','_blank')" style="cursor:pointer"`:' ';
+    return `<div class="fc${i===worstIdx?' worst':''}"${linkAttr} title="Click to drill down">
       ${badge}
       <div class="f-stage">${s.label}</div>
       <div class="f-dri">${s.dri}</div>
-      <div class="f-actual" style="color:${gapColor}">${fmtK(s.actual)}</div>
+      <div class="f-actual" style="color:${overTarget?'var(--grn)':gapColor}">${fmtK(s.actual)}</div>
       ${s.extra?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
       ${wow}
-      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${gapColor}">${gapPct.toFixed(0)}%</span></div>
-      <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${gapColor}"></div></div>
+      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${overTarget?'var(--grn)':gapColor}">${overTarget?'✓ '+gapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
+      <div class="f-gap-track"><div class="f-gap-fill" style="width:${Math.min(100,gapPct)}%;background:${overTarget?'var(--grn)':gapColor}"></div></div>
+      <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
     </div>`}).join('');
 
