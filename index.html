@@ -97,6 +97,14 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 
 .foot{text-align:center;font-size:9px;color:var(--tx3);padding:12px 0;border-top:1px solid var(--bd);margin-top:8px}
 .foot a{color:var(--acc);text-decoration:none}
+/* Slack copy button */
+.slack-btn{background:var(--acc);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;margin:12px auto;display:block}
+.slack-btn:hover{opacity:.9}
+.slack-btn.copied{background:var(--grn)}
+/* Waste callout */
+.waste{margin-top:8px;padding:8px 10px;background:var(--redg);border-radius:6px;font-size:10px;color:var(--red);font-weight:600}
+/* SDK footnote */
+.footnote-badge{font-size:8px;color:var(--ylw);background:var(--ylwg);padding:1px 5px;border-radius:4px;margin-left:4px}
 .loading{text-align:center;padding:80px;color:var(--tx3)}
 .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -122,6 +130,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
       <div class="card"><div class="st">Channel CAC</div><div id="cac"></div></div>
       <div class="card"><div class="st">Top Countries</div><div id="countries"></div></div>
     </div>
+    <button class="slack-btn" onclick="copySlack()">Copy for Slack</button>
     <div class="sliders section">
       <div class="st">Scenario Simulator</div>
       <div style="font-size:9px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정</div>
@@ -278,36 +287,52 @@ function render(d){
     {l:'Paid',v:h.paid||114,c:'#10b981'},
     {l:'Churn Risk',v:(h.churn_risk_onboarding||127)+(h.churn_risk_activation||69),c:'var(--ylw)'},
   ];
-  const survivalRate=h.onboarding>0?((h.onboarding-(h.churn_risk_onboarding||0))/h.onboarding*100):0;
+  const atRiskRate=h.onboarding>0?((h.churn_risk_onboarding||0)/h.onboarding*100):0;
+  const atRiskColor=atRiskRate<=20?'var(--grn)':atRiskRate<=40?'var(--ylw)':'var(--red)';
   $('health').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
     <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">alive orgs (excl. ${fmtK(h.churned||2284)} churned)</span></div>
-    <div style="font-size:11px">Onboarding Survival: <b style="color:${survivalRate>=70?'var(--grn)':'var(--red)'}"> ${survivalRate.toFixed(0)}%</b></div>
+    <div style="font-size:11px">At-Risk: <b style="color:${atRiskColor}">${atRiskRate.toFixed(0)}%</b> <span style="font-size:9px;color:var(--tx3)">of onboarding</span></div>
   </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
 
   // === WEEKLY ===
   if(wk.length>0){const mx=Math.max(...wk.map(w=>w.total||0),1);$('weekly').innerHTML=`<div style="display:flex;align-items:flex-end;gap:2px;height:80px">${wk.map(w=>{const ht=Math.max(3,(w.total/mx)*65);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%"><div style="font-size:8px;font-weight:700;margin-bottom:1px">${w.total}</div><div style="width:85%;height:${ht}px;background:var(--acc);border-radius:2px 2px 0 0"></div><div style="font-size:7px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div></div>`}).join('')}</div>`}
 
-  // === CAC BY CHANNEL (replace raw table) ===
-  const ch=(mkt.channels||[]).filter(c=>c.traffic_forecast>0||c.signup_forecast>0).sort((a,b)=>b.signup_forecast-a.signup_forecast);
-  if(ch.length>0){
-    const maxSig=Math.max(...ch.map(c=>c.signup_forecast),1);
-    $('cac').innerHTML=ch.map(c=>{
+  // === CAC BY CHANNEL ===
+  const allCh=mkt.channels||[];
+  const activeCh=allCh.filter(c=>c.signup_forecast>0).sort((a,b)=>b.signup_forecast-a.signup_forecast);
+  const wasteCh=allCh.filter(c=>{const cost=parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,''))||0;return cost>0&&c.signup_forecast<=0});
+  const wasteTotal=wasteCh.reduce((s,c)=>s+(parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,''))||0),0);
+  if(activeCh.length>0||wasteCh.length>0){
+    const maxSig=Math.max(...activeCh.map(c=>c.signup_forecast),1);
+    let html=activeCh.map(c=>{
       const cost=parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,''))||0;
       const sigs=c.signup_forecast||0;
-      const cac=sigs>0?Math.round(cost/sigs):cost>0?Infinity:0;
+      const cac=sigs>0?Math.round(cost/sigs):0;
       const cacColor=cac===0?'var(--grn)':cac<=50?'var(--grn)':cac<=150?'var(--ylw)':'var(--red)';
-      const cacLabel=cac===Infinity?'∞':cac===0?'Organic':'$'+fmt(cac);
-      const barW=sigs>0?(sigs/maxSig)*100:0;
+      const cacLabel=cac===0?'Organic':'$'+fmt(cac);
+      const barW=(sigs/maxSig)*100;
       return`<div class="cac-row">
         <span class="cac-name">${c.channel}</span>
         <div class="cac-bar-wrap"><div class="cac-bar" style="width:${barW}%;background:var(--acc)"></div></div>
         <span class="cac-val">${sigs} signups</span>
         <span class="cac-badge" style="background:${cacColor}20;color:${cacColor}">CAC ${cacLabel}</span>
       </div>`}).join('');
+    if(wasteTotal>0){
+      html+=`<div class="waste">Zero-Signup Spend: ${wasteCh.map(c=>c.channel+' $'+parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,'')||0)).join(' + ')} = <b>$${fmt(wasteTotal)}/mo wasted</b></div>`;
+    }
+    $('cac').innerHTML=html;
   }
 
-  // === COUNTRIES (top 8) ===
-  if(cc.length>0){const mx=Math.max(...cc.map(c=>c.orgs),1);$('countries').innerHTML=cc.slice(0,8).map(c=>`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/mx)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <span style="color:var(--grn)">${c.active_pct}</span></span></div>`).join('')}
+  // === COUNTRIES (sorted by active_pct) ===
+  if(cc.length>0){
+    const sorted=[...cc].sort((a,b)=>parseFloat(b.active_pct)-parseFloat(a.active_pct));
+    const mx=Math.max(...sorted.map(c=>c.orgs),1);
+    $('countries').innerHTML=sorted.slice(0,8).map(c=>{
+      const apct=parseFloat(c.active_pct)||0;
+      const aColor=apct>=10?'var(--grn)':apct>=5?'var(--ylw)':'var(--tx3)';
+      return`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/mx)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <b style="color:${aColor}">${c.active_pct}</b></span></div>`
+    }).join('');
+  }
 
   // === SIMULATOR (init with CURRENT actuals, not targets) ===
   const curVis=Math.round(vis30);const curSig=cv_v2s*100;const curSdk=cv_s2k*100;const curPaid=cv_k2p>0?cv_k2p*100:5;
@@ -330,6 +355,33 @@ function sim(){
   $('sim-mrr').textContent='$'+fmt(mr);$('sim-mrr').style.color=mr>=35000?'var(--grn)':'var(--ylw)';
   $('sim-pct').textContent=vs.toFixed(0)+'%';$('sim-pct').style.color=vs>=100?'var(--grn)':'var(--ylw)';
 }
+// Slack copy
+function copySlack(){
+  const el=$('funnel');if(!el)return;
+  const cards=el.querySelectorAll('.fc');
+  const lines=['*Core Plan Funnel Update* ('+new Date().toLocaleDateString('ko-KR')+')',''];
+  const cdEl=$('countdown');
+  if(cdEl){
+    const vals=cdEl.querySelectorAll('.cd-val');
+    if(vals.length>=4)lines.push(`D-${vals[0].textContent} | Paid Orgs: ${vals[1].textContent} needed | ${vals[2].textContent}/mo required`,'');
+  }
+  cards.forEach(c=>{
+    const stage=c.querySelector('.f-stage')?.textContent||'';
+    const actual=c.querySelector('.f-actual')?.textContent||'';
+    const pctEl=c.querySelector('.f-gap-pct');
+    const pctTxt=pctEl?pctEl.textContent:'';
+    const conv=c.querySelector('.f-conv')?.textContent||'';
+    const emoji=pctTxt.includes('✓')?'✅':parseInt(pctTxt)>=40?'🟡':'🔴';
+    lines.push(`${emoji} ${stage}: *${actual}* (${pctTxt} of target)${conv?' · conv '+conv:''}`);
+  });
+  lines.push('','Dashboard: https://owenchoi-kr.github.io/full-funnel-dashboard/');
+  navigator.clipboard.writeText(lines.join('\n')).then(()=>{
+    const btn=document.querySelector('.slack-btn');
+    btn.textContent='Copied!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Copy for Slack';btn.classList.remove('copied')},2000);
+  });
+}
+
 init();
 </script>
 </body>
