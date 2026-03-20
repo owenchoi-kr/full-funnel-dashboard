@@ -113,39 +113,39 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 <body>
 <div class="wrap">
   <div class="hdr">
-    <div><h1><b>Core Plan</b> Full Funnel</h1><div class="sub">Scalable Product Squad</div></div>
+    <div><h1><b>Core Plan</b> 전체 퍼널</h1><div class="sub">Scalable Product Squad</div></div>
     <div class="hdr-r"><div id="sync-ts"></div></div>
   </div>
-  <div id="loading" class="loading"><div class="spinner"></div><p style="margin-top:10px;font-size:11px">Loading...</p></div>
+  <div id="loading" class="loading"><div class="spinner"></div><p style="margin-top:10px;font-size:11px">데이터 불러오는 중...</p></div>
   <div id="app" style="display:none">
     <div class="hero-row" id="heroes"></div>
     <div class="countdown" id="countdown"></div>
     <div id="bottleneck"></div>
     <div class="funnel-row" id="funnel"></div>
     <div class="g2">
-      <div class="card"><div class="st">Org Health</div><div id="health"></div></div>
-      <div class="card"><div class="st">Weekly New Orgs</div><div id="weekly"></div></div>
+      <div class="card"><div class="st">조직 건강 현황</div><div id="health"></div></div>
+      <div class="card"><div class="st">주간 신규 조직</div><div id="weekly"></div></div>
     </div>
     <div class="g2">
-      <div class="card"><div class="st">Channel CAC</div><div id="cac"></div></div>
-      <div class="card"><div class="st">Top Countries</div><div id="countries"></div></div>
+      <div class="card"><div class="st">채널별 CAC</div><div id="cac"></div></div>
+      <div class="card"><div class="st">활성률 기준 국가</div><div id="countries"></div></div>
     </div>
-    <button class="slack-btn" onclick="copySlack()">Copy for Slack</button>
+    <button class="slack-btn" onclick="copySlack()">Slack에 복사</button>
     <div class="sliders section">
-      <div class="st">Scenario Simulator</div>
-      <div style="font-size:9px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정</div>
+      <div class="st">시나리오 시뮬레이터</div>
+      <div style="font-size:9px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정하세요</div>
       <div class="sl-grid">
-        <div><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="xv1"></span></div><input type="range" id="xr1" min="3000" max="50000" step="500"></div>
-        <div><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="xv2"></span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1"></div>
-        <div><div class="sl-top"><span class="sl-n">Signup → SDK</span><span class="sl-v" id="xv3"></span></div><input type="range" id="xr3" min="1" max="50" step="1"></div>
-        <div><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="xv4"></span></div><input type="range" id="xr4" min="1" max="20" step="0.5"></div>
-        <div><div class="sl-top"><span class="sl-n">ARPPU $/mo</span><span class="sl-v" id="xv5"></span></div><input type="range" id="xr5" min="100" max="1500" step="50"></div>
-        <div><div class="sl-top"><span class="sl-n">Months Left</span><span class="sl-v" id="xv6"></span></div><input type="range" id="xr6" min="1" max="9" step="1"></div>
+        <div><div class="sl-top"><span class="sl-n">월간 방문자</span><span class="sl-v" id="xv1"></span></div><input type="range" id="xr1" min="3000" max="50000" step="500"></div>
+        <div><div class="sl-top"><span class="sl-n">방문 → 가입</span><span class="sl-v" id="xv2"></span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1"></div>
+        <div><div class="sl-top"><span class="sl-n">가입 → SDK 설치</span><span class="sl-v" id="xv3"></span></div><input type="range" id="xr3" min="1" max="50" step="1"></div>
+        <div><div class="sl-top"><span class="sl-n">SDK → 유료 전환</span><span class="sl-v" id="xv4"></span></div><input type="range" id="xr4" min="1" max="20" step="0.5"></div>
+        <div><div class="sl-top"><span class="sl-n">ARPPU (월)</span><span class="sl-v" id="xv5"></span></div><input type="range" id="xr5" min="100" max="1500" step="50"></div>
+        <div><div class="sl-top"><span class="sl-n">남은 개월 수</span><span class="sl-v" id="xv6"></span></div><input type="range" id="xr6" min="1" max="9" step="1"></div>
       </div>
       <div class="sim-out">
-        <div><div class="so-label">Paid Orgs</div><div class="so-val" id="sim-orgs">0</div></div>
-        <div><div class="so-label">MRR</div><div class="so-val" id="sim-mrr" style="color:var(--grn)">$0</div></div>
-        <div><div class="so-label">vs Target</div><div class="so-val" id="sim-pct">0%</div></div>
+        <div><div class="so-label">유료 조직 수</div><div class="so-val" id="sim-orgs">0</div></div>
+        <div><div class="so-label">예상 MRR</div><div class="so-val" id="sim-mrr" style="color:var(--grn)">$0</div></div>
+        <div><div class="so-label">목표 대비</div><div class="so-val" id="sim-pct">0%</div></div>
       </div>
     </div>
   </div>
@@ -177,7 +177,7 @@ async function init(){
   let d;
   try{d=await(await fetch(API)).json()}catch(e){try{d=await(await fetch('data.json')).json()}catch(e2){$('loading').innerHTML='<p style="color:var(--red)">Load failed</p>';return}}
   $('loading').style.display='none';$('app').style.display='block';
-  $('sync-ts').textContent='Live · '+(d.synced_at||'').slice(0,16).replace('T',' ');
+  $('sync-ts').textContent='실시간 · '+(d.synced_at||'').slice(0,16).replace('T',' ');
   render(d);
 }
 
@@ -206,15 +206,15 @@ function render(d){
   const mrrColor=mrrPct>=60?'var(--grn)':mrrPct>=30?'var(--ylw)':'var(--red)';
   $('heroes').innerHTML=`
     <div class="hero-card">
-      <div class="hero-label">Active Orgs (Leading)</div>
+      <div class="hero-label">활성 조직 (선행지표)</div>
       <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}</div>
-      <div class="hero-sub">of <b>${fmt(totalOrgs)}</b> total · ${(activeOrgs/totalOrgs*100).toFixed(1)}% active rate</div>
+      <div class="hero-sub">전체 <b>${fmt(totalOrgs)}</b>개 중 · 활성률 ${(activeOrgs/totalOrgs*100).toFixed(1)}%</div>
       <div class="hero-bar"><div class="hero-fill" style="width:${(activeOrgs/totalOrgs*100)}%;background:var(--acc)"></div></div>
     </div>
     <div class="hero-card">
-      <div class="hero-label">MRR (Lagging)</div>
+      <div class="hero-label">MRR (후행지표)</div>
       <div class="hero-val" style="color:${mrrColor}">$${fmt(mrr)}</div>
-      <div class="hero-sub">of <b>$${fmt(T.mrr)}</b> target · <b>$${fmt(T.mrr-mrr)}</b> to go</div>
+      <div class="hero-sub">목표 <b>$${fmt(T.mrr)}</b> · 남은 금액 <b>$${fmt(T.mrr-mrr)}</b></div>
       <div class="hero-bar"><div class="hero-fill" style="width:${mrrPct}%;background:${mrrColor}"></div></div>
       <div class="hero-bar-label"><span>$0</span><span>${mrrPct.toFixed(0)}%</span><span>$35K</span></div>
     </div>`;
@@ -225,10 +225,10 @@ function render(d){
   const orgsNeeded=T.paid-paidSS;const orgsPerMonth=Math.ceil(orgsNeeded/monthsLeft);
   const mrrPerMonth=Math.ceil((T.mrr-mrr)/monthsLeft);
   $('countdown').innerHTML=`
-    <div class="cd-item"><div class="cd-val">${daysLeft}</div><div class="cd-label">Days Left</div></div>
-    <div class="cd-item"><div class="cd-val" style="color:var(--red)">+${orgsNeeded}</div><div class="cd-label">Paid Orgs Needed</div></div>
-    <div class="cd-item"><div class="cd-val">${orgsPerMonth}</div><div class="cd-label">Orgs / Month</div></div>
-    <div class="cd-item"><div class="cd-val">+$${fmtK(mrrPerMonth)}</div><div class="cd-label">MRR / Month</div></div>`;
+    <div class="cd-item"><div class="cd-val">${daysLeft}</div><div class="cd-label">남은 일수</div></div>
+    <div class="cd-item"><div class="cd-val" style="color:var(--red)">+${orgsNeeded}</div><div class="cd-label">필요 유료 조직</div></div>
+    <div class="cd-item"><div class="cd-val">${orgsPerMonth}</div><div class="cd-label">월간 확보 목표</div></div>
+    <div class="cd-item"><div class="cd-val">+$${fmtK(mrrPerMonth)}</div><div class="cd-label">월간 MRR 증가</div></div>`;
 
   // === BOTTLENECK (top 2) ===
   const gaps=[{k:'Visit→Signup',r:cv_v2s/BM.v2s,conv:cv_v2s,bm:BM.v2s,dri:DRI.sig},{k:'Signup→SDK',r:cv_s2k/BM.s2k,conv:cv_s2k,bm:BM.s2k,dri:DRI.sdk}];
@@ -237,16 +237,16 @@ function render(d){
     const sev=g.r<0.4?'red':'ylw';
     return`<div class="banner ${sev==='red'?'red':''}" style="${sev!=='red'?'background:var(--ylwg);border:1px solid rgba(234,179,8,.2);margin-bottom:8px':'margin-bottom:8px'}">
       <div>${i===0?'⚠️':'⚡'}</div>
-      <div><div class="btitle">#${i+1} ${g.k}: ${pct(g.conv,2)} (benchmark ${pct(g.bm,0)}의 ${(g.r*100).toFixed(0)}%)</div>
-      <div class="bdesc">DRI: ${g.dri}</div></div>
+      <div><div class="btitle">#${i+1} 병목: ${g.k} — ${pct(g.conv,2)} (벤치마크 ${pct(g.bm,0)}의 ${(g.r*100).toFixed(0)}%)</div>
+      <div class="bdesc">담당: ${g.dri}</div></div>
     </div>`}).join('');
 
   // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
   const stages=[
-    {label:'Visitors',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/mo',dri:DRI.vis,conv:null,bm:null,weekly:wVis,link:LINKS.vis},
-    {label:'Signups',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/mo',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig,link:LINKS.sig},
-    {label:'SDK Install',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+' (6mo)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk},
-    {label:'Paid (Self-Serve)',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+' orgs',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`,link:LINKS.paid},
+    {label:'방문자',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/월',dri:DRI.vis,conv:null,bm:null,weekly:wVis,link:LINKS.vis},
+    {label:'가입',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/월',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig,link:LINKS.sig},
+    {label:'SDK 설치',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+'개 (6개월)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk},
+    {label:'유료 전환',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+'개',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`,link:LINKS.paid},
   ];
 
   // Find worst
@@ -286,9 +286,9 @@ function render(d){
 
     // Gap text
     let gapText='';
-    if(isLowQuality){gapText='Volume OK · conversion is the problem'}
-    else if(rawGapPct>=100){gapText='✓ On track'}
-    else{gapText='Gap: '+fmtK(s.target-s.actual)}
+    if(isLowQuality){gapText='트래픽 충분 · 전환율이 문제'}
+    else if(rawGapPct>=100){gapText='✓ 목표 달성'}
+    else{gapText='부족: '+fmtK(s.target-s.actual)}
 
     // Paid orgs: split view
     let actualHtml=`<span class="f-actual" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${fmtK(s.actual)}</span>${wowHtml}`;
@@ -298,11 +298,11 @@ function render(d){
 
     // SDK footnote
     let sdkNote='';
-    if(s.label.includes('SDK')){sdkNote=`<div style="font-size:7px;color:var(--ylw);margin-top:2px">* 동일 기간 — 코호트 매칭 시 다를 수 있음</div>`}
+    if(s.label.includes('SDK')){sdkNote=`<div style="font-size:7px;color:var(--ylw);margin-top:2px">* 동일 기간 기준 — 코호트별 추적 시 다를 수 있음</div>`}
 
     const linkAttr=s.link?` onclick="window.open('${s.link}','_blank')" style="cursor:pointer;border-left:3px solid ${driColors[i]}"`:` style="border-left:3px solid ${driColors[i]}"`;
 
-    return `<div class="fc${i===worstIdx?' worst':''}"${linkAttr} title="Click to drill down">
+    return `<div class="fc${i===worstIdx?' worst':''}"${linkAttr} title="클릭하면 상세 데이터로 이동">
       ${badge}
       <div class="f-stage">${s.label}</div>
       <div class="f-dri">${s.dri}</div>
@@ -310,7 +310,7 @@ function render(d){
       ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:8px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
       ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
       ${sdkNote}
-      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ Volume OK':rawGapPct>=100?'✓ '+rawGapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
+      <div class="f-target"><span>목표: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ 트래픽 충분':rawGapPct>=100?'✓ '+rawGapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
       <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}"></div></div>
       <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
@@ -319,16 +319,16 @@ function render(d){
   // === ORG HEALTH (without churned dominating) ===
   const alive=totalOrgs-(h.churned||2284);
   const items=[
-    {l:'Onboarding',v:h.onboarding||356,c:'var(--acc)'},
-    {l:'Active',v:h.active||107,c:'var(--grn)'},
-    {l:'Paid',v:h.paid||114,c:'#10b981'},
-    {l:'Churn Risk',v:(h.churn_risk_onboarding||127)+(h.churn_risk_activation||69),c:'var(--ylw)'},
+    {l:'온보딩',v:h.onboarding||356,c:'var(--acc)'},
+    {l:'활성',v:h.active||107,c:'var(--grn)'},
+    {l:'유료',v:h.paid||114,c:'#10b981'},
+    {l:'이탈 위험',v:(h.churn_risk_onboarding||127)+(h.churn_risk_activation||69),c:'var(--ylw)'},
   ];
   const atRiskRate=h.onboarding>0?((h.churn_risk_onboarding||0)/h.onboarding*100):0;
   const atRiskColor=atRiskRate<=20?'var(--grn)':atRiskRate<=40?'var(--ylw)':'var(--red)';
   $('health').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-    <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">alive orgs (excl. ${fmtK(h.churned||2284)} churned)</span></div>
-    <div style="font-size:11px">At-Risk: <b style="color:${atRiskColor}">${atRiskRate.toFixed(0)}%</b> <span style="font-size:9px;color:var(--tx3)">of onboarding</span></div>
+    <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">활성 조직 (이탈 ${fmtK(h.churned||2284)}개 제외)</span></div>
+    <div style="font-size:11px">이탈 위험: <b style="color:${atRiskColor}">${atRiskRate.toFixed(0)}%</b> <span style="font-size:9px;color:var(--tx3)">온보딩 중</span></div>
   </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
 
   // === WEEKLY (stacked: healthy vs churned) ===
@@ -351,9 +351,9 @@ function render(d){
       <div style="font-size:6px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div>
     </div>`}).join('')}</div>
     <div style="display:flex;gap:8px;margin-top:6px;font-size:8px;color:var(--tx3)">
-      <span><span style="display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:1px"></span> Healthy</span>
-      <span><span style="display:inline-block;width:6px;height:6px;background:var(--ylw);border-radius:1px;opacity:.6"></span> At Risk</span>
-      <span><span style="display:inline-block;width:6px;height:6px;background:var(--red);border-radius:1px;opacity:.5"></span> Churned</span>
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:1px"></span> 건강</span>
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--ylw);border-radius:1px;opacity:.6"></span> 위험</span>
+      <span><span style="display:inline-block;width:6px;height:6px;background:var(--red);border-radius:1px;opacity:.5"></span> 이탈</span>
     </div>`}
 
   // === CAC BY CHANNEL ===
@@ -377,7 +377,7 @@ function render(d){
         <span class="cac-badge" style="background:${cacColor}20;color:${cacColor}">CAC ${cacLabel}</span>
       </div>`}).join('');
     if(wasteTotal>0){
-      html+=`<div class="waste">Zero-Signup Spend: ${wasteCh.map(c=>c.channel+' $'+parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,'')||0)).join(' + ')} = <b>$${fmt(wasteTotal)}/mo wasted</b></div>`;
+      html+=`<div class="waste">가입 0건 지출: ${wasteCh.map(c=>c.channel+' $'+parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,'')||0)).join(' + ')} = <b>월 $${fmt(wasteTotal)} 낭비</b></div>`;
     }
     $('cac').innerHTML=html;
   }
@@ -418,11 +418,11 @@ function sim(){
 function copySlack(){
   const el=$('funnel');if(!el)return;
   const cards=el.querySelectorAll('.fc');
-  const lines=['*Core Plan Funnel Update* ('+new Date().toLocaleDateString('ko-KR')+')',''];
+  const lines=['*Core Plan 퍼널 현황* ('+new Date().toLocaleDateString('ko-KR')+')',''];
   const cdEl=$('countdown');
   if(cdEl){
     const vals=cdEl.querySelectorAll('.cd-val');
-    if(vals.length>=4)lines.push(`D-${vals[0].textContent} | Paid Orgs: ${vals[1].textContent} needed | ${vals[2].textContent}/mo required`,'');
+    if(vals.length>=4)lines.push(`D-${vals[0].textContent} | 유료 조직: ${vals[1].textContent}개 필요 | 월 ${vals[2].textContent}개 확보 목표`,'');
   }
   cards.forEach(c=>{
     const stage=c.querySelector('.f-stage')?.textContent||'';
@@ -431,13 +431,13 @@ function copySlack(){
     const pctTxt=pctEl?pctEl.textContent:'';
     const conv=c.querySelector('.f-conv')?.textContent||'';
     const emoji=pctTxt.includes('✓')?'✅':parseInt(pctTxt)>=40?'🟡':'🔴';
-    lines.push(`${emoji} ${stage}: *${actual}* (${pctTxt} of target)${conv?' · conv '+conv:''}`);
+    lines.push(`${emoji} ${stage}: *${actual}* (목표 대비 ${pctTxt})${conv?' · 전환율 '+conv:''}`);
   });
-  lines.push('','Dashboard: https://owenchoi-kr.github.io/full-funnel-dashboard/');
+  lines.push('','대시보드: https://owenchoi-kr.github.io/full-funnel-dashboard/');
   navigator.clipboard.writeText(lines.join('\n')).then(()=>{
     const btn=document.querySelector('.slack-btn');
-    btn.textContent='Copied!';btn.classList.add('copied');
-    setTimeout(()=>{btn.textContent='Copy for Slack';btn.classList.remove('copied')},2000);
+    btn.textContent='복사 완료!';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='Slack에 복사';btn.classList.remove('copied')},2000);
   });
 }
 
