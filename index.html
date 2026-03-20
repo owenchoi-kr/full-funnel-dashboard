@@ -159,7 +159,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
 const $=id=>document.getElementById(id);
 const fmt=n=>n==null?'—':typeof n==='number'?n.toLocaleString('en-US'):String(n);
 const fmtK=n=>n>=10000?(n/1000).toFixed(0)+'K':n>=1000?(n/1000).toFixed(1)+'K':fmt(n);
-const pct=(n,d=1)=>n==null?'—':(n*100).toFixed(d)+'%';
+const pct=(n,d=2)=>n==null?'—':(n*100).toFixed(d)+'%';
 
 const API='https://script.google.com/macros/s/AKfycbxrPNjj8t0p-AraZcwQtANMO-jTX1yOBPEUlLwVcOeC74Y3ZRQt6kG_1arsMkREbz8B/exec';
 const T={mrr:35000,arppu:500,paid:80,vis_mo:11000,sig_mo:700,sdk_6mo:800,deadline:'2026-09-30'};
