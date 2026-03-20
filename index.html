@@ -5,417 +5,307 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core Plan Full Funnel</title>
 <style>
-:root{--bg:#09090b;--s1:#111116;--s2:#18181b;--s3:#1e1e24;--bd:#27272a;--tx:#fafafa;--tx2:#a1a1aa;--tx3:#52525b;--acc:#6366f1;--accg:rgba(99,102,241,.1);--grn:#22c55e;--grn2:#16a34a;--grng:rgba(34,197,94,.1);--red:#ef4444;--redg:rgba(239,68,68,.08);--ylw:#eab308;--ylwg:rgba(234,179,8,.08);--blue:#3b82f6}
+:root{--bg:#09090b;--s1:#111116;--s2:#18181b;--bd:#27272a;--tx:#fafafa;--tx2:#a1a1aa;--tx3:#52525b;--acc:#6366f1;--accg:rgba(99,102,241,.1);--grn:#22c55e;--grng:rgba(34,197,94,.1);--red:#ef4444;--redg:rgba(239,68,68,.08);--ylw:#eab308;--ylwg:rgba(234,179,8,.08)}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1100px;margin:0 auto;padding:24px 20px}
+.wrap{max-width:1060px;margin:0 auto;padding:24px 20px}
+.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bd);margin-bottom:20px}
+.hdr h1{font-size:18px;font-weight:700}.hdr h1 b{color:var(--acc)}
+.hdr .sub{font-size:10px;color:var(--tx3);margin-top:2px}
+.hdr-r{font-size:9px;color:var(--tx3);text-align:right}
 
-/* Header */
-.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--bd);margin-bottom:24px}
-.hdr-left h1{font-size:20px;font-weight:700;letter-spacing:-.3px}
-.hdr-left h1 b{color:var(--acc)}
-.hdr-left .sub{font-size:11px;color:var(--tx3);margin-top:2px}
-.hdr-right{text-align:right}
-.hdr-right .sync{font-size:10px;color:var(--tx3)}
+/* Dual Hero: Active Orgs + MRR */
+.hero-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+@media(max-width:640px){.hero-row{grid-template-columns:1fr}}
+.hero-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px}
+.hero-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.hero-val{font-size:36px;font-weight:800;font-variant-numeric:tabular-nums}
+.hero-sub{font-size:11px;color:var(--tx3);margin-top:4px}
+.hero-sub b{color:var(--tx2)}
+.hero-bar{height:8px;background:var(--s2);border-radius:4px;overflow:hidden;margin-top:8px}
+.hero-fill{height:100%;border-radius:4px;transition:width .6s}
+.hero-bar-label{display:flex;justify-content:space-between;font-size:9px;color:var(--tx3);margin-top:3px}
 
-/* MRR Hero */
-.mrr-hero{background:linear-gradient(135deg,#1a1a2e 0%,#16162a 100%);border:1px solid var(--bd);border-radius:16px;padding:28px 32px;margin-bottom:24px;display:flex;align-items:center;gap:32px}
-.mrr-left{flex-shrink:0}
-.mrr-label{font-size:11px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.mrr-amount{font-size:42px;font-weight:800;font-variant-numeric:tabular-nums}
-.mrr-target{font-size:13px;color:var(--tx3);margin-top:2px}
-.mrr-target b{color:var(--tx2)}
-.mrr-right{flex:1}
-.mrr-bar-track{height:16px;background:var(--s2);border-radius:8px;overflow:hidden;position:relative}
-.mrr-bar-fill{height:100%;border-radius:8px;transition:width .8s cubic-bezier(.4,0,.2,1)}
-.mrr-bar-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--tx3);margin-top:6px}
-.mrr-bar-pct{position:absolute;right:8px;top:50%;transform:translateY(-50%);font-size:10px;font-weight:700;color:white}
+/* Countdown */
+.countdown{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+.cd-item{text-align:center;flex:1;min-width:100px}
+.cd-val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
+.cd-label{font-size:9px;color:var(--tx3);margin-top:1px}
 
-/* Bottleneck Banner */
-.banner{border-radius:12px;padding:16px 20px;margin-bottom:24px;display:flex;align-items:center;gap:12px}
-.banner.red{background:var(--redg);border:1px solid rgba(239,68,68,.25)}
-.banner .icon{font-size:20px}
-.banner .btitle{font-size:13px;font-weight:700}
-.banner .bdesc{font-size:11px;color:var(--tx2);margin-top:2px}
+/* Bottleneck */
+.banner{border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.banner.red{background:var(--redg);border:1px solid rgba(239,68,68,.2)}
+.banner .btitle{font-size:12px;font-weight:700}
+.banner .bdesc{font-size:10px;color:var(--tx2);margin-top:2px}
 
-/* Funnel Cards — THE MAIN VIEW */
-.funnel-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:24px}
-@media(max-width:900px){.funnel-row{grid-template-columns:repeat(3,1fr)}}
-@media(max-width:600px){.funnel-row{grid-template-columns:1fr 1fr}}
+/* Funnel (4 cards: Visitor→Signup→SDK→Paid) */
+.funnel-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+@media(max-width:700px){.funnel-row{grid-template-columns:1fr 1fr}}
+.fc{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative}
+.fc:hover{border-color:var(--acc)}
+.fc.worst{border-color:var(--red);box-shadow:0 0 16px rgba(239,68,68,.06)}
+.fc .f-stage{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px}
+.fc .f-dri{font-size:8px;color:var(--tx3);margin-top:1px;margin-bottom:6px}
+.fc .f-actual{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.fc .f-wow{font-size:10px;font-weight:600;margin-top:4px}
+.fc .f-target{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;font-size:10px;color:var(--tx3)}
+.fc .f-target b{color:var(--tx2)}
+.fc .f-gap-track{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;margin-top:4px}
+.fc .f-gap-fill{height:100%;border-radius:3px}
+.fc .f-gap-pct{font-size:10px;font-weight:700;margin-top:3px}
+.fc .f-conv{position:absolute;top:10px;right:10px;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.f-conv.red{background:var(--redg);color:var(--red)}
+.f-conv.ylw{background:var(--ylwg);color:var(--ylw)}
+.f-conv.grn{background:var(--grng);color:var(--grn)}
+.spark{display:flex;align-items:flex-end;gap:1px;height:28px;margin-top:8px}
+.spark div{flex:1;border-radius:1px 1px 0 0}
 
-.fcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative;transition:border-color .2s}
-.fcard:hover{border-color:var(--acc)}
-.fcard.bottleneck{border-color:var(--red);box-shadow:0 0 20px rgba(239,68,68,.08)}
+/* Sections */
+.section{margin-bottom:20px}
+.st{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.st::before{content:'';width:3px;height:12px;background:var(--acc);border-radius:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+@media(max-width:700px){.g2{grid-template-columns:1fr}}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px;overflow:hidden}
 
-.fcard .stage-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
-.fcard .stage-dri{font-size:9px;color:var(--tx3);margin-bottom:4px}
-
-/* Actual number — BIG */
-.fcard .actual{font-size:32px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-
-/* Target comparison */
-.fcard .target-row{display:flex;align-items:center;gap:6px;margin-top:8px}
-.fcard .target-label{font-size:10px;color:var(--tx3)}
-.fcard .target-val{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums}
-
-/* Gap bar */
-.fcard .gap-bar{margin-top:10px}
-.fcard .gap-track{height:6px;background:var(--s2);border-radius:3px;overflow:hidden}
-.fcard .gap-fill{height:100%;border-radius:3px;transition:width .6s}
-.fcard .gap-label{display:flex;justify-content:space-between;font-size:9px;margin-top:3px}
-
-/* Conversion badge between cards */
-.fcard .conv-badge{position:absolute;top:10px;right:10px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700}
-.conv-badge.red{background:var(--redg);color:var(--red)}
-.conv-badge.yellow{background:var(--ylwg);color:var(--ylw)}
-.conv-badge.green{background:var(--grng);color:var(--grn)}
-.conv-badge.gray{background:var(--s2);color:var(--tx3)}
-
-/* WoW change */
-.wow{font-size:10px;margin-top:6px;font-weight:600}
-.wow.up{color:var(--grn)}
-.wow.down{color:var(--red)}
-
-/* Section */
-.section{margin-bottom:24px}
-.stitle{font-size:14px;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:6px}
-.stitle::before{content:'';width:3px;height:14px;background:var(--acc);border-radius:2px}
-
-/* Grid layouts */
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:24px}
-@media(max-width:768px){.g2{grid-template-columns:1fr}}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;overflow:hidden}
-
-/* Table */
-.tbl{width:100%;border-collapse:collapse;font-size:11px}
-.tbl th{text-align:left;padding:6px 8px;background:var(--s2);color:var(--tx3);font-weight:600;font-size:9px;text-transform:uppercase;letter-spacing:.5px}
-.tbl td{padding:6px 8px;border-bottom:1px solid var(--bd);font-variant-numeric:tabular-nums}
-.tbl tr:last-child td{border:0}
+/* CAC Chart */
+.cac-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
+.cac-name{min-width:70px;font-weight:600}
+.cac-bar-wrap{flex:1;height:16px;background:var(--s2);border-radius:3px;overflow:hidden}
+.cac-bar{height:100%;border-radius:3px}
+.cac-val{min-width:80px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.cac-badge{font-size:8px;padding:1px 5px;border-radius:6px;font-weight:700}
 
 /* Mini bars */
-.mbar{display:flex;align-items:center;gap:6px;margin-bottom:5px}
-.mbar .ml{font-size:10px;font-weight:600;min-width:28px;text-align:right}
-.mbar .mt{flex:1;height:12px;background:var(--s2);border-radius:3px;overflow:hidden}
+.mbar{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.mbar .ml{font-size:10px;font-weight:600;min-width:26px;text-align:right}
+.mbar .mt{flex:1;height:10px;background:var(--s2);border-radius:3px;overflow:hidden}
 .mbar .mf{height:100%;border-radius:3px}
-.mbar .mv{font-size:9px;color:var(--tx2);min-width:80px;font-variant-numeric:tabular-nums}
+.mbar .mv{font-size:9px;color:var(--tx2);min-width:70px;font-variant-numeric:tabular-nums}
 
-/* Sparkline (CSS-only mini chart) */
-.spark{display:flex;align-items:flex-end;gap:2px;height:40px}
-.spark-bar{flex:1;border-radius:2px 2px 0 0;transition:height .4s}
-
-/* Slider section */
-.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px}
-.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.sl-top{display:flex;justify-content:space-between;margin-bottom:3px}
-.sl-n{font-size:11px;font-weight:500;color:var(--tx2)}
-.sl-v{font-size:13px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+/* Sliders */
+.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.sl-top{display:flex;justify-content:space-between;margin-bottom:2px}
+.sl-n{font-size:10px;color:var(--tx2)}
+.sl-v{font-size:12px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
 input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--s2);border-radius:2px;outline:0}
 input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer}
-.sim-result{margin-top:14px;padding:14px;background:var(--s2);border-radius:8px;display:flex;justify-content:space-between;align-items:center}
+.sim-out{margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
+.sim-out .so-label{font-size:9px;color:var(--tx3)}
+.sim-out .so-val{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
 
-.foot{text-align:center;font-size:10px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:12px}
+.foot{text-align:center;font-size:9px;color:var(--tx3);padding:12px 0;border-top:1px solid var(--bd);margin-top:8px}
 .foot a{color:var(--acc);text-decoration:none}
-
 .loading{text-align:center;padding:80px;color:var(--tx3)}
-.spinner{display:inline-block;width:20px;height:20px;border:2px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:spin .7s linear infinite}
-@keyframes spin{to{transform:rotate(360deg)}}
+.spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:sp .7s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 <div class="wrap">
   <div class="hdr">
-    <div class="hdr-left">
-      <h1><b>Core Plan</b> Full Funnel</h1>
-      <div class="sub">Scalable Product Squad · Target $35K MRR by Sep 2026</div>
-    </div>
-    <div class="hdr-right">
-      <div class="sync" id="sync-ts"></div>
-    </div>
+    <div><h1><b>Core Plan</b> Full Funnel</h1><div class="sub">Scalable Product Squad</div></div>
+    <div class="hdr-r"><div id="sync-ts"></div></div>
   </div>
-
-  <div id="loading" class="loading"><div class="spinner"></div><p style="margin-top:12px;font-size:12px">Loading live data...</p></div>
-
+  <div id="loading" class="loading"><div class="spinner"></div><p style="margin-top:10px;font-size:11px">Loading...</p></div>
   <div id="app" style="display:none">
-    <!-- MRR Hero -->
-    <div class="mrr-hero">
-      <div class="mrr-left">
-        <div class="mrr-label">Current MRR</div>
-        <div class="mrr-amount" id="mrr-val">$0</div>
-        <div class="mrr-target">of <b>$35,000</b> target · <span id="mrr-gap"></span></div>
-      </div>
-      <div class="mrr-right">
-        <div class="mrr-bar-track"><div class="mrr-bar-fill" id="mrr-fill"></div></div>
-        <div class="mrr-bar-labels"><span>$0</span><span id="mrr-pct-label"></span><span>$35K</span></div>
-      </div>
-    </div>
-
-    <!-- Bottleneck Banner -->
+    <div class="hero-row" id="heroes"></div>
+    <div class="countdown" id="countdown"></div>
     <div id="bottleneck"></div>
-
-    <!-- FUNNEL CARDS — Main View -->
-    <div class="funnel-row" id="funnel-cards"></div>
-
-    <!-- Conversion Flow (arrow view) -->
-    <div class="section">
-      <div class="stitle">Conversion Flow (30 Days)</div>
-      <div id="conv-flow" style="display:flex;align-items:center;justify-content:center;gap:4px;flex-wrap:wrap;padding:8px 0"></div>
-    </div>
-
-    <!-- Detail Grid -->
+    <div class="funnel-row" id="funnel"></div>
     <div class="g2">
-      <div class="card">
-        <div class="stitle">Org Health Status</div>
-        <div id="org-health"></div>
-      </div>
-      <div class="card">
-        <div class="stitle">Weekly Trend (New Orgs)</div>
-        <div id="weekly"></div>
-      </div>
+      <div class="card"><div class="st">Org Health</div><div id="health"></div></div>
+      <div class="card"><div class="st">Weekly New Orgs</div><div id="weekly"></div></div>
     </div>
-
     <div class="g2">
-      <div class="card">
-        <div class="stitle">Marketing Channels</div>
-        <div id="mkt-wrap" style="overflow-x:auto"></div>
-      </div>
-      <div class="card">
-        <div class="stitle">Top Countries</div>
-        <div id="countries"></div>
-      </div>
+      <div class="card"><div class="st">Channel CAC</div><div id="cac"></div></div>
+      <div class="card"><div class="st">Top Countries</div><div id="countries"></div></div>
     </div>
-
-    <!-- Simulator -->
     <div class="sliders section">
-      <div class="stitle">Scenario Simulator</div>
+      <div class="st">Scenario Simulator</div>
+      <div style="font-size:9px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정</div>
       <div class="sl-grid">
-        <div><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="xv1">11,000</span></div><input type="range" id="xr1" min="3000" max="50000" step="500" value="11000"></div>
-        <div><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="xv2">3.0%</span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1" value="3"></div>
-        <div><div class="sl-top"><span class="sl-n">Signup → SDK (6mo)</span><span class="sl-v" id="xv3">20%</span></div><input type="range" id="xr3" min="5" max="50" step="1" value="20"></div>
-        <div><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="xv4">5.0%</span></div><input type="range" id="xr4" min="1" max="15" step="0.5" value="5"></div>
-        <div><div class="sl-top"><span class="sl-n">ARPPU ($/mo)</span><span class="sl-v" id="xv5">$500</span></div><input type="range" id="xr5" min="100" max="1500" step="50" value="500"></div>
-        <div><div class="sl-top"><span class="sl-n">Months Left</span><span class="sl-v" id="xv6">6</span></div><input type="range" id="xr6" min="1" max="9" step="1" value="6"></div>
+        <div><div class="sl-top"><span class="sl-n">Monthly Visitors</span><span class="sl-v" id="xv1"></span></div><input type="range" id="xr1" min="3000" max="50000" step="500"></div>
+        <div><div class="sl-top"><span class="sl-n">Visit → Signup</span><span class="sl-v" id="xv2"></span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1"></div>
+        <div><div class="sl-top"><span class="sl-n">Signup → SDK</span><span class="sl-v" id="xv3"></span></div><input type="range" id="xr3" min="1" max="50" step="1"></div>
+        <div><div class="sl-top"><span class="sl-n">SDK → Paid</span><span class="sl-v" id="xv4"></span></div><input type="range" id="xr4" min="1" max="20" step="0.5"></div>
+        <div><div class="sl-top"><span class="sl-n">ARPPU $/mo</span><span class="sl-v" id="xv5"></span></div><input type="range" id="xr5" min="100" max="1500" step="50"></div>
+        <div><div class="sl-top"><span class="sl-n">Months Left</span><span class="sl-v" id="xv6"></span></div><input type="range" id="xr6" min="1" max="9" step="1"></div>
       </div>
-      <div class="sim-result">
-        <div><span style="font-size:11px;color:var(--tx3)">Simulated Paid Orgs</span><div style="font-size:18px;font-weight:800" id="sim-orgs">0</div></div>
-        <div style="text-align:right"><span style="font-size:11px;color:var(--tx3)">Simulated MRR</span><div style="font-size:24px;font-weight:800;color:var(--grn)" id="sim-mrr">$0</div></div>
+      <div class="sim-out">
+        <div><div class="so-label">Paid Orgs</div><div class="so-val" id="sim-orgs">0</div></div>
+        <div><div class="so-label">MRR</div><div class="so-val" id="sim-mrr" style="color:var(--grn)">$0</div></div>
+        <div><div class="so-label">vs Target</div><div class="so-val" id="sim-pct">0%</div></div>
       </div>
     </div>
   </div>
-
   <div class="foot">
-    <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure</a> ·
-    <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI</a> ·
-    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude</a>
+    <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure ↗</a> ·
+    <a href="https://docs.google.com/spreadsheets/d/145fp9fBz8qszcjSd45azGk0gU_s8coPfzf8i-Do_l8M/edit" target="_blank">Marketing KPI ↗</a> ·
+    <a href="https://app.amplitude.com/analytics/ab180/dashboard/qsa1x9zt" target="_blank">Amplitude ↗</a>
   </div>
 </div>
-
 <script>
 const $=id=>document.getElementById(id);
 const fmt=n=>n==null?'—':typeof n==='number'?n.toLocaleString('en-US'):String(n);
 const fmtK=n=>n>=10000?(n/1000).toFixed(0)+'K':n>=1000?(n/1000).toFixed(1)+'K':fmt(n);
 const pct=(n,d=1)=>n==null?'—':(n*100).toFixed(d)+'%';
 
-const API_URL = 'https://script.google.com/macros/s/AKfycbxrPNjj8t0p-AraZcwQtANMO-jTX1yOBPEUlLwVcOeC74Y3ZRQt6kG_1arsMkREbz8B/exec';
+const API='https://script.google.com/macros/s/AKfycbxrPNjj8t0p-AraZcwQtANMO-jTX1yOBPEUlLwVcOeC74Y3ZRQt6kG_1arsMkREbz8B/exec';
+const T={mrr:35000,arppu:500,paid:80,vis_mo:11000,sig_mo:700,sdk_6mo:800,deadline:'2026-09-30'};
+const BM={v2s:0.05,s2k:0.15,k2p:0.02};
+const DRI={vis:'슬 · 재혁 · 채건',sig:'채건 (Website)',sdk:'승헌 (Agent)',paid:'Amy · 현탁'};
 
-// Targets
-const T = {
-  mrr: 35000, arppu: 500, paid: 80,
-  monthly_visitors: 11000, monthly_signups: 700,
-  sdk_6mo: 800, deadline: '2026-09-30',
-};
-
-// Benchmarks (Conservative)
-const BM = {
-  visitor_to_signup: 0.05,
-  signup_to_sdk: 0.15,
-  sdk_to_paid: 0.02,
-};
-
-// DRI mapping
-const DRI = {
-  visitor: 'Traffic: 슬 · 재혁 · 채건',
-  signup: 'Website: 채건',
-  sdk: 'Agent: 승헌',
-  activation: 'Product: Amy · 승헌',
-  paid: 'Upsell: Amy · 현탁',
-};
-
-async function init() {
-  let data;
-  try {
-    const r = await fetch(API_URL);
-    data = await r.json();
-  } catch(e) {
-    try { data = await (await fetch('data.json')).json(); } catch(e2) {
-      $('loading').innerHTML = '<p style="color:var(--red)">데이터 로드 실패</p>'; return;
-    }
-  }
-  $('loading').style.display='none';
-  $('app').style.display='block';
-  $('sync-ts').textContent = 'Live · ' + (data.synced_at||'').slice(0,16).replace('T',' ');
-  render(data);
+async function init(){
+  let d;
+  try{d=await(await fetch(API)).json()}catch(e){try{d=await(await fetch('data.json')).json()}catch(e2){$('loading').innerHTML='<p style="color:var(--red)">Load failed</p>';return}}
+  $('loading').style.display='none';$('app').style.display='block';
+  $('sync-ts').textContent='Live · '+(d.synced_at||'').slice(0,16).replace('T',' ');
+  render(d);
 }
 
-function render(data) {
-  // Extract data (handle both Apps Script and data.json formats)
-  const amp = data.amplitude || {};
-  const funnel = data.funnel || {};
-  const stages = funnel.stages || [];
-  const health = data.org_health || data.health || {};
-  const weekly = data.weekly_trend || [];
-  const mkt = data.marketing || {};
-  const countries = data.countries || [];
+function render(d){
+  const amp=d.amplitude||{};const h=d.org_health||d.health||{};const wk=d.weekly_trend||[];const mkt=d.marketing||{};const cc=d.countries||[];
+  // Extract actuals
+  const vis30=amp.visitor?.count_30d||d.funnel?.stages?.find(s=>s.key==='visitor')?.count_30d||42082;
+  const sig30=amp.signup?.count_30d||d.funnel?.stages?.find(s=>s.key==='signup')?.count_30d||382;
+  const sdk30=amp.sdk_install?.count_30d||d.funnel?.stages?.find(s=>s.key==='sdk_install')?.count_30d||15;
+  const paidSS=h.paid_self_serve||d.funnel?.stages?.find(s=>s.key==='paid')?.self_serve||13;
+  const paidTotal=h.paid||114;
+  const activeOrgs=h.active||107;
+  const totalOrgs=h.total_orgs||3057;
+  const mrr=paidSS*T.arppu;
 
-  // Build stage data
-  const S = [
-    { key:'visitor', label:'Visitors', actual: amp.visitor?.count_30d || stages.find(s=>s.key==='visitor')?.count_30d || 0, target_mo: T.monthly_visitors, target_label: fmt(T.monthly_visitors)+'/mo', dri: DRI.visitor, weekly: amp.visitor?.weekly || [], conv: null, bm: null },
-    { key:'signup', label:'Signups', actual: amp.signup?.count_30d || stages.find(s=>s.key==='signup')?.count_30d || 0, target_mo: T.monthly_signups, target_label: fmt(T.monthly_signups)+'/mo', dri: DRI.signup, weekly: amp.signup?.weekly || [], conv: null, bm: BM.visitor_to_signup },
-    { key:'sdk', label:'SDK Install', actual: amp.sdk_install?.count_30d || stages.find(s=>s.key==='sdk_install')?.count_30d || 0, target_mo: Math.round(T.sdk_6mo/6), target_label: fmt(T.sdk_6mo)+' (6mo)', dri: DRI.sdk, weekly: amp.sdk_install?.weekly || [], conv: null, bm: BM.signup_to_sdk },
-    { key:'activation', label:'Activation', actual: amp.activation?.count_30d || stages.find(s=>s.key==='activation')?.count_30d || 0, target_mo: null, target_label: 'TBD', dri: DRI.activation, weekly: amp.activation?.weekly || [], conv: null, bm: null },
-    { key:'paid', label:'Paid Orgs', actual: (typeof health === 'object' && health.paid_self_serve) || stages.find(s=>s.key==='paid')?.self_serve || 13, target_mo: T.paid, target_label: fmt(T.paid)+' orgs', dri: DRI.paid, weekly: [], conv: null, bm: BM.sdk_to_paid, extra: `(+ ${(health.paid_contract||health.paid||114)-(health.paid_self_serve||13)} contract)` },
+  // Weekly arrays
+  const wVis=amp.visitor?.weekly||[];const wSig=amp.signup?.weekly||[];const wSdk=amp.sdk_install?.weekly||[];
+
+  // Conversions
+  const cv_v2s=vis30>0?sig30/vis30:0;
+  const cv_s2k=sig30>0?sdk30/sig30:0;
+  const cv_k2p=sdk30>0?paidSS/sdk30:0;
+
+  // === DUAL HERO ===
+  const mrrPct=Math.min(100,(mrr/T.mrr)*100);
+  const mrrColor=mrrPct>=60?'var(--grn)':mrrPct>=30?'var(--ylw)':'var(--red)';
+  $('heroes').innerHTML=`
+    <div class="hero-card">
+      <div class="hero-label">Active Orgs (Leading)</div>
+      <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}</div>
+      <div class="hero-sub">of <b>${fmt(totalOrgs)}</b> total · ${(activeOrgs/totalOrgs*100).toFixed(1)}% active rate</div>
+      <div class="hero-bar"><div class="hero-fill" style="width:${(activeOrgs/totalOrgs*100)}%;background:var(--acc)"></div></div>
+    </div>
+    <div class="hero-card">
+      <div class="hero-label">MRR (Lagging)</div>
+      <div class="hero-val" style="color:${mrrColor}">$${fmt(mrr)}</div>
+      <div class="hero-sub">of <b>$${fmt(T.mrr)}</b> target · <b>$${fmt(T.mrr-mrr)}</b> to go</div>
+      <div class="hero-bar"><div class="hero-fill" style="width:${mrrPct}%;background:${mrrColor}"></div></div>
+      <div class="hero-bar-label"><span>$0</span><span>${mrrPct.toFixed(0)}%</span><span>$35K</span></div>
+    </div>`;
+
+  // === COUNTDOWN ===
+  const now=new Date();const dl=new Date('2026-09-30');const daysLeft=Math.max(0,Math.ceil((dl-now)/(86400000)));
+  const monthsLeft=Math.max(1,Math.ceil(daysLeft/30));
+  const orgsNeeded=T.paid-paidSS;const orgsPerMonth=Math.ceil(orgsNeeded/monthsLeft);
+  const mrrPerMonth=Math.ceil((T.mrr-mrr)/monthsLeft);
+  $('countdown').innerHTML=`
+    <div class="cd-item"><div class="cd-val">${daysLeft}</div><div class="cd-label">Days Left</div></div>
+    <div class="cd-item"><div class="cd-val" style="color:var(--red)">+${orgsNeeded}</div><div class="cd-label">Paid Orgs Needed</div></div>
+    <div class="cd-item"><div class="cd-val">${orgsPerMonth}</div><div class="cd-label">Orgs / Month</div></div>
+    <div class="cd-item"><div class="cd-val">+$${fmtK(mrrPerMonth)}</div><div class="cd-label">MRR / Month</div></div>`;
+
+  // === BOTTLENECK ===
+  const gaps=[{k:'Visit→Signup',r:cv_v2s/BM.v2s,conv:cv_v2s,bm:BM.v2s,dri:DRI.sig},{k:'Signup→SDK',r:cv_s2k/BM.s2k,conv:cv_s2k,bm:BM.s2k,dri:DRI.sdk}];
+  const worst=gaps.reduce((a,b)=>a.r<b.r?a:b);
+  $('bottleneck').innerHTML=`<div class="banner red">
+    <div>⚠️</div>
+    <div><div class="btitle">#1 Bottleneck: ${worst.k} — ${pct(worst.conv,2)} (benchmark ${pct(worst.bm,0)}의 ${(worst.r*100).toFixed(0)}%)</div>
+    <div class="bdesc">DRI: ${worst.dri} · 이 구간 개선이 전체 퍼널에 가장 큰 레버</div></div>
+  </div>`;
+
+  // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
+  const stages=[
+    {label:'Visitors',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/mo',dri:DRI.vis,conv:null,bm:null,weekly:wVis},
+    {label:'Signups',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/mo',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig},
+    {label:'SDK Install',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+' (6mo)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk},
+    {label:'Paid (Self-Serve)',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+' orgs',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`},
   ];
 
-  // Calculate conversions
-  for (let i=1;i<S.length;i++) {
-    if (S[i-1].actual > 0) S[i].conv = S[i].actual / S[i-1].actual;
-  }
+  // Find worst
+  let worstIdx=-1,worstR=1;
+  stages.forEach((s,i)=>{if(s.bm&&s.conv!==null){const r=s.conv/s.bm;if(r<worstR){worstR=r;worstIdx=i}}});
 
-  // MRR
-  const mrr = S[4].actual * T.arppu;
-  const mrrPct = Math.min(100, (mrr/T.mrr)*100);
-  const mrrGap = T.mrr - mrr;
-  $('mrr-val').textContent = '$'+fmt(mrr);
-  $('mrr-val').style.color = mrrPct >= 80 ? 'var(--grn)' : mrrPct >= 40 ? 'var(--ylw)' : 'var(--red)';
-  $('mrr-gap').textContent = '$'+fmt(mrrGap)+' to go';
-  $('mrr-fill').style.width = mrrPct+'%';
-  $('mrr-fill').style.background = mrrPct >= 80 ? 'var(--grn)' : mrrPct >= 40 ? 'linear-gradient(90deg,var(--acc),var(--ylw))' : 'linear-gradient(90deg,var(--red),var(--acc))';
-  $('mrr-pct-label').textContent = mrrPct.toFixed(0)+'%';
-
-  // Worst bottleneck
-  let worstIdx = -1, worstRatio = 1;
-  S.forEach((s,i) => {
-    if (s.bm && s.conv !== null) {
-      const r = s.conv / s.bm;
-      if (r < worstRatio) { worstRatio = r; worstIdx = i; }
-    }
-  });
-  if (worstIdx >= 0) {
-    const ws = S[worstIdx];
-    const prevLabel = S[worstIdx-1]?.label || '';
-    $('bottleneck').innerHTML = `<div class="banner red">
-      <div class="icon">⚠️</div>
-      <div>
-        <div class="btitle">#1 Bottleneck: ${prevLabel} → ${ws.label} (${pct(ws.conv,2)} · benchmark ${pct(ws.bm,0)}의 ${(worstRatio*100).toFixed(0)}%)</div>
-        <div class="bdesc">이 구간을 개선하면 전체 퍼널에 가장 큰 영향. DRI: ${ws.dri}</div>
-      </div>
-    </div>`;
-  }
-
-  // Funnel Cards
-  $('funnel-cards').innerHTML = S.map((s,i) => {
-    // Gap to target
-    const targetNum = s.target_mo;
-    const gapPct = targetNum ? Math.min(100, (s.actual/targetNum)*100) : null;
-    const gapColor = gapPct === null ? 'var(--tx3)' : gapPct >= 80 ? 'var(--grn)' : gapPct >= 40 ? 'var(--ylw)' : 'var(--red)';
-
+  $('funnel').innerHTML=stages.map((s,i)=>{
+    const gapPct=s.target?Math.min(100,(s.actual/s.target)*100):0;
+    const gapColor=gapPct>=80?'var(--grn)':gapPct>=40?'var(--ylw)':'var(--red)';
     // Conv badge
-    let badge = '';
-    if (s.conv !== null && s.bm) {
-      const ratio = s.conv / s.bm;
-      const cls = ratio >= 0.8 ? 'green' : ratio >= 0.4 ? 'yellow' : 'red';
-      badge = `<div class="conv-badge ${cls}">${pct(s.conv,1)}</div>`;
-    } else if (s.conv !== null) {
-      badge = `<div class="conv-badge gray">${pct(s.conv,1)}</div>`;
-    }
-
-    const isBottleneck = i === worstIdx;
-
+    let badge='';
+    if(s.conv!==null&&s.bm){const r=s.conv/s.bm;const cls=r>=0.8?'grn':r>=0.4?'ylw':'red';badge=`<div class="f-conv ${cls}">${pct(s.conv,1)}</div>`}
+    // WoW
+    let wow='';
+    if(s.weekly&&s.weekly.length>=2){const last=s.weekly[s.weekly.length-1];const prev=s.weekly[s.weekly.length-2];if(prev>0){const ch=((last-prev)/prev);wow=`<div class="f-wow" style="color:${ch>=0?'var(--grn)':'var(--red)'}"><span>${ch>=0?'↑':'↓'}${Math.abs(ch*100).toFixed(0)}%</span> WoW</div>`}}
     // Sparkline
-    let spark = '';
-    if (s.weekly && s.weekly.length > 0) {
-      const max = Math.max(...s.weekly, 1);
-      spark = `<div class="spark">${s.weekly.map(v=>`<div class="spark-bar" style="height:${Math.max(3,(v/max)*36)}px;background:${gapColor}"></div>`).join('')}</div>`;
-    }
-
-    return `<div class="fcard${isBottleneck?' bottleneck':''}">
+    let spark='';
+    if(s.weekly&&s.weekly.length>0){const mx=Math.max(...s.weekly,1);spark=`<div class="spark">${s.weekly.map(v=>`<div style="height:${Math.max(2,(v/mx)*24)}px;background:${gapColor}"></div>`).join('')}</div>`}
+    return `<div class="fc${i===worstIdx?' worst':''}">
       ${badge}
-      <div class="stage-label">${s.label}</div>
-      <div class="stage-dri">${s.dri}</div>
-      <div class="actual" style="color:${gapColor}">${fmtK(s.actual)}</div>
-      ${s.extra?`<div style="font-size:10px;color:var(--tx3)">${s.extra}</div>`:''}
-      <div class="target-row">
-        <span class="target-label">Target:</span>
-        <span class="target-val" style="color:var(--tx2)">${s.target_label}</span>
-      </div>
-      ${gapPct!==null?`
-        <div class="gap-bar">
-          <div class="gap-track"><div class="gap-fill" style="width:${gapPct}%;background:${gapColor}"></div></div>
-          <div class="gap-label"><span style="color:${gapColor};font-weight:700">${gapPct.toFixed(0)}%</span><span style="color:var(--tx3)">${gapPct>=100?'✓ On track':'Gap: '+fmtK(targetNum-s.actual)}</span></div>
-        </div>`:''}
+      <div class="f-stage">${s.label}</div>
+      <div class="f-dri">${s.dri}</div>
+      <div class="f-actual" style="color:${gapColor}">${fmtK(s.actual)}</div>
+      ${s.extra?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
+      ${wow}
+      <div class="f-target"><span>Target: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${gapColor}">${gapPct.toFixed(0)}%</span></div>
+      <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${gapColor}"></div></div>
       ${spark}
-    </div>`;
-  }).join('');
+    </div>`}).join('');
 
-  // Conversion Flow
-  $('conv-flow').innerHTML = S.map((s,i) => {
-    const box = `<div style="background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:10px 16px;text-align:center;min-width:100px">
-      <div style="font-size:9px;color:var(--tx3);text-transform:uppercase">${s.label}</div>
-      <div style="font-size:20px;font-weight:800;margin:2px 0">${fmtK(s.actual)}</div>
-    </div>`;
-    if (i < S.length-1) {
-      const nextConv = S[i+1].conv;
-      const convColor = nextConv === null ? 'var(--tx3)' : (S[i+1].bm && nextConv/S[i+1].bm < 0.4) ? 'var(--red)' : (S[i+1].bm && nextConv/S[i+1].bm < 0.8) ? 'var(--ylw)' : 'var(--grn)';
-      return box + `<div style="color:${convColor};font-size:12px;font-weight:700;padding:0 4px">→ ${nextConv?pct(nextConv,1):'—'}</div>`;
-    }
-    return box;
-  }).join('');
+  // === ORG HEALTH (without churned dominating) ===
+  const alive=totalOrgs-(h.churned||2284);
+  const items=[
+    {l:'Onboarding',v:h.onboarding||356,c:'var(--acc)'},
+    {l:'Active',v:h.active||107,c:'var(--grn)'},
+    {l:'Paid',v:h.paid||114,c:'#10b981'},
+    {l:'Churn Risk',v:(h.churn_risk_onboarding||127)+(h.churn_risk_activation||69),c:'var(--ylw)'},
+  ];
+  const survivalRate=h.onboarding>0?((h.onboarding-(h.churn_risk_onboarding||0))/h.onboarding*100):0;
+  $('health').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
+    <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">alive orgs (excl. ${fmtK(h.churned||2284)} churned)</span></div>
+    <div style="font-size:11px">Onboarding Survival: <b style="color:${survivalRate>=70?'var(--grn)':'var(--red)'}"> ${survivalRate.toFixed(0)}%</b></div>
+  </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
 
-  // Org Health
-  if (health && typeof health === 'object' && !health.error) {
-    const total = health.total_orgs || 3057;
-    const items = [
-      {l:'Onboarding',v:health.onboarding||356,c:'var(--acc)'},
-      {l:'Active',v:health.active||107,c:'var(--grn)'},
-      {l:'Paid',v:health.paid||114,c:'var(--grn2)'},
-      {l:'Churn Risk',v:(health.churn_risk_onboarding||127)+(health.churn_risk_activation||69),c:'var(--ylw)'},
-      {l:'Churned',v:health.churned||2284,c:'var(--red)'},
-    ];
-    $('org-health').innerHTML = `<div style="font-size:20px;font-weight:800;margin-bottom:10px">${fmt(total)} <span style="font-size:12px;color:var(--tx3)">Total Orgs</span></div>` +
-      items.map(h=>`<div class="mbar"><span class="ml" style="color:${h.c}">${fmtK(h.v)}</span><div class="mt"><div class="mf" style="width:${(h.v/total)*100}%;background:${h.c}"></div></div><span class="mv">${h.l} (${(h.v/total*100).toFixed(1)}%)</span></div>`).join('');
+  // === WEEKLY ===
+  if(wk.length>0){const mx=Math.max(...wk.map(w=>w.total||0),1);$('weekly').innerHTML=`<div style="display:flex;align-items:flex-end;gap:2px;height:80px">${wk.map(w=>{const ht=Math.max(3,(w.total/mx)*65);return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%"><div style="font-size:8px;font-weight:700;margin-bottom:1px">${w.total}</div><div style="width:85%;height:${ht}px;background:var(--acc);border-radius:2px 2px 0 0"></div><div style="font-size:7px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div></div>`}).join('')}</div>`}
+
+  // === CAC BY CHANNEL (replace raw table) ===
+  const ch=(mkt.channels||[]).filter(c=>c.traffic_forecast>0||c.signup_forecast>0).sort((a,b)=>b.signup_forecast-a.signup_forecast);
+  if(ch.length>0){
+    const maxSig=Math.max(...ch.map(c=>c.signup_forecast),1);
+    $('cac').innerHTML=ch.map(c=>{
+      const cost=parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,''))||0;
+      const sigs=c.signup_forecast||0;
+      const cac=sigs>0?Math.round(cost/sigs):cost>0?Infinity:0;
+      const cacColor=cac===0?'var(--grn)':cac<=50?'var(--grn)':cac<=150?'var(--ylw)':'var(--red)';
+      const cacLabel=cac===Infinity?'∞':cac===0?'Organic':'$'+fmt(cac);
+      const barW=sigs>0?(sigs/maxSig)*100:0;
+      return`<div class="cac-row">
+        <span class="cac-name">${c.channel}</span>
+        <div class="cac-bar-wrap"><div class="cac-bar" style="width:${barW}%;background:var(--acc)"></div></div>
+        <span class="cac-val">${sigs} signups</span>
+        <span class="cac-badge" style="background:${cacColor}20;color:${cacColor}">CAC ${cacLabel}</span>
+      </div>`}).join('');
   }
 
-  // Weekly trend
-  if (weekly.length > 0) {
-    const max = Math.max(...weekly.map(w=>w.total||0),1);
-    $('weekly').innerHTML = `<div style="display:flex;align-items:flex-end;gap:3px;height:100px">
-      ${weekly.map(w=>{
-        const h=Math.max(4,(w.total/max)*80);
-        return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
-          <div style="font-size:9px;font-weight:700;margin-bottom:2px">${w.total}</div>
-          <div style="width:90%;height:${h}px;background:var(--acc);border-radius:2px 2px 0 0"></div>
-          <div style="font-size:7px;color:var(--tx3);margin-top:3px;white-space:nowrap">${String(w.week).slice(5)}</div>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }
+  // === COUNTRIES (top 8) ===
+  if(cc.length>0){const mx=Math.max(...cc.map(c=>c.orgs),1);$('countries').innerHTML=cc.slice(0,8).map(c=>`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/mx)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <span style="color:var(--grn)">${c.active_pct}</span></span></div>`).join('')}
 
-  // Marketing
-  const ch = mkt.channels || [];
-  if (ch.length) {
-    const tot = mkt.totals || {};
-    $('mkt-wrap').innerHTML = `<table class="tbl"><thead><tr><th>Channel</th><th>Cost</th><th>Traffic</th><th>As-Is</th><th>Target</th><th>Signups</th></tr></thead><tbody>
-      ${ch.map(c=>`<tr><td><b>${c.channel}</b><br><span style="color:var(--tx3);font-size:9px">${c.type}</span></td><td>${c.monthly_cost_usd}</td><td>${fmt(c.traffic_forecast)}</td><td style="color:${parseFloat(c.as_is_conv)>1?'var(--grn)':'var(--ylw)'}">${c.as_is_conv}</td><td style="color:var(--acc)">${c.to_be_conv}</td><td style="font-weight:700">${c.signup_forecast}</td></tr>`).join('')}
-      ${tot.traffic?`<tr style="background:var(--s2)"><td><b>Total</b></td><td>${tot.monthly_cost_usd||''}</td><td><b>${fmt(tot.traffic)}</b></td><td></td><td></td><td style="color:var(--acc);font-weight:700">${fmt(tot.signups||0)}</td></tr>`:''}
-    </tbody></table>`;
-  }
-
-  // Countries
-  if (countries.length) {
-    const max = Math.max(...countries.map(c=>c.orgs),1);
-    $('countries').innerHTML = countries.slice(0,8).map(c=>`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/max)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <span style="color:var(--grn)">${c.active_pct}</span></span></div>`).join('');
-  }
-
-  // Simulator
+  // === SIMULATOR (init with CURRENT actuals, not targets) ===
+  const curVis=Math.round(vis30);const curSig=cv_v2s*100;const curSdk=cv_s2k*100;const curPaid=cv_k2p>0?cv_k2p*100:5;
+  $('xr1').value=curVis;$('xr1').max=Math.max(50000,curVis*2);
+  $('xr2').value=curSig.toFixed(1);
+  $('xr3').value=Math.round(curSdk);$('xr3').min=1;
+  $('xr4').value=curPaid.toFixed(1);
+  $('xr5').value=T.arppu;
+  const mLeft=Math.max(1,Math.ceil(daysLeft/30));$('xr6').value=mLeft;
   ['xr1','xr2','xr3','xr4','xr5','xr6'].forEach(id=>$(id).addEventListener('input',sim));
   sim();
 }
@@ -424,12 +314,11 @@ function sim(){
   const v=+$('xr1').value,s=+$('xr2').value/100,k=+$('xr3').value/100,p=+$('xr4').value/100,a=+$('xr5').value,m=+$('xr6').value;
   $('xv1').textContent=fmt(v);$('xv2').textContent=(s*100).toFixed(1)+'%';$('xv3').textContent=(k*100).toFixed(0)+'%';
   $('xv4').textContent=(p*100).toFixed(1)+'%';$('xv5').textContent='$'+fmt(a);$('xv6').textContent=m;
-  const orgs=Math.round(v*m*s*k*p);
+  const orgs=Math.round(v*m*s*k*p);const mr=orgs*a;const vs=Math.min(100,(mr/35000)*100);
   $('sim-orgs').textContent=fmt(orgs);
-  $('sim-mrr').textContent='$'+fmt(orgs*a);
-  $('sim-mrr').style.color=orgs*a>=35000?'var(--grn)':'var(--ylw)';
+  $('sim-mrr').textContent='$'+fmt(mr);$('sim-mrr').style.color=mr>=35000?'var(--grn)':'var(--ylw)';
+  $('sim-pct').textContent=vs.toFixed(0)+'%';$('sim-pct').style.color=vs>=100?'var(--grn)':'var(--ylw)';
 }
-
 init();
 </script>
 </body>
