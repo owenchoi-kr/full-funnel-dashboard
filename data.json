@@ -570,5 +570,11 @@
       "현탁"
     ],
     "owner": "현종"
+  },
+  "diagnostic": {
+    "signup": 1317,
+    "app_created": 453,
+    "tracking_link": 212,
+    "sdk_install": 0
   }
 }

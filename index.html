@@ -122,6 +122,11 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <div class="countdown" id="countdown"></div>
     <div id="bottleneck"></div>
     <div class="funnel-row" id="funnel"></div>
+    <!-- Signup→SDK Diagnostic -->
+    <div class="card section" id="diag-wrap" style="display:none">
+      <div class="st">가입→SDK 진단 (어디서 이탈하나?)</div>
+      <div id="diagnostic"></div>
+    </div>
     <div class="g2">
       <div class="card"><div class="st">조직 건강 현황</div><div id="health"></div></div>
       <div class="card"><div class="st">주간 신규 조직</div><div id="weekly"></div></div>
@@ -332,6 +337,32 @@ function render(d){
       <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
     </div>`}).join('');
+
+  // === SIGNUP→SDK DIAGNOSTIC ===
+  const diag=d.diagnostic||{signup:1317,app_created:453,tracking_link:212,sdk_install:0};
+  if(diag.signup>0){
+    $('diag-wrap').style.display='block';
+    const steps=[
+      {label:'가입 완료',val:diag.signup,pct:100,color:'var(--acc)'},
+      {label:'앱 생성',val:diag.app_created,pct:diag.app_created/diag.signup*100,color:diag.app_created/diag.signup>0.5?'var(--grn)':'var(--ylw)'},
+      {label:'트래킹 링크 생성',val:diag.tracking_link,pct:diag.tracking_link/diag.signup*100,color:diag.tracking_link/diag.signup>0.3?'var(--ylw)':'var(--red)'},
+      {label:'SDK 첫 이벤트',val:diag.sdk_install||sdk30,pct:(diag.sdk_install||sdk30)/diag.signup*100,color:'var(--red)'},
+    ];
+    $('diagnostic').innerHTML=`<div style="display:flex;align-items:flex-end;gap:4px;height:100px;margin-bottom:8px">${steps.map((s,i)=>{
+      const h=Math.max(6,s.pct/100*80);
+      const convLabel=i>0?`${s.pct.toFixed(1)}%`:'';
+      return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
+        <div style="font-size:10px;font-weight:700;margin-bottom:2px">${fmtK(s.val)}</div>
+        <div style="font-size:8px;color:${s.color};margin-bottom:1px">${convLabel}</div>
+        <div style="width:80%;height:${h}px;background:${s.color};border-radius:3px 3px 0 0"></div>
+        <div style="font-size:8px;color:var(--tx3);margin-top:3px;text-align:center">${s.label}</div>
+      </div>`}).join('')}</div>
+    <div style="font-size:9px;color:var(--tx3)">
+      가입 후 <b style="color:var(--ylw)">${(100-diag.app_created/diag.signup*100).toFixed(0)}%</b>가 앱조차 생성 안 함 → 온보딩 UX가 첫 번째 이탈 지점.
+      앱 생성 후 <b style="color:var(--ylw)">${((1-diag.tracking_link/diag.app_created)*100).toFixed(0)}%</b>가 트래킹링크 미생성.
+      전체 가입→SDK 전환율: <b style="color:var(--red)">${((diag.sdk_install||sdk30)/diag.signup*100).toFixed(2)}%</b>
+    </div>`;
+  }
 
   // === ORG HEALTH (without churned dominating) ===
   const alive=totalOrgs-(h.churned||2284);
