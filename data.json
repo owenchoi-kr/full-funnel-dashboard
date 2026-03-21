@@ -1,171 +1,146 @@
 {
-  "synced_at": "2026-03-19T10:52:42Z",
+  "synced_at": "2026-03-20T06:46:01Z",
   "funnel": {
     "stages": [
       {
         "key": "visitor",
-        "label": "Visitors",
-        "count_30d": 42082,
+        "label": "방문자",
+        "count_30d": 48319,
         "weekly": [
-          9298,
-          10363,
-          8865,
-          10798,
-          7578
+          9302,
+          10366,
+          8866,
+          10800,
+          8985
         ],
         "conv_rate": null,
-        "conv_key": null,
         "benchmark": null,
-        "target": null,
         "status": "gray"
       },
       {
         "key": "signup",
-        "label": "Signups",
-        "count_30d": 382,
+        "label": "가입",
+        "count_30d": 1338,
         "weekly": [
           175,
           310,
           272,
           315,
-          232
+          266
         ],
-        "conv_rate": 0.009077515327218288,
-        "conv_key": "visitor_to_signup",
+        "conv_rate": 0.027690970425712454,
         "benchmark": 0.05,
-        "target": 0.03,
-        "status": "red"
+        "status": "yellow"
       },
       {
         "key": "sdk_install",
-        "label": "SDK Install",
-        "count_30d": 15,
+        "label": "SDK 설치",
+        "count_30d": 16,
         "weekly": [
           2,
           3,
           2,
           7,
-          1
+          2
         ],
-        "conv_rate": 0.03926701570680628,
-        "conv_key": "signup_to_sdk_install",
+        "conv_rate": 0.01195814648729447,
         "benchmark": 0.15,
-        "target": 0.2,
         "status": "red"
       },
       {
-        "key": "activation",
-        "label": "Activation",
-        "count_30d": 5923,
-        "weekly": [
-          919,
-          1265,
-          1243,
-          1290,
-          1206
-        ],
-        "conv_rate": 394.8666666666667,
-        "conv_key": "sdk_install_to_activation",
-        "benchmark": null,
-        "target": null,
-        "status": "gray"
-      },
-      {
         "key": "paid",
-        "label": "Paid Orgs",
-        "count_30d": 114,
-        "self_serve": 13,
-        "contract": 101,
+        "label": "유료 전환",
+        "count_30d": 122,
+        "self_serve": 14,
+        "contract": 108,
         "weekly": [],
-        "conv_rate": 0.8666666666666667,
-        "conv_key": "sdk_install_to_paid",
+        "conv_rate": 0.875,
         "benchmark": 0.02,
-        "target": 0.05,
         "status": "green",
         "source": "sheets"
       }
     ],
     "mrr": {
-      "current": 6500,
+      "current": 7000,
       "target": 35000,
-      "pct": 18.571428571428573
+      "pct": 20.0
     },
-    "e2e_conv": 0.0003089206786749679,
-    "worst_bottleneck": "visitor_to_signup"
+    "e2e_conv": 0.00028974109563525735,
+    "worst_bottleneck": "signup_to_sdk_install"
   },
   "health": {
     "Onboarding": {
-      "total": 356,
-      "self_serve": 347,
-      "contract": 9
+      "total": 516,
+      "self_serve": 506,
+      "contract": 10
     },
     "Active": {
-      "total": 107,
-      "self_serve": 107,
+      "total": 108,
+      "self_serve": 108,
       "contract": 0
     },
     "Paid": {
-      "total": 114,
-      "self_serve": 13,
-      "contract": 101
+      "total": 122,
+      "self_serve": 14,
+      "contract": 108
     },
     "Churn Risk - Activation": {
-      "total": 69,
-      "self_serve": 62,
-      "contract": 7
+      "total": 24,
+      "self_serve": 24,
+      "contract": 0
     },
     "Churn Risk - Onboarding": {
-      "total": 127,
-      "self_serve": 127,
+      "total": 10,
+      "self_serve": 10,
       "contract": 0
     },
     "Churned": {
-      "total": 2284,
-      "self_serve": 2261,
+      "total": 2315,
+      "self_serve": 2292,
       "contract": 23
     },
     "Total": {
-      "total": 3057,
-      "self_serve": 2917,
-      "contract": 140
+      "total": 3095,
+      "self_serve": 2954,
+      "contract": 141
     }
   },
   "countries": [
     {
       "country": "US",
-      "orgs": 673,
-      "active": 28,
+      "orgs": 682,
+      "active": 29,
       "active_pct": "4%"
     },
     {
       "country": "KR",
-      "orgs": 681,
-      "active": 14,
+      "orgs": 686,
+      "active": 13,
       "active_pct": "2%"
     },
     {
       "country": "PK",
-      "orgs": 408,
+      "orgs": 419,
       "active": 2,
       "active_pct": "0%"
     },
     {
       "country": "GB",
-      "orgs": 151,
-      "active": 9,
-      "active_pct": "6%"
+      "orgs": 153,
+      "active": 10,
+      "active_pct": "7%"
     },
     {
       "country": "IN",
-      "orgs": 178,
+      "orgs": 179,
       "active": 8,
       "active_pct": "4%"
     },
     {
       "country": "VN",
-      "orgs": 122,
-      "active": 1,
-      "active_pct": "1%"
+      "orgs": 124,
+      "active": 2,
+      "active_pct": "2%"
     },
     {
       "country": "CN",
@@ -176,8 +151,8 @@
     {
       "country": "ID",
       "orgs": 36,
-      "active": 2,
-      "active_pct": "6%"
+      "active": 1,
+      "active_pct": "3%"
     },
     {
       "country": "FR",
@@ -187,15 +162,15 @@
     },
     {
       "country": "AE",
-      "orgs": 33,
-      "active": 2,
-      "active_pct": "6%"
+      "orgs": 36,
+      "active": 3,
+      "active_pct": "8%"
     },
     {
       "country": "EG",
       "orgs": 27,
-      "active": 2,
-      "active_pct": "7%"
+      "active": 1,
+      "active_pct": "4%"
     },
     {
       "country": "CA",
@@ -256,119 +231,119 @@
     {
       "week": "2025-12-29",
       "total": 49,
-      "onboarding": 2,
+      "onboarding": 4,
       "churn_risk_onboarding": 0,
       "active": 0,
-      "churn_risk_activation": 3,
+      "churn_risk_activation": 0,
       "paid": 0,
-      "churned": 44
+      "churned": 45
     },
     {
       "week": "2026-01-05",
       "total": 66,
-      "onboarding": 2,
+      "onboarding": 4,
       "churn_risk_onboarding": 0,
       "active": 5,
-      "churn_risk_activation": 2,
+      "churn_risk_activation": 0,
       "paid": 0,
       "churned": 57
     },
     {
       "week": "2026-01-12",
       "total": 85,
-      "onboarding": 9,
-      "churn_risk_onboarding": 1,
+      "onboarding": 13,
+      "churn_risk_onboarding": 0,
       "active": 4,
-      "churn_risk_activation": 4,
+      "churn_risk_activation": 1,
       "paid": 0,
       "churned": 67
     },
     {
       "week": "2026-01-19",
       "total": 118,
-      "onboarding": 8,
-      "churn_risk_onboarding": 1,
+      "onboarding": 12,
+      "churn_risk_onboarding": 0,
       "active": 6,
-      "churn_risk_activation": 3,
+      "churn_risk_activation": 0,
       "paid": 0,
       "churned": 100
     },
     {
       "week": "2026-01-26",
       "total": 82,
-      "onboarding": 7,
+      "onboarding": 11,
       "churn_risk_onboarding": 0,
-      "active": 9,
-      "churn_risk_activation": 6,
+      "active": 7,
+      "churn_risk_activation": 1,
       "paid": 0,
-      "churned": 60
+      "churned": 63
     },
     {
       "week": "2026-02-02",
       "total": 125,
-      "onboarding": 12,
-      "churn_risk_onboarding": 10,
-      "active": 6,
-      "churn_risk_activation": 5,
+      "onboarding": 18,
+      "churn_risk_onboarding": 0,
+      "active": 5,
+      "churn_risk_activation": 4,
       "paid": 0,
-      "churned": 92
+      "churned": 98
     },
     {
       "week": "2026-02-09",
       "total": 125,
-      "onboarding": 16,
-      "churn_risk_onboarding": 3,
+      "onboarding": 22,
+      "churn_risk_onboarding": 0,
       "active": 3,
-      "churn_risk_activation": 5,
+      "churn_risk_activation": 2,
       "paid": 0,
       "churned": 98
     },
     {
       "week": "2026-02-16",
       "total": 90,
-      "onboarding": 11,
-      "churn_risk_onboarding": 5,
+      "onboarding": 16,
+      "churn_risk_onboarding": 0,
       "active": 3,
-      "churn_risk_activation": 3,
+      "churn_risk_activation": 1,
       "paid": 0,
-      "churned": 68
+      "churned": 70
     },
     {
       "week": "2026-02-23",
       "total": 112,
-      "onboarding": 34,
-      "churn_risk_onboarding": 12,
+      "onboarding": 45,
+      "churn_risk_onboarding": 0,
       "active": 6,
-      "churn_risk_activation": 7,
+      "churn_risk_activation": 3,
       "paid": 0,
-      "churned": 53
+      "churned": 58
     },
     {
       "week": "2026-03-02",
       "total": 129,
-      "onboarding": 40,
-      "churn_risk_onboarding": 52,
-      "active": 8,
-      "churn_risk_activation": 13,
+      "onboarding": 87,
+      "churn_risk_onboarding": 2,
+      "active": 6,
+      "churn_risk_activation": 5,
       "paid": 0,
-      "churned": 16
+      "churned": 29
     },
     {
       "week": "2026-03-09",
       "total": 160,
-      "onboarding": 129,
-      "churn_risk_onboarding": 21,
-      "active": 7,
-      "churn_risk_activation": 3,
+      "onboarding": 151,
+      "churn_risk_onboarding": 0,
+      "active": 8,
+      "churn_risk_activation": 1,
       "paid": 0,
       "churned": 0
     },
     {
       "week": "2026-03-16",
-      "total": 36,
-      "onboarding": 36,
+      "total": 74,
+      "onboarding": 69,
       "churn_risk_onboarding": 0,
-      "active": 0,
+      "active": 5,
       "churn_risk_activation": 0,
       "paid": 0,
       "churned": 0
@@ -529,47 +504,47 @@
   },
   "amplitude": {
     "visitor": {
-      "label": "Visitors",
-      "count_30d": 42082,
+      "label": "방문자",
+      "count_30d": 48319,
       "weekly": [
-        9298,
-        10363,
-        8865,
-        10798,
-        7578
+        9302,
+        10366,
+        8866,
+        10800,
+        8985
       ]
     },
     "signup": {
-      "label": "Signups",
-      "count_30d": 382,
+      "label": "가입",
+      "count_30d": 1338,
       "weekly": [
         175,
         310,
         272,
         315,
-        232
+        266
       ]
     },
     "sdk_install": {
-      "label": "SDK Install",
-      "count_30d": 15,
+      "label": "SDK 설치",
+      "count_30d": 16,
       "weekly": [
         2,
         3,
         2,
         7,
-        1
+        2
       ]
     },
     "activation": {
       "label": "Activation",
-      "count_30d": 5923,
+      "count_30d": 5983,
       "weekly": [
         919,
         1265,
         1243,
         1290,
-        1206
+        1266
       ]
     },
     "weeks": [
@@ -580,34 +555,20 @@
       "3/16"
     ]
   },
-  "benchmarks": {
-    "visitor_to_signup": {
-      "benchmark": 0.05,
-      "target": 0.03
-    },
-    "signup_to_sdk_install": {
-      "benchmark": 0.15,
-      "target": 0.2
-    },
-    "sdk_install_to_paid": {
-      "benchmark": 0.02,
-      "target": 0.05
-    }
-  },
   "dri": {
     "traffic": [
-      "슬(Seul)",
-      "재혁(Jaehyuk)",
-      "채건(Chaigun)"
+      "슬",
+      "재혁",
+      "채건"
     ],
     "sdk_install": [
-      "승헌(Seungheon)",
+      "승헌",
       "Agent팀"
     ],
     "paid": [
       "Amy",
-      "현탁(Hyeontak)"
+      "현탁"
     ],
-    "owner": "현종(Hyunjong)"
+    "owner": "현종"
   }
 }
