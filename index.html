@@ -174,10 +174,27 @@ const LINKS={
 };
 
 async function init(){
-  let d;
-  try{d=await(await fetch(API)).json()}catch(e){try{d=await(await fetch('data.json')).json()}catch(e2){$('loading').innerHTML='<p style="color:var(--red)">Load failed</p>';return}}
+  let d, source='live';
+  try{
+    const r=await fetch(API);
+    d=await r.json();
+    if(d.error){throw new Error(d.error)}
+  }catch(e){
+    source='fallback';
+    try{d=await(await fetch('data.json')).json()}
+    catch(e2){$('loading').innerHTML='<p style="color:var(--red)">데이터 로드 실패</p>';return}
+  }
   $('loading').style.display='none';$('app').style.display='block';
-  $('sync-ts').textContent='실시간 · '+(d.synced_at||'').slice(0,16).replace('T',' ');
+  const syncDate=(d.synced_at||'').slice(0,10);
+  const today=new Date().toISOString().slice(0,10);
+  const isStale=syncDate&&syncDate<today;
+  if(source==='fallback'||isStale){
+    const warn=document.createElement('div');
+    warn.style.cssText='background:var(--ylwg);border:1px solid var(--ylw);border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:var(--ylw);font-weight:600;text-align:center';
+    warn.textContent=source==='fallback'?'⚠ 실시간 연결 실패 — 캐시 데이터 표시 중 ('+syncDate+')':'⚠ 데이터가 오래됨 ('+syncDate+') — Amplitude 싱크 필요';
+    $('app').prepend(warn);
+  }
+  $('sync-ts').textContent=(source==='live'?'실시간':'캐시')+' · '+syncDate;
   render(d);
 }
 
