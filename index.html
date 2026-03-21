@@ -230,7 +230,7 @@ function render(d){
     <div class="hero-card">
       <div class="hero-label">활성 조직 (선행지표)</div>
       <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}</div>
-      <div class="hero-sub">전체 <b>${fmt(totalOrgs)}</b>개 중 · 활성률 ${(activeOrgs/totalOrgs*100).toFixed(1)}%</div>
+      <div class="hero-sub">전체 <b>${fmt(totalOrgs)}</b>개 중 · 활성률 ${(activeOrgs/totalOrgs*100).toFixed(2)}%</div>
       <div class="hero-bar"><div class="hero-fill" style="width:${(activeOrgs/totalOrgs*100)}%;background:var(--acc)"></div></div>
     </div>
     <div class="hero-card">
@@ -259,7 +259,7 @@ function render(d){
     const sev=g.r<0.4?'red':'ylw';
     return`<div class="banner ${sev==='red'?'red':''}" style="${sev!=='red'?'background:var(--ylwg);border:1px solid rgba(234,179,8,.2);margin-bottom:8px':'margin-bottom:8px'}">
       <div>${i===0?'⚠️':'⚡'}</div>
-      <div><div class="btitle">#${i+1} 병목: ${g.k} — ${pct(g.conv,2)} (벤치마크 ${pct(g.bm,0)}의 ${(g.r*100).toFixed(0)}%)</div>
+      <div><div class="btitle">#${i+1} 병목: ${g.k} — ${pct(g.conv,2)} (벤치마크 ${pct(g.bm,0)}의 ${(g.r*100).toFixed(2)}%)</div>
       <div class="bdesc">담당: ${g.dri}</div></div>
     </div>`}).join('');
 
@@ -299,7 +299,7 @@ function render(d){
     let wowHtml='';
     if(s.weekly&&s.weekly.length>=2){
       const last=s.weekly[s.weekly.length-1];const prev=s.weekly[s.weekly.length-2];
-      if(prev>0){const ch=((last-prev)/prev);wowHtml=` <span style="font-size:12px;font-weight:700;color:${ch>=0?'var(--grn)':'var(--red)'}"> ${ch>=0?'↑':'↓'}${Math.abs(ch*100).toFixed(0)}%</span>`}
+      if(prev>0){const ch=((last-prev)/prev);wowHtml=` <span style="font-size:12px;font-weight:700;color:${ch>=0?'var(--grn)':'var(--red)'}"> ${ch>=0?'↑':'↓'}${Math.abs(ch*100).toFixed(2)}%</span>`}
     }
 
     // Sparkline
@@ -332,7 +332,7 @@ function render(d){
       ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:8px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
       ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
       ${sdkNote}
-      <div class="f-target"><span>목표: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ 트래픽 충분':rawGapPct>=100?'✓ '+rawGapPct.toFixed(0)+'%':gapPct.toFixed(0)+'%'}</span></div>
+      <div class="f-target"><span>목표: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ 트래픽 충분':rawGapPct>=100?'✓ '+rawGapPct.toFixed(2)+'%':gapPct.toFixed(2)+'%'}</span></div>
       <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}"></div></div>
       <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
@@ -350,7 +350,7 @@ function render(d){
     ];
     $('diagnostic').innerHTML=`<div style="display:flex;align-items:flex-end;gap:4px;height:100px;margin-bottom:8px">${steps.map((s,i)=>{
       const h=Math.max(6,s.pct/100*80);
-      const convLabel=i>0?`${s.pct.toFixed(1)}%`:'';
+      const convLabel=i>0?`${s.pct.toFixed(2)}%`:'';
       return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
         <div style="font-size:10px;font-weight:700;margin-bottom:2px">${fmtK(s.val)}</div>
         <div style="font-size:8px;color:${s.color};margin-bottom:1px">${convLabel}</div>
@@ -358,8 +358,8 @@ function render(d){
         <div style="font-size:8px;color:var(--tx3);margin-top:3px;text-align:center">${s.label}</div>
       </div>`}).join('')}</div>
     <div style="font-size:9px;color:var(--tx3)">
-      가입 후 <b style="color:var(--ylw)">${(100-diag.app_created/diag.signup*100).toFixed(0)}%</b>가 앱조차 생성 안 함 → 온보딩 UX가 첫 번째 이탈 지점.
-      앱 생성 후 <b style="color:var(--ylw)">${((1-diag.tracking_link/diag.app_created)*100).toFixed(0)}%</b>가 트래킹링크 미생성.
+      가입 후 <b style="color:var(--ylw)">${(100-diag.app_created/diag.signup*100).toFixed(2)}%</b>가 앱조차 생성 안 함 → 온보딩 UX가 첫 번째 이탈 지점.
+      앱 생성 후 <b style="color:var(--ylw)">${((1-diag.tracking_link/diag.app_created)*100).toFixed(2)}%</b>가 트래킹링크 미생성.
       전체 가입→SDK 전환율: <b style="color:var(--red)">${((diag.sdk_install||sdk30)/diag.signup*100).toFixed(2)}%</b>
     </div>`;
   }
@@ -376,7 +376,7 @@ function render(d){
   const atRiskColor=atRiskRate<=20?'var(--grn)':atRiskRate<=40?'var(--ylw)':'var(--red)';
   $('health').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
     <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">활성 조직 (이탈 ${fmtK(h.churned||2284)}개 제외)</span></div>
-    <div style="font-size:11px">이탈 위험: <b style="color:${atRiskColor}">${atRiskRate.toFixed(0)}%</b> <span style="font-size:9px;color:var(--tx3)">온보딩 중</span></div>
+    <div style="font-size:11px">이탈 위험: <b style="color:${atRiskColor}">${atRiskRate.toFixed(2)}%</b> <span style="font-size:9px;color:var(--tx3)">온보딩 중</span></div>
   </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
 
   // === WEEKLY (stacked: healthy vs churned) ===
@@ -455,12 +455,12 @@ function render(d){
 
 function sim(){
   const v=+$('xr1').value,s=+$('xr2').value/100,k=+$('xr3').value/100,p=+$('xr4').value/100,a=+$('xr5').value,m=+$('xr6').value;
-  $('xv1').textContent=fmt(v);$('xv2').textContent=(s*100).toFixed(1)+'%';$('xv3').textContent=(k*100).toFixed(0)+'%';
-  $('xv4').textContent=(p*100).toFixed(1)+'%';$('xv5').textContent='$'+fmt(a);$('xv6').textContent=m;
+  $('xv1').textContent=fmt(v);$('xv2').textContent=(s*100).toFixed(2)+'%';$('xv3').textContent=(k*100).toFixed(2)+'%';
+  $('xv4').textContent=(p*100).toFixed(2)+'%';$('xv5').textContent='$'+fmt(a);$('xv6').textContent=m;
   const orgs=Math.round(v*m*s*k*p);const mr=orgs*a;const vs=Math.min(100,(mr/35000)*100);
   $('sim-orgs').textContent=fmt(orgs);
   $('sim-mrr').textContent='$'+fmt(mr);$('sim-mrr').style.color=mr>=35000?'var(--grn)':'var(--ylw)';
-  $('sim-pct').textContent=vs.toFixed(0)+'%';$('sim-pct').style.color=vs>=100?'var(--grn)':'var(--ylw)';
+  $('sim-pct').textContent=vs.toFixed(2)+'%';$('sim-pct').style.color=vs>=100?'var(--grn)':'var(--ylw)';
 }
 // Slack copy
 function copySlack(){
