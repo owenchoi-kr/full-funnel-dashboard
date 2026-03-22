@@ -5,106 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Core Plan Full Funnel</title>
 <style>
-:root{--bg:#ffffff;--s1:#f9fafb;--s2:#f3f4f6;--bd:#e5e7eb;--tx:#111827;--tx2:#6b7280;--tx3:#9ca3af;--acc:#4f46e5;--accg:rgba(79,70,229,.08);--grn:#16a34a;--grng:rgba(22,163,74,.08);--red:#dc2626;--redg:rgba(220,38,38,.06);--ylw:#ca8a04;--ylwg:rgba(202,138,4,.06)}
+:root{--bg:#ffffff;--s1:#f9fafb;--s2:#f3f4f6;--bd:#e5e7eb;--tx:#111827;--tx2:#4b5563;--tx3:#6b7280;--acc:#4f46e5;--accg:rgba(79,70,229,.08);--grn:#16a34a;--grng:rgba(22,163,74,.08);--red:#dc2626;--redg:rgba(220,38,38,.06);--ylw:#ca8a04;--ylwg:rgba(202,138,4,.06)}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased}
-.wrap{max-width:1060px;margin:0 auto;padding:24px 20px}
-.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--bd);margin-bottom:20px}
-.hdr h1{font-size:18px;font-weight:700}.hdr h1 b{color:var(--acc)}
-.hdr .sub{font-size:10px;color:var(--tx3);margin-top:2px}
-.hdr-r{font-size:9px;color:var(--tx3);text-align:right}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;-webkit-font-smoothing:antialiased;font-size:14px;line-height:1.6}
+.wrap{max-width:1140px;margin:0 auto;padding:32px 24px}
 
-/* Dual Hero: Active Orgs + MRR */
-.hero-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+/* Header */
+.hdr{display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--bd);margin-bottom:24px}
+.hdr h1{font-size:24px;font-weight:700;letter-spacing:-.3px}.hdr h1 b{color:var(--acc)}
+.hdr .sub{font-size:13px;color:var(--tx3);margin-top:4px}
+.hdr-r{font-size:12px;color:var(--tx3);text-align:right}
+
+/* Dual Hero */
+.hero-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px}
 @media(max-width:640px){.hero-row{grid-template-columns:1fr}}
-.hero-card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px}
-.hero-label{font-size:10px;color:var(--tx3);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
-.hero-val{font-size:36px;font-weight:800;font-variant-numeric:tabular-nums}
-.hero-sub{font-size:11px;color:var(--tx3);margin-top:4px}
+.hero-card{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:24px}
+.hero-label{font-size:13px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px;margin-bottom:6px;font-weight:600}
+.hero-val{font-size:44px;font-weight:800;font-variant-numeric:tabular-nums}
+.hero-sub{font-size:14px;color:var(--tx3);margin-top:6px;line-height:1.5}
 .hero-sub b{color:var(--tx2)}
-.hero-bar{height:8px;background:var(--s2);border-radius:4px;overflow:hidden;margin-top:8px}
-.hero-fill{height:100%;border-radius:4px;transition:width .6s}
-.hero-bar-label{display:flex;justify-content:space-between;font-size:9px;color:var(--tx3);margin-top:3px}
+.hero-bar{height:10px;background:var(--s2);border-radius:5px;overflow:hidden;margin-top:10px}
+.hero-fill{height:100%;border-radius:5px;transition:width .6s}
+.hero-bar-label{display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-top:4px}
 
 /* Countdown */
-.countdown{background:var(--s2);border:1px solid var(--bd);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-.cd-item{text-align:center;flex:1;min-width:100px}
-.cd-val{font-size:20px;font-weight:800;font-variant-numeric:tabular-nums}
-.cd-label{font-size:9px;color:var(--tx3);margin-top:1px}
+.countdown{background:var(--s2);border:1px solid var(--bd);border-radius:12px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.cd-item{text-align:center;flex:1;min-width:110px}
+.cd-val{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums}
+.cd-label{font-size:12px;color:var(--tx3);margin-top:2px;font-weight:500}
 
 /* Bottleneck */
-.banner{border-radius:10px;padding:14px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px}
-.banner.red{background:var(--redg);border:1px solid rgba(239,68,68,.2)}
-.banner .btitle{font-size:12px;font-weight:700}
-.banner .bdesc{font-size:10px;color:var(--tx2);margin-top:2px}
+.banner{border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.banner.red{background:var(--redg);border:1px solid rgba(220,38,38,.2)}
+.banner .btitle{font-size:14px;font-weight:700}
+.banner .bdesc{font-size:13px;color:var(--tx2);margin-top:3px}
 
-/* Funnel (4 cards: Visitor→Signup→SDK→Paid) */
-.funnel-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+/* Funnel Cards */
+.funnel-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
 @media(max-width:700px){.funnel-row{grid-template-columns:1fr 1fr}}
-.fc{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:16px;position:relative}
+.fc{background:var(--s1);border:1px solid var(--bd);border-radius:14px;padding:20px;position:relative;transition:border-color .2s}
 .fc:hover{border-color:var(--acc)}
-.fc.worst{border-color:var(--red);box-shadow:0 0 16px rgba(239,68,68,.06)}
-.fc .f-stage{font-size:9px;color:var(--tx3);text-transform:uppercase;letter-spacing:.8px}
-.fc .f-dri{font-size:8px;color:var(--tx3);margin-top:1px;margin-bottom:6px}
-.fc .f-actual{font-size:30px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
-.fc .f-wow{font-size:10px;font-weight:600;margin-top:4px}
-.fc .f-target{display:flex;justify-content:space-between;align-items:baseline;margin-top:8px;font-size:10px;color:var(--tx3)}
+.fc.worst{border-color:var(--red);box-shadow:0 0 20px rgba(220,38,38,.08)}
+.fc .f-stage{font-size:12px;color:var(--tx3);text-transform:uppercase;letter-spacing:.6px;font-weight:600}
+.fc .f-dri{font-size:12px;color:var(--tx3);margin-top:2px;margin-bottom:8px}
+.fc .f-actual{font-size:36px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.1}
+.fc .f-wow{font-size:13px;font-weight:600;margin-top:4px}
+.fc .f-target{display:flex;justify-content:space-between;align-items:baseline;margin-top:10px;font-size:13px;color:var(--tx3)}
 .fc .f-target b{color:var(--tx2)}
-.fc .f-gap-track{height:5px;background:var(--s2);border-radius:3px;overflow:hidden;margin-top:4px}
+.fc .f-gap-track{height:6px;background:var(--s2);border-radius:3px;overflow:hidden;margin-top:6px}
 .fc .f-gap-fill{height:100%;border-radius:3px}
-.fc .f-gap-pct{font-size:10px;font-weight:700;margin-top:3px}
-.fc .f-conv{position:absolute;top:10px;right:10px;padding:2px 7px;border-radius:8px;font-size:9px;font-weight:700}
+.fc .f-gap-pct{font-size:13px;font-weight:700;margin-top:4px}
+.fc .f-conv{position:absolute;top:14px;right:14px;padding:3px 10px;border-radius:8px;font-size:12px;font-weight:700}
 .f-conv.red{background:var(--redg);color:var(--red)}
 .f-conv.ylw{background:var(--ylwg);color:var(--ylw)}
 .f-conv.grn{background:var(--grng);color:var(--grn)}
-.spark{display:flex;align-items:flex-end;gap:1px;height:28px;margin-top:8px}
-.spark div{flex:1;border-radius:1px 1px 0 0}
+.spark{display:flex;align-items:flex-end;gap:2px;height:32px;margin-top:10px}
+.spark div{flex:1;border-radius:2px 2px 0 0}
 
 /* Sections */
-.section{margin-bottom:20px}
-.st{font-size:13px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:5px}
-.st::before{content:'';width:3px;height:12px;background:var(--acc);border-radius:2px}
-.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+.section{margin-bottom:24px}
+.st{font-size:16px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:6px}
+.st::before{content:'';width:4px;height:16px;background:var(--acc);border-radius:2px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:24px}
 @media(max-width:700px){.g2{grid-template-columns:1fr}}
-.card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:14px;overflow:hidden}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:20px;overflow:hidden}
 
 /* CAC Chart */
-.cac-row{display:flex;align-items:center;gap:8px;margin-bottom:6px;font-size:11px}
-.cac-name{min-width:70px;font-weight:600}
-.cac-bar-wrap{flex:1;height:16px;background:var(--s2);border-radius:3px;overflow:hidden}
-.cac-bar{height:100%;border-radius:3px}
-.cac-val{min-width:80px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
-.cac-badge{font-size:8px;padding:1px 5px;border-radius:6px;font-weight:700}
+.cac-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;font-size:13px}
+.cac-name{min-width:80px;font-weight:600}
+.cac-bar-wrap{flex:1;height:20px;background:var(--s2);border-radius:4px;overflow:hidden}
+.cac-bar{height:100%;border-radius:4px}
+.cac-val{min-width:90px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.cac-badge{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:700}
 
 /* Mini bars */
-.mbar{display:flex;align-items:center;gap:5px;margin-bottom:4px}
-.mbar .ml{font-size:10px;font-weight:600;min-width:26px;text-align:right}
-.mbar .mt{flex:1;height:10px;background:var(--s2);border-radius:3px;overflow:hidden}
-.mbar .mf{height:100%;border-radius:3px}
-.mbar .mv{font-size:9px;color:var(--tx2);min-width:70px;font-variant-numeric:tabular-nums}
+.mbar{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.mbar .ml{font-size:14px;font-weight:700;min-width:32px;text-align:right}
+.mbar .mt{flex:1;height:14px;background:var(--s2);border-radius:4px;overflow:hidden}
+.mbar .mf{height:100%;border-radius:4px}
+.mbar .mv{font-size:13px;color:var(--tx2);min-width:90px;font-variant-numeric:tabular-nums}
 
 /* Sliders */
-.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:16px}
-.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
-.sl-top{display:flex;justify-content:space-between;margin-bottom:2px}
-.sl-n{font-size:10px;color:var(--tx2)}
-.sl-v{font-size:12px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
-input[type=range]{-webkit-appearance:none;width:100%;height:4px;background:var(--s2);border-radius:2px;outline:0}
-input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;border-radius:50%;background:var(--acc);cursor:pointer}
-.sim-out{margin-top:12px;padding:12px;background:var(--s2);border-radius:8px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;text-align:center}
-.sim-out .so-label{font-size:9px;color:var(--tx3)}
-.sim-out .so-val{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
+.sliders{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:24px}
+.sl-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.sl-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.sl-n{font-size:13px;color:var(--tx2);font-weight:500}
+.sl-v{font-size:15px;font-weight:700;color:var(--acc);font-variant-numeric:tabular-nums}
+input[type=range]{-webkit-appearance:none;width:100%;height:6px;background:var(--s2);border-radius:3px;outline:0;margin-top:4px}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--acc);cursor:pointer}
+.sim-out{margin-top:16px;padding:16px;background:var(--s2);border-radius:10px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;text-align:center}
+.sim-out .so-label{font-size:12px;color:var(--tx3);font-weight:500}
+.sim-out .so-val{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums}
 
-.foot{text-align:center;font-size:9px;color:var(--tx3);padding:12px 0;border-top:1px solid var(--bd);margin-top:8px}
+.foot{text-align:center;font-size:12px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:12px}
 .foot a{color:var(--acc);text-decoration:none}
 /* Slack copy button */
-.slack-btn{background:var(--acc);color:white;border:none;padding:8px 16px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;margin:12px auto;display:block}
+.slack-btn{background:var(--acc);color:white;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin:16px auto;display:block}
 .slack-btn:hover{opacity:.9}
 .slack-btn.copied{background:var(--grn)}
 /* Waste callout */
-.waste{margin-top:8px;padding:8px 10px;background:var(--redg);border-radius:6px;font-size:10px;color:var(--red);font-weight:600}
+.waste{margin-top:8px;padding:8px 10px;background:var(--redg);border-radius:6px;font-size:13px;color:var(--red);font-weight:600}
 /* SDK footnote */
-.footnote-badge{font-size:8px;color:var(--ylw);background:var(--ylwg);padding:1px 5px;border-radius:4px;margin-left:4px}
+.footnote-badge{font-size:12px;color:var(--ylw);background:var(--ylwg);padding:1px 5px;border-radius:4px;margin-left:4px}
 .loading{text-align:center;padding:80px;color:var(--tx3)}
 .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd);border-top-color:var(--acc);border-radius:50%;animation:sp .7s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -138,7 +140,7 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:14px;heigh
     <button class="slack-btn" onclick="copySlack()">Slack에 복사</button>
     <div class="sliders section">
       <div class="st">시나리오 시뮬레이터</div>
-      <div style="font-size:9px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정하세요</div>
+      <div style="font-size:12px;color:var(--tx3);margin-bottom:10px">현재 실적 기반 초기값 — 슬라이더로 조정하세요</div>
       <div class="sl-grid">
         <div><div class="sl-top"><span class="sl-n">월간 방문자</span><span class="sl-v" id="xv1"></span></div><input type="range" id="xr1" min="3000" max="50000" step="500"></div>
         <div><div class="sl-top"><span class="sl-n">방문 → 가입</span><span class="sl-v" id="xv2"></span></div><input type="range" id="xr2" min="0.1" max="8" step="0.1"></div>
@@ -321,7 +323,7 @@ function render(d){
 
     // SDK footnote
     let sdkNote='';
-    if(s.label.includes('SDK')){sdkNote=`<div style="font-size:7px;color:var(--ylw);margin-top:2px">* 동일 기간 기준 — 코호트별 추적 시 다를 수 있음</div>`}
+    if(s.label.includes('SDK')){sdkNote=`<div style="font-size:11px;color:var(--ylw);margin-top:2px">* 동일 기간 기준 — 코호트별 추적 시 다를 수 있음</div>`}
 
     const linkAttr=s.link?` onclick="window.open('${s.link}','_blank')" style="cursor:pointer;border-left:3px solid ${driColors[i]}"`:` style="border-left:3px solid ${driColors[i]}"`;
 
@@ -330,12 +332,12 @@ function render(d){
       <div class="f-stage">${s.label}</div>
       <div class="f-dri">${s.dri}</div>
       <div>${actualHtml}</div>
-      ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:8px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
-      ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:9px;color:var(--tx3)">${s.extra}</span>`:''}
+      ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:12px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
+      ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:12px;color:var(--tx3)">${s.extra}</span>`:''}
       ${sdkNote}
       <div class="f-target"><span>목표: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ 트래픽 충분':rawGapPct>=100?'✓ '+rawGapPct.toFixed(2)+'%':gapPct.toFixed(2)+'%'}</span></div>
       <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}"></div></div>
-      <div style="font-size:8px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
+      <div style="font-size:12px;color:var(--tx3);margin-top:2px;text-align:right">${gapText}</div>
       ${spark}
     </div>`}).join('');
 
@@ -353,12 +355,12 @@ function render(d){
       const h=Math.max(6,s.pct/100*80);
       const convLabel=i>0?`${s.pct.toFixed(2)}%`:'';
       return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
-        <div style="font-size:10px;font-weight:700;margin-bottom:2px">${fmtK(s.val)}</div>
-        <div style="font-size:8px;color:${s.color};margin-bottom:1px">${convLabel}</div>
+        <div style="font-size:13px;font-weight:700;margin-bottom:2px">${fmtK(s.val)}</div>
+        <div style="font-size:12px;color:${s.color};margin-bottom:1px">${convLabel}</div>
         <div style="width:80%;height:${h}px;background:${s.color};border-radius:3px 3px 0 0"></div>
-        <div style="font-size:8px;color:var(--tx3);margin-top:3px;text-align:center">${s.label}</div>
+        <div style="font-size:12px;color:var(--tx3);margin-top:3px;text-align:center">${s.label}</div>
       </div>`}).join('')}</div>
-    <div style="font-size:9px;color:var(--tx3)">
+    <div style="font-size:12px;color:var(--tx3)">
       가입 후 <b style="color:var(--ylw)">${(100-diag.app_created/diag.signup*100).toFixed(2)}%</b>가 앱조차 생성 안 함 → 온보딩 UX가 첫 번째 이탈 지점.
       앱 생성 후 <b style="color:var(--ylw)">${((1-diag.tracking_link/diag.app_created)*100).toFixed(2)}%</b>가 트래킹링크 미생성.
       전체 가입→SDK 전환율: <b style="color:var(--red)">${((diag.sdk_install||sdk30)/diag.signup*100).toFixed(2)}%</b>
@@ -373,9 +375,9 @@ function render(d){
   ];
   const cpAlive=(cp.active||0)+(cp.onboarding||0);
   $('health').innerHTML=`<div style="margin-bottom:10px">
-    <span style="font-size:18px;font-weight:800">${fmt(cp.total||0)}</span> <span style="font-size:10px;color:var(--tx3)">Core Plan 조직 (테스트 제외)</span>
+    <span style="font-size:18px;font-weight:800">${fmt(cp.total||0)}</span> <span style="font-size:13px;color:var(--tx3)">Core Plan 조직 (테스트 제외)</span>
   </div>`+cpItems.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${x.v}</span><div class="mt"><div class="mf" style="width:${cp.total>0?(x.v/cp.total)*100:0}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('')
-  +`<div style="margin-top:10px;font-size:9px;color:var(--tx3);border-top:1px solid var(--bd);padding-top:8px">
+  +`<div style="margin-top:10px;font-size:12px;color:var(--tx3);border-top:1px solid var(--bd);padding-top:8px">
     ${(cp.detail||[]).map(o=>{
       const sc=o.status==='Active'?'var(--grn)':o.status==='Onboarding'?'var(--acc)':'var(--red)';
       return '<span style="display:inline-block;margin:1px 4px 1px 0;padding:1px 6px;border-radius:4px;background:'+sc+'20;color:'+sc+';font-weight:600">'+o.name+' ('+o.country+')</span>'
@@ -393,15 +395,15 @@ function render(d){
     const cPct=w.total>0?churned/w.total*100:0;
     const net=healthy+risk;
     return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;height:100%">
-      <div style="font-size:7px;font-weight:700;margin-bottom:1px">${w.total}<span style="color:var(--grn);font-size:6px"> (${net})</span></div>
+      <div style="font-size:11px;font-weight:700;margin-bottom:1px">${w.total}<span style="color:var(--grn);font-size:11px"> (${net})</span></div>
       <div style="width:85%;height:${ht}px;border-radius:2px 2px 0 0;overflow:hidden;display:flex;flex-direction:column">
         <div style="flex:${cPct};background:var(--red);opacity:.5"></div>
         <div style="flex:${rPct};background:var(--ylw);opacity:.6"></div>
         <div style="flex:${hPct};background:var(--grn)"></div>
       </div>
-      <div style="font-size:6px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div>
+      <div style="font-size:11px;color:var(--tx3);margin-top:2px">${String(w.week).slice(5)}</div>
     </div>`}).join('')}</div>
-    <div style="display:flex;gap:8px;margin-top:6px;font-size:8px;color:var(--tx3)">
+    <div style="display:flex;gap:8px;margin-top:6px;font-size:12px;color:var(--tx3)">
       <span><span style="display:inline-block;width:6px;height:6px;background:var(--grn);border-radius:1px"></span> 건강</span>
       <span><span style="display:inline-block;width:6px;height:6px;background:var(--ylw);border-radius:1px;opacity:.6"></span> 위험</span>
       <span><span style="display:inline-block;width:6px;height:6px;background:var(--red);border-radius:1px;opacity:.5"></span> 이탈</span>
