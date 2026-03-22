@@ -205,14 +205,15 @@ async function init(){
 
 function render(d){
   const amp=d.amplitude||{};const h=d.org_health||d.health||{};const wk=d.weekly_trend||[];const mkt=d.marketing||{};const cc=d.countries||[];
+  const cp=d.core_plan_orgs||{total:10,active:3,onboarding:4,churned:3,paid:0,detail:[]};
   // Extract actuals
   const vis30=amp.visitor?.count_30d||d.funnel?.stages?.find(s=>s.key==='visitor')?.count_30d||42082;
   const sig30=amp.signup?.count_30d||d.funnel?.stages?.find(s=>s.key==='signup')?.count_30d||382;
   const sdk30=amp.sdk_install?.count_30d||d.funnel?.stages?.find(s=>s.key==='sdk_install')?.count_30d||15;
-  const paidSS=h.paid_self_serve||d.funnel?.stages?.find(s=>s.key==='paid')?.self_serve||13;
-  const paidTotal=h.paid||114;
-  const activeOrgs=h.active||107;
-  const totalOrgs=h.total_orgs||3057;
+  const paidSS=cp.active||3;
+  const paidTotal=h.paid||122;
+  const activeOrgs=cp.active||3;
+  const totalOrgs=cp.total||10;
   const mrr=paidSS*T.arppu;
 
   // Weekly arrays
@@ -228,10 +229,10 @@ function render(d){
   const mrrColor=mrrPct>=60?'var(--grn)':mrrPct>=30?'var(--ylw)':'var(--red)';
   $('heroes').innerHTML=`
     <div class="hero-card">
-      <div class="hero-label">활성 조직 (선행지표)</div>
+      <div class="hero-label">Core Plan 활성 조직 (선행지표)</div>
       <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}</div>
-      <div class="hero-sub">전체 <b>${fmt(totalOrgs)}</b>개 중 · 활성률 ${(activeOrgs/totalOrgs*100).toFixed(2)}%</div>
-      <div class="hero-bar"><div class="hero-fill" style="width:${(activeOrgs/totalOrgs*100)}%;background:var(--acc)"></div></div>
+      <div class="hero-sub">Core Plan <b>${fmt(totalOrgs)}</b>개 중 · 온보딩 ${cp.onboarding||0} · 이탈 ${cp.churned||0}</div>
+      <div class="hero-bar"><div class="hero-fill" style="width:${totalOrgs>0?(activeOrgs/totalOrgs*100):0}%;background:var(--acc)"></div></div>
     </div>
     <div class="hero-card">
       <div class="hero-label">MRR (후행지표)</div>
@@ -364,20 +365,22 @@ function render(d){
     </div>`;
   }
 
-  // === ORG HEALTH (without churned dominating) ===
-  const alive=totalOrgs-(h.churned||2284);
-  const items=[
-    {l:'온보딩',v:h.onboarding||356,c:'var(--acc)'},
-    {l:'활성',v:h.active||107,c:'var(--grn)'},
-    {l:'유료',v:h.paid||114,c:'#10b981'},
-    {l:'이탈 위험',v:(h.churn_risk_onboarding||127)+(h.churn_risk_activation||69),c:'var(--ylw)'},
+  // === ORG HEALTH (Core Plan only) ===
+  const cpItems=[
+    {l:'활성',v:cp.active||0,c:'var(--grn)'},
+    {l:'온보딩',v:cp.onboarding||0,c:'var(--acc)'},
+    {l:'이탈',v:cp.churned||0,c:'var(--red)'},
   ];
-  const atRiskRate=h.onboarding>0?((h.churn_risk_onboarding||0)/h.onboarding*100):0;
-  const atRiskColor=atRiskRate<=20?'var(--grn)':atRiskRate<=40?'var(--ylw)':'var(--red)';
-  $('health').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px">
-    <div><span style="font-size:18px;font-weight:800">${fmt(alive)}</span> <span style="font-size:10px;color:var(--tx3)">활성 조직 (이탈 ${fmtK(h.churned||2284)}개 제외)</span></div>
-    <div style="font-size:11px">이탈 위험: <b style="color:${atRiskColor}">${atRiskRate.toFixed(2)}%</b> <span style="font-size:9px;color:var(--tx3)">온보딩 중</span></div>
-  </div>`+items.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${fmtK(x.v)}</span><div class="mt"><div class="mf" style="width:${(x.v/alive)*100}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('');
+  const cpAlive=(cp.active||0)+(cp.onboarding||0);
+  $('health').innerHTML=`<div style="margin-bottom:10px">
+    <span style="font-size:18px;font-weight:800">${fmt(cp.total||0)}</span> <span style="font-size:10px;color:var(--tx3)">Core Plan 조직 (테스트 제외)</span>
+  </div>`+cpItems.map(x=>`<div class="mbar"><span class="ml" style="color:${x.c}">${x.v}</span><div class="mt"><div class="mf" style="width:${cp.total>0?(x.v/cp.total)*100:0}%;background:${x.c}"></div></div><span class="mv">${x.l}</span></div>`).join('')
+  +`<div style="margin-top:10px;font-size:9px;color:var(--tx3);border-top:1px solid var(--bd);padding-top:8px">
+    ${(cp.detail||[]).map(o=>{
+      const sc=o.status==='Active'?'var(--grn)':o.status==='Onboarding'?'var(--acc)':'var(--red)';
+      return '<span style="display:inline-block;margin:1px 4px 1px 0;padding:1px 6px;border-radius:4px;background:'+sc+'20;color:'+sc+';font-weight:600">'+o.name+' ('+o.country+')</span>'
+    }).join('')}
+  </div>`;
 
   // === WEEKLY (stacked: healthy vs churned) ===
   if(wk.length>0){const mx=Math.max(...wk.map(w=>w.total||0),1);$('weekly').innerHTML=`<div style="display:flex;align-items:flex-end;gap:2px;height:90px">${wk.map(w=>{

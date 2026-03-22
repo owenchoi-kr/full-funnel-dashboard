@@ -576,5 +576,69 @@
     "app_created": 453,
     "tracking_link": 212,
     "sdk_install": 0
+  },
+  "core_plan_orgs": {
+    "total": 10,
+    "active": 3,
+    "onboarding": 4,
+    "churned": 3,
+    "paid": 0,
+    "churn_risk": 0,
+    "detail": [
+      {
+        "name": "BodyBuddy",
+        "status": "Active",
+        "country": "US"
+      },
+      {
+        "name": "Sling Inc.",
+        "status": "Active",
+        "country": "KR"
+      },
+      {
+        "name": "Unilink",
+        "status": "Active",
+        "country": "KG"
+      },
+      {
+        "name": "numberone",
+        "status": "Onboarding",
+        "country": "US"
+      },
+      {
+        "name": "POWERMAN",
+        "status": "Onboarding",
+        "country": "US"
+      },
+      {
+        "name": "Linkup",
+        "status": "Onboarding",
+        "country": "GB"
+      },
+      {
+        "name": "Thamani",
+        "status": "Onboarding",
+        "country": "GB"
+      },
+      {
+        "name": "Yellow Umbrella",
+        "status": "Churned",
+        "country": "IL"
+      },
+      {
+        "name": "Gendy",
+        "status": "Churned",
+        "country": "KR"
+      },
+      {
+        "name": "Once",
+        "status": "Churned",
+        "country": "US"
+      }
+    ],
+    "test_excluded": [
+      "uuuu",
+      "ab1234"
+    ]
   }
 }
