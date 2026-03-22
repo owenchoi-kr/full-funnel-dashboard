@@ -208,18 +208,22 @@ async function init(){
 function render(d){
   const amp=d.amplitude||{};const h=d.org_health||d.health||{};const wk=d.weekly_trend||[];const mkt=d.marketing||{};const cc=d.countries||[];
   const cp=d.core_plan_orgs||{total:10,active:3,onboarding:4,churned:3,paid:0,detail:[]};
-  // Extract actuals
-  const vis30=amp.visitor?.count_30d||d.funnel?.stages?.find(s=>s.key==='visitor')?.count_30d||42082;
-  const sig30=amp.signup?.count_30d||d.funnel?.stages?.find(s=>s.key==='signup')?.count_30d||382;
-  const sdk30=amp.sdk_install?.count_30d||d.funnel?.stages?.find(s=>s.key==='sdk_install')?.count_30d||15;
+  // Extract actuals — Global(ex-KR) as primary, US as secondary
+  const vis30=amp.visitor?.count_30d_global_ex_kr||amp.visitor?.count_30d||35516;
+  const visUS=amp.visitor?.count_30d_us||11963;
+  const sig30=amp.signup?.count_30d_global_ex_kr||amp.signup?.count_30d||681;
+  const sigUS=amp.signup?.count_30d_us||74;
+  const sdk30=amp.sdk_install?.count_30d||d.funnel?.stages?.find(s=>s.key==='sdk_install')?.count_30d||16;
+  // Weekly arrays — use ex-KR
+  const wVisGlobal=amp.visitor?.weekly||[];const wVisUS=amp.visitor?.weekly_us||[];
+  const wSigGlobal=amp.signup?.weekly||[];const wSigUS=amp.signup?.weekly_us||[];
   const paidSS=cp.active||3;
   const paidTotal=h.paid||122;
   const activeOrgs=cp.active||3;
   const totalOrgs=cp.total||10;
   const mrr=paidSS*T.arppu;
 
-  // Weekly arrays
-  const wVis=amp.visitor?.weekly||[];const wSig=amp.signup?.weekly||[];const wSdk=amp.sdk_install?.weekly||[];
+  const wSdk=amp.sdk_install?.weekly||[];
 
   // Conversions
   const cv_v2s=vis30>0?sig30/vis30:0;
@@ -268,8 +272,8 @@ function render(d){
 
   // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
   const stages=[
-    {label:'방문자',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/월',dri:DRI.vis,conv:null,bm:null,weekly:wVis,link:LINKS.vis},
-    {label:'가입',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/월',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSig,link:LINKS.sig},
+    {label:'방문자',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/월',dri:DRI.vis,conv:null,bm:null,weekly:wVisGlobal,link:LINKS.vis,sub:`US ${fmtK(visUS)} · Global(KR제외) ${fmtK(vis30)}`},
+    {label:'가입',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/월',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSigGlobal,link:LINKS.sig,sub:`US ${fmtK(sigUS)} (${(sigUS/visUS*100).toFixed(2)}%) · Global ${fmtK(sig30)} (${(sig30/vis30*100).toFixed(2)}%)`},
     {label:'SDK 설치',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+'개 (6개월)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk},
     {label:'유료 전환',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+'개',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`,link:LINKS.paid},
   ];
@@ -332,8 +336,9 @@ function render(d){
       <div class="f-stage">${s.label}</div>
       <div class="f-dri">${s.dri}</div>
       <div>${actualHtml}</div>
+      ${s.sub?`<div style="font-size:12px;color:var(--tx2);margin-top:4px;line-height:1.4">${s.sub}</div>`:''}
       ${s.label.includes('Paid')?`<div style="display:flex;height:4px;border-radius:2px;overflow:hidden;margin-top:4px"><div style="width:${paidSS/paidTotal*100}%;background:var(--acc)"></div><div style="width:${(paidTotal-paidSS)/paidTotal*100}%;background:var(--grn);opacity:0.3"></div></div><div style="font-size:12px;color:var(--tx3);margin-top:2px">SS ${paidSS} · Contract ${paidTotal-paidSS}</div>`:''}
-      ${s.extra&&!s.label.includes('Paid')?`<span style="font-size:12px;color:var(--tx3)">${s.extra}</span>`:''}
+      ${s.extra&&!s.label.includes('Paid')&&!s.sub?`<span style="font-size:12px;color:var(--tx3)">${s.extra}</span>`:''}
       ${sdkNote}
       <div class="f-target"><span>목표: <b>${s.tLabel}</b></span><span class="f-gap-pct" style="color:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}">${isLowQuality?'⚡ 트래픽 충분':rawGapPct>=100?'✓ '+rawGapPct.toFixed(2)+'%':gapPct.toFixed(2)+'%'}</span></div>
       <div class="f-gap-track"><div class="f-gap-fill" style="width:${gapPct}%;background:${isLowQuality?'var(--ylw)':rawGapPct>=100?'var(--grn)':gapColor}"></div></div>
