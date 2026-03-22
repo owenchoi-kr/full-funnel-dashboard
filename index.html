@@ -428,7 +428,7 @@ function render(d){
         <span class="cac-badge" style="background:${cacColor}20;color:${cacColor}">CAC ${cacLabel}</span>
       </div>`}).join('');
     if(wasteTotal>0){
-      html+=`<div class="waste">가입 0건 지출: ${wasteCh.map(c=>c.channel+' $'+parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,'')||0)).join(' + ')} = <b>월 $${fmt(wasteTotal)} 낭비</b></div>`;
+      html+=`<div class="waste">가입 0건 지출: ${wasteCh.map(c=>c.channel+' $'+(parseFloat(String(c.monthly_cost_usd).replace(/[$,]/g,''))||0).toFixed(2)).join(' + ')} = <b>월 $${wasteTotal.toFixed(2)} 낭비</b></div>`;
     }
     $('cac').innerHTML=html;
   }
@@ -440,7 +440,8 @@ function render(d){
     $('countries').innerHTML=sorted.slice(0,8).map(c=>{
       const apct=parseFloat(c.active_pct)||0;
       const aColor=apct>=10?'var(--grn)':apct>=5?'var(--ylw)':'var(--tx3)';
-      return`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/mx)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <b style="color:${aColor}">${c.active_pct}</b></span></div>`
+      const apctDisplay=typeof c.active_pct==='string'&&c.active_pct.includes('%')?c.active_pct:(apct*100).toFixed(2)+'%';
+      return`<div class="mbar"><span class="ml">${c.country}</span><div class="mt"><div class="mf" style="width:${(c.orgs/mx)*100}%;background:var(--acc)"></div></div><span class="mv">${fmt(c.orgs)} · <b style="color:${aColor}">${apctDisplay}</b></span></div>`
     }).join('');
   }
 
