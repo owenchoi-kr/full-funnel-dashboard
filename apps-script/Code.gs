@@ -83,9 +83,94 @@ function buildDashboardData() {
   };
 }
 
-// ========== AMPLITUDE DATA (from Sheet) ==========
-// Amplitude 데이터는 Simulation 탭에서 읽음 (Claude Code가 MCP로 싱크)
+// ========== AMPLITUDE API (직접 호출) ==========
+// Script Properties에 AMP_API_KEY + AMP_SECRET_KEY 설정 필요
+// 자동 싱크: 트리거 → dailySync() 매일 아침 실행
 function fetchAmplitudeData() {
+  const props = PropertiesService.getScriptProperties();
+  const apiKey = props.getProperty('AMP_API_KEY');
+  const secretKey = props.getProperty('AMP_SECRET_KEY');
+
+  if (!apiKey || !secretKey) {
+    // Fallback: Simulation 탭에서 읽기
+    return fetchAmplitudeFromSheet_();
+  }
+
+  try {
+    const auth = Utilities.base64Encode(apiKey + ':' + secretKey);
+    const now = new Date();
+    const start = formatDate(new Date(now.getTime() - 30 * 86400000));
+    const end = formatDate(now);
+
+    const events = [
+      { key: 'visitor', event: '[Amplitude] Page Viewed', label: '방문자', filter: 'country_ex_kr' },
+      { key: 'signup', event: 'signup_completed', label: '가입', filter: 'country_ex_kr' },
+      { key: 'sdk_install', event: 'first_sdk_event_collected', label: 'SDK 설치', filter: null },
+      { key: 'activation', event: 'actuals_request_complete', label: 'Activation', filter: null },
+    ];
+
+    const results = {};
+
+    for (const ev of events) {
+      // Build segmentation query
+      const eParam = JSON.stringify({ event_type: ev.event });
+      let url = 'https://amplitude.com/api/2/events/segmentation?e=' + encodeURIComponent(eParam)
+        + '&start=' + start + '&end=' + end + '&m=uniques&i=7';
+
+      // Add country filter for visitor/signup (exclude South Korea)
+      if (ev.filter === 'country_ex_kr') {
+        const seg = JSON.stringify({ prop: 'country', op: 'is not', values: ['South Korea'] });
+        url += '&s=' + encodeURIComponent('[' + seg + ']');
+      }
+
+      const response = UrlFetchApp.fetch(url, {
+        headers: { 'Authorization': 'Basic ' + auth },
+        muteHttpExceptions: true,
+      });
+
+      const json = JSON.parse(response.getContentText());
+      if (json.data && json.data.series && json.data.series[0]) {
+        const weekly = json.data.series[0];
+        const total = weekly.reduce((a, b) => a + b, 0);
+        results[ev.key] = {
+          label: ev.label,
+          event: ev.event,
+          count_30d: total,
+          weekly: weekly,
+        };
+      } else {
+        results[ev.key] = { label: ev.label, event: ev.event, count_30d: 0, weekly: [], error: json.error };
+      }
+
+      // Also fetch US-only for visitor and signup
+      if (ev.filter === 'country_ex_kr') {
+        const segUS = JSON.stringify({ prop: 'country', op: 'is', values: ['United States'] });
+        const urlUS = 'https://amplitude.com/api/2/events/segmentation?e=' + encodeURIComponent(eParam)
+          + '&start=' + start + '&end=' + end + '&m=uniques&i=7'
+          + '&s=' + encodeURIComponent('[' + segUS + ']');
+
+        const resUS = UrlFetchApp.fetch(urlUS, {
+          headers: { 'Authorization': 'Basic ' + auth },
+          muteHttpExceptions: true,
+        });
+        const jsonUS = JSON.parse(resUS.getContentText());
+        if (jsonUS.data && jsonUS.data.series && jsonUS.data.series[0]) {
+          const weeklyUS = jsonUS.data.series[0];
+          results[ev.key].count_30d_us = weeklyUS.reduce((a, b) => a + b, 0);
+          results[ev.key].weekly_us = weeklyUS;
+          results[ev.key].count_30d_global_ex_kr = results[ev.key].count_30d;
+        }
+      }
+    }
+
+    return results;
+  } catch (e) {
+    return { error: 'Amplitude API failed: ' + e.message };
+  }
+}
+
+// Fallback: Simulation 탭에서 읽기
+function fetchAmplitudeFromSheet_() {
   try {
     const ss = SpreadsheetApp.openById(LEAD_SHEET_ID);
     const sheet = ss.getSheetByName('Simulation');
@@ -94,7 +179,6 @@ function fetchAmplitudeData() {
     const data = sheet.getRange('A1:F7').getValues();
     const weekly = sheet.getRange('A9:F13').getValues();
 
-    // Parse funnel rows (row 2-6: Visitor, Signup, SDK, Activation, Paid)
     const results = {};
     const stageMap = {
       'Visitor': 'visitor',
@@ -118,7 +202,6 @@ function fetchAmplitudeData() {
       };
     }
 
-    // Parse weekly breakdown (rows 9-13)
     if (weekly.length >= 5) {
       const weeks = weekly[0].slice(1).filter(w => w);
       results.weeks = weeks.map(String);
@@ -400,6 +483,64 @@ function toInt(val) {
 }
 
 // ========== TEST FUNCTION ==========
+// ========== 자동 싱크 트리거 설정 ==========
+// 1회만 실행하면 됨. 매일 오전 8-9시(KST) 자동 실행 등록.
+function setupDailyTrigger() {
+  // 기존 트리거 제거
+  ScriptApp.getProjectTriggers().forEach(t => {
+    if (t.getHandlerFunction() === 'dailySync') ScriptApp.deleteTrigger(t);
+  });
+  // 매일 오전 8-9시(KST = UTC-15 → 한국 시간)
+  ScriptApp.newTrigger('dailySync')
+    .timeBased()
+    .everyDays(1)
+    .atHour(8)
+    .inTimezone('Asia/Seoul')
+    .create();
+  Logger.log('Daily sync trigger created: 매일 오전 8-9시 KST');
+}
+
+// 매일 자동 실행 — Amplitude 데이터를 Simulation 탭에 기록
+function dailySync() {
+  const amp = fetchAmplitudeData();
+  if (amp.error) {
+    Logger.log('dailySync failed: ' + amp.error);
+    return;
+  }
+
+  // Simulation 탭에 기록
+  const ss = SpreadsheetApp.openById(LEAD_SHEET_ID);
+  let sheet = ss.getSheetByName('Simulation');
+  if (!sheet) sheet = ss.insertSheet('Simulation');
+
+  const vis = amp.visitor || {};
+  const sig = amp.signup || {};
+  const sdk = amp.sdk_install || {};
+  const act = amp.activation || {};
+
+  const rows = [
+    ['Amplitude Funnel Data', 'Auto-synced: ' + new Date().toISOString()],
+    ['Stage', 'Event', '30d Uniques', 'US 30d', 'Global(exKR) 30d', 'Status'],
+    ['Visitor', 'Page Viewed', vis.count_30d_global_ex_kr || vis.count_30d || 0, vis.count_30d_us || 0, vis.count_30d_global_ex_kr || vis.count_30d || 0, ''],
+    ['Signup', 'signup_completed', sig.count_30d_global_ex_kr || sig.count_30d || 0, sig.count_30d_us || 0, sig.count_30d_global_ex_kr || sig.count_30d || 0, ''],
+    ['SDK Install', 'first_sdk_event_collected', sdk.count_30d || 0, '', '', ''],
+    ['Activation', 'actuals_request_complete', act.count_30d || 0, '', '', ''],
+    [''],
+    ['Weekly (Global exKR)', ...((vis.weekly || []).length > 0 ? vis.weekly.map((_, i) => 'W' + (i + 1)) : ['W1', 'W2', 'W3', 'W4', 'W5'])],
+    ['Visitors', ...(vis.weekly || [])],
+    ['Signups', ...(sig.weekly || [])],
+    ['SDK Install', ...(sdk.weekly || [])],
+    ['Activation', ...(act.weekly || [])],
+  ];
+
+  sheet.getRange(1, 1, rows.length, Math.max(...rows.map(r => r.length))).setValues(
+    rows.map(r => { while (r.length < Math.max(...rows.map(r2 => r2.length))) r.push(''); return r; })
+  );
+
+  Logger.log('dailySync complete: Visitor=' + (vis.count_30d || 0) + ', Signup=' + (sig.count_30d || 0));
+}
+
+// ========== TEST ==========
 function testBuild() {
   const data = buildDashboardData();
   Logger.log('=== Funnel ===');
@@ -408,6 +549,7 @@ function testBuild() {
   });
   Logger.log('MRR: $' + data.funnel.mrr.current + ' / $' + data.funnel.mrr.target + ' (' + data.funnel.mrr.pct.toFixed(1) + '%)');
   Logger.log('Worst bottleneck: ' + data.funnel.worst_bottleneck);
-  Logger.log('Org Health: ' + JSON.stringify(data.org_health));
+  Logger.log('Amplitude: ' + JSON.stringify(Object.keys(data.amplitude || {})));
+  Logger.log('Org Health: paid=' + (data.org_health || {}).paid);
   Logger.log('Marketing channels: ' + (data.marketing.channels || []).length);
 }
