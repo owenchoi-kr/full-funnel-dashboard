@@ -241,9 +241,9 @@ function render(d){
       <div class="hero-bar"><div class="hero-fill" style="width:${totalOrgs>0?(activeOrgs/totalOrgs*100):0}%;background:var(--acc)"></div></div>
     </div>
     <div class="hero-card">
-      <div class="hero-label">MRR (후행지표)</div>
+      <div class="hero-label">MRR (후행지표) <span style="font-size:11px;color:var(--ylw);background:var(--ylwg);padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:none;letter-spacing:0">추정치 · Stripe 미연동</span></div>
       <div class="hero-val" style="color:${mrrColor}">$${fmt(mrr)}</div>
-      <div class="hero-sub">목표 <b>$${fmt(T.mrr)}</b> · 남은 금액 <b>$${fmt(T.mrr-mrr)}</b></div>
+      <div class="hero-sub">목표 <b>$${fmt(T.mrr)}</b> · 남은 금액 <b>$${fmt(T.mrr-mrr)}</b> · <span style="color:var(--ylw)">Active ${activeOrgs}개 × $${T.arppu} ARPPU 추정</span></div>
       <div class="hero-bar"><div class="hero-fill" style="width:${mrrPct}%;background:${mrrColor}"></div></div>
       <div class="hero-bar-label"><span>$0</span><span>${mrrPct.toFixed(0)}%</span><span>$35K</span></div>
     </div>`;
