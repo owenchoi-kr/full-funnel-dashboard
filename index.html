@@ -99,6 +99,16 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
 
 .foot{text-align:center;font-size:12px;color:var(--tx3);padding:16px 0;border-top:1px solid var(--bd);margin-top:12px}
 .foot a{color:var(--acc);text-decoration:none}
+/* Definitions */
+.defs{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:24px;margin-top:16px}
+.defs h3{font-size:15px;font-weight:700;margin-bottom:16px;color:var(--tx)}
+.defs .def-group{margin-bottom:16px}
+.defs .def-group:last-child{margin-bottom:0}
+.defs .def-group-title{font-size:13px;font-weight:700;color:var(--tx2);margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid var(--bd)}
+.defs dl{display:grid;grid-template-columns:auto 1fr;gap:4px 12px;font-size:13px;margin:0}
+.defs dt{font-weight:600;color:var(--acc);white-space:nowrap}
+.defs dd{color:var(--tx2);margin:0;line-height:1.5}
+.defs code{font-size:11px;background:var(--s2);padding:1px 4px;border-radius:3px}
 /* Slack copy button */
 .slack-btn{background:var(--acc);color:white;border:none;padding:12px 24px;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer;margin:16px auto;display:block}
 .slack-btn:hover{opacity:.9}
@@ -155,6 +165,38 @@ input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;heigh
         <div><div class="so-label">목표 대비</div><div class="so-val" id="sim-pct">0%</div></div>
       </div>
     </div>
+    <div class="defs">
+      <h3>지표 정의 및 기준</h3>
+      <div class="def-group">
+        <div class="def-group-title">퍼널 단계</div>
+        <dl>
+          <dt>방문자</dt><dd><code>[Amplitude] Page Viewed</code> 유니크 유저 (30일, KR 제외). US = Amplitude country 필터 "United States"</dd>
+          <dt>가입</dt><dd><code>signup_completed</code> 이벤트 완료 유저 (30일). US = Amplitude country 필터 기준</dd>
+          <dt>SDK 설치</dt><dd><code>first_sdk_event_collected</code> — 앱에서 첫 SDK 이벤트 수집 완료 (30일, 국가별 미분리)</dd>
+          <dt>유료 전환</dt><dd>Core Plan 구독이 활성 상태(Active)인 조직 수. US = 조직 등록 국가 기준</dd>
+        </dl>
+      </div>
+      <div class="def-group">
+        <div class="def-group-title">조직 상태 정의</div>
+        <dl>
+          <dt>활성 (Active)</dt><dd>SDK 이벤트 수집 중 + 대시보드 활동이 있는 조직. Core Plan에서 채널 링킹을 사용하는 상태</dd>
+          <dt>온보딩 (Onboarding)</dt><dd>가입 완료 후 SDK 설치 및 데이터 수집 설정을 진행 중인 조직</dd>
+          <dt>이탈 위험 — 온보딩</dt><dd>가입 후 일정 기간 내 SDK 설치를 완료하지 못한 조직</dd>
+          <dt>이탈 위험 — 활성화</dt><dd>SDK 설치 후 실제 데이터 활용(Actuals 조회 등)으로 넘어가지 못한 조직</dd>
+          <dt>이탈 (Churned)</dt><dd>SDK 이벤트 수집 중단 + 대시보드 비활동 상태가 일정 기간 지속된 조직</dd>
+        </dl>
+      </div>
+      <div class="def-group">
+        <div class="def-group-title">벤치마크 및 목표</div>
+        <dl>
+          <dt>Visit → Signup</dt><dd>벤치마크 5% (SaaS B2B 평균). 현재 US 기준 산출</dd>
+          <dt>Signup → SDK</dt><dd>벤치마크 15% (개발자 도구 평균). 현재 Global 기준 산출 (US 미분리)</dd>
+          <dt>SDK → Paid</dt><dd>벤치마크 2% (PLG SaaS 평균)</dd>
+          <dt>MRR 목표</dt><dd>$35,000 (2026-09-30 기한). Active 조직 수 × ARPPU $500으로 추정 (Stripe 미연동)</dd>
+          <dt>Global (KR 제외)</dt><dd>한국은 별도 GTM 트랙으로 운영하므로 Global 지표에서 KR 제외</dd>
+        </dl>
+      </div>
+    </div>
   </div>
   <div class="foot">
     <a href="https://docs.google.com/spreadsheets/d/1y2MlUqSHYMSefkVFoxo6Kh5YYTFWvk00R__nUWH7Afw/edit" target="_blank">Lead Measure ↗</a> ·
@@ -208,19 +250,24 @@ async function init(){
 function render(d){
   const amp=d.amplitude||{};const h=d.org_health||d.health||{};const wk=d.weekly_trend||[];const mkt=d.marketing||{};const cc=d.countries||[];
   const cp=d.core_plan_orgs||{total:10,active:3,onboarding:4,churned:3,paid:0,detail:[]};
-  // Extract actuals — Global(ex-KR) as primary, US as secondary
-  const vis30=amp.visitor?.count_30d_global_ex_kr||amp.visitor?.count_30d||35516;
-  const visUS=amp.visitor?.count_30d_us||11963;
-  const sig30=amp.signup?.count_30d_global_ex_kr||amp.signup?.count_30d||681;
-  const sigUS=amp.signup?.count_30d_us||74;
+  // Extract actuals — US as primary, Global(ex-KR) as reference
+  const vis30=amp.visitor?.count_30d_us||11963;
+  const visGlobal=amp.visitor?.count_30d_global_ex_kr||amp.visitor?.count_30d||35516;
+  const sig30=amp.signup?.count_30d_us||74;
+  const sigGlobal=amp.signup?.count_30d_global_ex_kr||amp.signup?.count_30d||681;
   const sdk30=amp.sdk_install?.count_30d||d.funnel?.stages?.find(s=>s.key==='sdk_install')?.count_30d||16;
-  // Weekly arrays — use ex-KR
-  const wVisGlobal=amp.visitor?.weekly||[];const wVisUS=amp.visitor?.weekly_us||[];
-  const wSigGlobal=amp.signup?.weekly||[];const wSigUS=amp.signup?.weekly_us||[];
+  // Weekly arrays — US as primary
+  const wVisUS=amp.visitor?.weekly_us||[];const wVisGlobal=amp.visitor?.weekly||[];
+  const wSigUS=amp.signup?.weekly_us||[];const wSigGlobal=amp.signup?.weekly||[];
   const paidSS=cp.active||3;
   const paidTotal=h.paid||122;
   const activeOrgs=cp.active||3;
   const totalOrgs=cp.total||10;
+  const usCountry=cc.find(c=>c.country==='US')||{orgs:0,active:0,active_pct:'0%'};
+  const cpUSDetail=(cp.detail||[]).filter(o=>o.country==='US');
+  const cpUSActive=cpUSDetail.filter(o=>o.status==='Active').length;
+  const cpUSTotal=cpUSDetail.length;
+  const cvGlobal_v2s=visGlobal>0?sigGlobal/visGlobal:0;
   const mrr=paidSS*T.arppu;
 
   const wSdk=amp.sdk_install?.weekly||[];
@@ -236,9 +283,13 @@ function render(d){
   $('heroes').innerHTML=`
     <div class="hero-card">
       <div class="hero-label">Core Plan 활성 조직 (선행지표)</div>
-      <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}</div>
-      <div class="hero-sub">Core Plan <b>${fmt(totalOrgs)}</b>개 중 · 온보딩 ${cp.onboarding||0} · 이탈 ${cp.churned||0}</div>
+      <div class="hero-val" style="color:var(--acc)">${fmt(activeOrgs)}<span style="font-size:18px;color:var(--tx3);font-weight:600"> / ${fmt(totalOrgs)}개</span></div>
+      <div class="hero-sub">온보딩 <b>${cp.onboarding||0}</b> · 이탈 <b>${cp.churned||0}</b></div>
       <div class="hero-bar"><div class="hero-fill" style="width:${totalOrgs>0?(activeOrgs/totalOrgs*100):0}%;background:var(--acc)"></div></div>
+      <div style="margin-top:10px;padding:10px 14px;background:var(--s2);border-radius:8px;font-size:13px;color:var(--tx2)">
+        🇺🇸 US: <span style="font-size:20px;font-weight:800;color:var(--acc)">${cpUSActive}</span><span style="color:var(--tx3)"> 활성 / ${cpUSTotal}개 중</span>
+        <span style="font-size:12px;color:var(--tx3);margin-left:8px">(온보딩 ${cpUSDetail.filter(o=>o.status==='Onboarding').length} · 이탈 ${cpUSDetail.filter(o=>o.status==='Churned').length})</span>
+      </div>
     </div>
     <div class="hero-card">
       <div class="hero-label">MRR (후행지표) <span style="font-size:11px;color:var(--ylw);background:var(--ylwg);padding:2px 6px;border-radius:4px;margin-left:6px;text-transform:none;letter-spacing:0">추정치 · Stripe 미연동</span></div>
@@ -272,10 +323,10 @@ function render(d){
 
   // === FUNNEL CARDS (4: Visitor, Signup, SDK, Paid — no Activation) ===
   const stages=[
-    {label:'방문자',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/월',dri:DRI.vis,conv:null,bm:null,weekly:wVisGlobal,link:LINKS.vis,sub:`US ${fmtK(visUS)} · Global(KR제외) ${fmtK(vis30)}`},
-    {label:'가입',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/월',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSigGlobal,link:LINKS.sig,sub:`US ${fmtK(sigUS)} (${(sigUS/visUS*100).toFixed(2)}%) · Global ${fmtK(sig30)} (${(sig30/vis30*100).toFixed(2)}%)`},
-    {label:'SDK 설치',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+'개 (6개월)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk},
-    {label:'유료 전환',actual:paidSS,target:T.paid,tLabel:fmt(T.paid)+'개',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],extra:`+${paidTotal-paidSS} contract`,link:LINKS.paid},
+    {label:'방문자 (US)',actual:vis30,target:T.vis_mo,tLabel:fmtK(T.vis_mo)+'/월',dri:DRI.vis,conv:null,bm:null,weekly:wVisUS,link:LINKS.vis,sub:`<span style="color:var(--tx3)">Global(KR제외) ${fmtK(visGlobal)}</span>`},
+    {label:'가입 (US)',actual:sig30,target:T.sig_mo,tLabel:fmt(T.sig_mo)+'/월',dri:DRI.sig,conv:cv_v2s,bm:BM.v2s,weekly:wSigUS,link:LINKS.sig,sub:`<span style="color:var(--tx3)">Global ${fmtK(sigGlobal)} (${pct(cvGlobal_v2s)})</span>`},
+    {label:'SDK 설치 (Global)',actual:sdk30,target:Math.round(T.sdk_6mo/6),tLabel:fmt(T.sdk_6mo)+'개 (6개월)',dri:DRI.sdk,conv:cv_s2k,bm:BM.s2k,weekly:wSdk,link:LINKS.sdk,sub:`<span style="color:var(--tx3)">US 미분리 — 전체 국가 합산</span>`},
+    {label:'유료 전환 (US)',actual:cpUSActive,target:T.paid,tLabel:fmt(T.paid)+'개',dri:DRI.paid,conv:cv_k2p,bm:BM.k2p,weekly:[],link:LINKS.paid,sub:`<span style="color:var(--tx3)">Global ${fmt(activeOrgs)}개 활성 · +${paidTotal-paidSS} contract</span>`},
   ];
 
   // Find worst
